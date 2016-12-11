@@ -1,0 +1,17 @@
+export REPO_URL := $(REPO_URL)/$(shell basename $(CURDIR))
+
+.PHONY : info
+info:
+	@make -C packages/ $@
+
+.PHONY : package
+package:
+	 find . -type d -d 1 '!' -name packages | xargs -I'{}' -n 1 /bin/sh -c 'helm package {} && mv {}*.tgz packages/'
+
+.PHONY : index
+index:
+	@make -C packages/ $@
+
+.PHONY : clean
+clean:
+	@make -C packages/ $@
