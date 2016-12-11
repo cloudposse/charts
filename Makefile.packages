@@ -4,14 +4,18 @@
 
 export REPO_URL := $(REPO_URL)/packages
 
+.PHONY : info
 info:
 	@echo "REPO_URL: $(REPO_URL)"
 
+.PHONY : index
 index:
 	@helm repo index . --url $(REPO_URL)
 
+.PHONY : real-clean
 real-clean: clean
 	rm -f *.tgz
 
+.PHONY : clean
 clean:
 	rm -f index.yaml

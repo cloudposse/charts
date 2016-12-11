@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for Kubernetes that implements a GeoIP API service
+name: geoip-api
+version: 0.1.0

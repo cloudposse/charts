@@ -6,7 +6,8 @@ info:
 
 .PHONY : package
 package:
-	 find . -type d -d 1 '!' -name packages | xargs -I'{}' -n 1 /bin/sh -c 'helm package {} && mv {}*.tgz packages/'
+	 find library/ -type d -d 1 '!' -name packages | xargs helm package
+	 find . -type f -name '*.tgz' -d 1 | xargs -I '{}' mv {} packages
 
 .PHONY : index
 index:
@@ -14,4 +15,8 @@ index:
 
 .PHONY : clean
 clean:
+	@rm -f *.tgz
+  
+.PHONY : real-clean
+real-clean: clean
 	@make -C packages/ $@
