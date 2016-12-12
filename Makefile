@@ -23,4 +23,9 @@ index:
 	@make -C incubator $@
 	@make -C test $@
 
-
+.PHONY : clean
+## Clean up 
+clean:
+	@make -C stable $@
+	@make -C incubator $@
+	@make -C test $@
