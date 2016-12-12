@@ -14,11 +14,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: "{{ template "fullname" . }}"
+      app: {{ template "fullname" . }}
   template:
     metadata:
       labels:
-        app: "{{ template "fullname" . }}"
+        app: {{ template "fullname" . }}
         serial: "0"
     spec:
       containers:
@@ -36,8 +36,8 @@ spec:
             path: "/locate?ip=127.0.0.1"
             port: {{ .Values.service.internalPort }}
         ports:
-        - containerPort: "{{ .Values.service.internalPort }}"
-          name: "{{ template "fullname" . }}"
+        - containerPort: {{ .Values.service.internalPort }}
+          name: geoip-api
           protocol: "TCP"
         resources:
 {{ toYaml .Values.resources | indent 12 }}
