@@ -1,0 +1,2 @@
+lint:
+	@find . -type d -depth 1 | xargs -n 1 helm lint
