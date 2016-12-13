@@ -1,0 +1,15 @@
+description: Allow to provide ssh access to servers based on github teams
+name: github-authorized-keys
+version: 0.1.0
+keywords:
+- ssh
+- github
+- pam
+- authentificate
+home: http://cloudposse.com
+sources:
+- https://github.com/cloudposse/github-authorized-keys
+maintainers:
+- name: Cloud Posse
+  email: hello@cloudposse.com
+engine: gotpl
