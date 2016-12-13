@@ -1,0 +1,53 @@
+# Default values for github-authorized-keys.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+## Github Authorized Keys image version
+## ref: https://hub.docker.com/r/cloudposse/github-authorized-keys/tags/
+##
+## Default: none
+image: 313021614177.dkr.ecr.us-west-2.amazonaws.com/cloudposse/github-authorized-keys
+
+## Specify a imagePullPolicy
+## Default to 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+# imagePullPolicy:
+
+## Specify github api token
+## ref: https://github.com/blog/1509-personal-api-tokens
+##
+# githubAPIToken:
+
+## Specify github organization
+##
+# githubOrganization:
+
+## Specify github team
+##
+# githubTeam:
+
+## Specify github team id
+##
+# githubTeamID:
+
+## Specify users secondary groups name
+##
+# syncUsersGroups:
+
+## Specify users shell
+##
+# syncUsersShell:
+
+## Specify sync users interval in seconds
+##
+# syncUsersInterval:
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m

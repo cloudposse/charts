@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  namespace: kube-system
+  name: github-authorized-keys
+  labels:
+    app: github-authorized-keys
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: github-authorized-keys
+        role: sync-users
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+        - name: github-authorized-keys
+          image: "{{ .Values.image }}"
+          imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+          env:
+            - name: GITHUB_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-authorized-keys
+                  key: github_api_token
+            - name: GITHUB_ORGANIZATION
+              valueFrom:
+                secretKeyRef:
+                  name: github-authorized-keys
+                  key: github_organization
+            - name: GITHUB_TEAM
+              valueFrom:
+                secretKeyRef:
+                  name: github-authorized-keys
+                  key: github_team
+            - name: SYNC_USERS_GROUPS
+              valueFrom:
+                secretKeyRef:
+                  name: github-authorized-keys
+                  key: sync_users_groups
+            - name: SYNC_USERS_SHELL
+              valueFrom:
+                secretKeyRef:
+                  name: github-authorized-keys
+                  key: sync_users_shell
+            - name: SYNC_USERS_ROOT
+              value: /host
+            - name: INTEGRATE_SSH
+              value: "true"
+          resources:
+{{ toYaml .Values.resources | indent 10 }}
+          volumeMounts:
+            - name: host-root
+              mountPath: /host
+      volumes:
+        - name: host-root
+          hostPath:
+            path: /

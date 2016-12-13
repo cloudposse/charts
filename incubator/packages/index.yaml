@@ -55,4 +55,25 @@ entries:
     urls:
     - https://cloudposse.github.io/charts/incubator/packages/syslog-forwarder-0.1.0.tgz
     version: 0.1.0
-generated: 2016-12-16T00:02:51.447524839-08:00
+  github-authorized-keys:
+  - created: 2016-12-12T17:29:43.983485681-08:00
+    description: Allow to provide ssh access to servers based on github teams
+    digest: e4bec63e645aa63f984362aad1a1e390df4912dc25a4b7f0e4019ceb70ebd2ca
+    engine: gotpl
+    home: http://cloudposse.com
+    keywords:
+    - ssh
+    - github
+    - pam
+    - authentificate
+    maintainers:
+    - email: hello@cloudposse.com
+      name: Cloud Posse
+    name: github-authorized-keys
+    sources:
+    - https://github.com/cloudposse/github-authorized-keys
+    urls:
+    - https://charts.cloudposse.com/incubator/packages/github-authorized-keys-0.1.0.tgz
+    version: 0.1.0
+generated: 2016-12-12T17:29:43.982820842-08:00
+
