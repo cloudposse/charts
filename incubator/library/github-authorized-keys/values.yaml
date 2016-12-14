@@ -7,7 +7,7 @@
 ## ref: https://hub.docker.com/r/cloudposse/github-authorized-keys/tags/
 ##
 ## Default: none
-image: 313021614177.dkr.ecr.us-west-2.amazonaws.com/cloudposse/github-authorized-keys
+image: cloudposse/github-authorized-keys
 
 ## Specify a imagePullPolicy
 ## Default to 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
@@ -18,19 +18,26 @@ image: 313021614177.dkr.ecr.us-west-2.amazonaws.com/cloudposse/github-authorized
 ## Specify github api token
 ## ref: https://github.com/blog/1509-personal-api-tokens
 ##
-# githubAPIToken:
+## REQUIRED
+githubAPIToken:
 
 ## Specify github organization
 ##
-# githubOrganization:
+## REQUIRED
+githubOrganization:
 
 ## Specify github team
 ##
-# githubTeam:
+## REQUIRED
+githubTeam:
 
 ## Specify github team id
 ##
 # githubTeamID:
+
+## Specify users primary group id
+##
+# syncUsersGID:
 
 ## Specify users secondary groups name
 ##
@@ -38,11 +45,59 @@ image: 313021614177.dkr.ecr.us-west-2.amazonaws.com/cloudposse/github-authorized
 
 ## Specify users shell
 ##
-# syncUsersShell:
+# syncUsersShell: "/bin/bash"
 
 ## Specify sync users interval in seconds
 ##
-# syncUsersInterval:
+# syncUsersInterval: 300
+
+## Specify ttl of etcd cache in seconds
+##
+## This is time we can have access to servers in case github.com down
+##
+# etcdTTL: 86400
+
+## Template of create user command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {shell}    - User shell
+##
+# tplLinuxUserAdd: "adduser {username} --disabled-password --force-badname --shell {shell}"
+
+## Template of create user with specified primary group id  command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {shell}    - User shell
+## {group}    - User primary group name
+## {gid}      - User primary group id
+##
+# tplLinuxUserAddWithGid: "adduser {username} --disabled-password --force-badname --shell {shell} --group {group}"
+
+## Template of add user secondary group command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {group}    - User primary group name
+##
+# tplLinuxUserAddToGroup: "adduser {username} {group}"
+
+## Template of user delete command
+##
+## Available placeholders
+##
+## {username} - User login name
+##
+# tplLinuxUserDelete: "deluser {username}"
+
+## Template of ssh restart command
+##
+# tplSSHRestart: "/usr/sbin/service ssh force-reload"
+
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -51,3 +106,27 @@ resources:
   requests:
     memory: 256Mi
     cpu: 250m
+
+
+etcd-operator:
+  replicaCount: 1
+  image:
+    repository: quay.io/coreos/etcd-operator
+    tag: v0.1.0
+  ## etcd-cluster specific values
+  cluster:
+    enabled: true
+    name: github-authorized-keys-etcd-cluster
+    size: 3
+    version: v3.1.0-rc.0
+    backup:
+      enabled: false
+      ## Cloud specific PV provisioner
+      ## Supports either kubernetes.io/gce-pd or kubernetes.io/aws-ebs
+      provisioner: kubernetes.io/aws-ebs
+      config:
+        ## short snapshot interval for testing, do not use this in production!
+        snapshotIntervalInSecond: 30
+        maxSnapshot: 5
+        volumeSizeInMB: 512
+        storageType: PersistentVolume
