@@ -6,7 +6,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     k8s-addon: {{ template "fullname" . }}.addons.k8s.io
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+{{ toYaml .Values.service.annotations | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

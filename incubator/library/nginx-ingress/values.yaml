@@ -14,6 +14,8 @@ service:
   internalHttpPort: 80
   internalHttpsPort: 443
   internalHealthzPort: 18080
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
 resources:
   limits:
     cpu: 100m
