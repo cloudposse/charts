@@ -4,13 +4,13 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    k8s-addon: ingress-nginx.addons.k8s.io
+    k8s-addon: {{ template "fullname" . }}.addons.k8s.io
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: {{ .Values.service.externalPort }}
-    targetPort: {{ .Values.service.internalPort }}
+  - name: http
+    targetPort: http
+    port: {{ .Values.service.externalPort }}
     protocol: TCP
-    name: {{ .Values.service.name }}
   selector:
     app: {{ template "fullname" . }}
