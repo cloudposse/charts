@@ -1,0 +1,5 @@
+# requirements.yaml
+dependencies:
+- name: "nginx-default-backend"
+  version: "0.1.0"
+  repository: "http://charts.cloudposse.com/incubator/packages"

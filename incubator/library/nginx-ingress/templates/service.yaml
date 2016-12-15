@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    k8s-addon: {{ template "fullname" . }}.addons.k8s.io
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    targetPort: http
+    port: {{ .Values.service.externalHttpPort }}
+    protocol: TCP
+    
+  - name: https
+    targetPort: https
+    port: {{ .Values.service.externalHttpsPort }}
+    protocol: TCP
+  selector:
+    app: {{ template "fullname" . }}
