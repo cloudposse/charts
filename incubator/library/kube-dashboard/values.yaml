@@ -1,0 +1,19 @@
+# Default values for kube-dashboard.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: "gcr.io/google_containers/kubernetes-dashboard-amd64"
+  tag: "v1.5.0"
+  pullPolicy: "IfNotPresent"
+service:
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 9090
+resources:
+  limits:
+    cpu: 100m
+    memory: 50Mi
+  requests:
+    cpu: 100m
+    memory: 50Mi
