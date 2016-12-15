@@ -1,0 +1,32 @@
+# Default values for papertrail.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: "cloudposse/fluentd-remote-syslog"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+forward:
+  containers: true
+  etcd: true
+  kubelet: false
+  kube_proxy: true
+  kube_apiserver: false
+  kube_controller_manager: true
+  kube_scheduler: true
+
+syslog:
+  kubernetes:
+    host: logs2.papertrailapp.com
+    port: 12345
+  default:
+    host: logs2.papertrailapp.com
+    port: 45678
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
