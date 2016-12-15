@@ -51,6 +51,22 @@ githubTeam:
 ##
 # syncUsersInterval: 300
 
+## ETCD build-in cluster
+##
+## To crete etcd build-in cluster you have to install etcd-operator before install this chart
+##
+## To install operator use this command
+##
+## helm install stable/etcd-operator
+##
+cluster:
+  ## Enable cluster
+  enabled: false
+  ## Nodes count
+  size: 3
+  ## Version
+  version: v3.1.0-rc.0
+
 ## Specify ttl of etcd cache in seconds
 ##
 ## This is time we can have access to servers in case github.com down
@@ -106,27 +122,3 @@ resources:
   requests:
     memory: 256Mi
     cpu: 250m
-
-
-etcd-operator:
-  replicaCount: 1
-  image:
-    repository: quay.io/coreos/etcd-operator
-    tag: v0.1.0
-  ## etcd-cluster specific values
-  cluster:
-    enabled: true
-    name: github-authorized-keys-etcd-cluster
-    size: 3
-    version: v3.1.0-rc.0
-    backup:
-      enabled: false
-      ## Cloud specific PV provisioner
-      ## Supports either kubernetes.io/gce-pd or kubernetes.io/aws-ebs
-      provisioner: kubernetes.io/aws-ebs
-      config:
-        ## short snapshot interval for testing, do not use this in production!
-        snapshotIntervalInSecond: 30
-        maxSnapshot: 5
-        volumeSizeInMB: 512
-        storageType: PersistentVolume
