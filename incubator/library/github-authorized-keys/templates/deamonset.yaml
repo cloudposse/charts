@@ -20,6 +20,11 @@ spec:
         - name: github-authorized-keys
           image: "{{ .Values.image }}"
           imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+{{if .Values.cluster.enabled }}
+          command: ["sh", "-c"]
+          args:
+            - "github-authorized-keys --etcd-endpoint http://$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_HOST:$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_PORT"
+{{end}}
           env:
             - name: GITHUB_API_TOKEN
               valueFrom:
@@ -79,6 +84,7 @@ spec:
                   key: sync_users_interval
 {{end}}
 
+
 {{if .Values.etcdTTL}}
             - name: ETCD_TTL
               valueFrom:
@@ -126,8 +132,6 @@ spec:
                   name: github-authorized-keys
                   key: tplSSHRestart
 {{end}}
-            - name: ETCD_ENDPOINT
-              value: http://
             - name: SYNC_USERS_ROOT
               value: /host
             - name: INTEGRATE_SSH
