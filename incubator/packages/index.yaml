@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   geoip-api:
   - apiVersion: v1
-    created: 2016-12-14T15:42:21.386625751-08:00
+    created: 2016-12-14T18:00:20.420992978-08:00
     description: A Helm chart for Kubernetes that implements a GeoIP API service
     digest: 707275bb72e3478a3b9b637a4e547c2a5107145775caf5f2f66a39c756592b0e
     name: geoip-api
@@ -11,12 +11,21 @@ entries:
     version: 0.1.0
   nginx-default-backend:
   - apiVersion: v1
-    created: 2016-12-14T15:42:21.387495548-08:00
+    created: 2016-12-14T18:00:20.421150804-08:00
     description: A Helm chart for nginx-default-backend to be used by nginx-ingress
       controller
-    digest: 3f4c3665982f72d9868229d58e65e798b69453defdfb29a013cec9cf580e5b71
+    digest: f105cc84782bfb4ed8292b926fb18721f359223b94748baeec250a9561346b2c
     name: nginx-default-backend
     urls:
     - https://cloudposse.github.io/charts/incubator/packages/nginx-default-backend-0.1.0.tgz
     version: 0.1.0
-generated: 2016-12-14T15:42:21.38613497-08:00
+  nginx-ingress:
+  - apiVersion: v1
+    created: 2016-12-14T18:00:20.422241192-08:00
+    description: A Helm chart for Kubernetes
+    digest: 5d4e35c3e961d0f813dbaf02aa3858b8bc3418266a0bfd3d410cfd7ee7c1f69f
+    name: nginx-ingress
+    urls:
+    - https://cloudposse.github.io/charts/incubator/packages/nginx-ingress-0.1.0.tgz
+    version: 0.1.0
+generated: 2016-12-14T18:00:20.420655705-08:00

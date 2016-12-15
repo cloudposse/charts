@@ -1,0 +1,26 @@
+# Default values for nginx-ingress.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: "gcr.io/google_containers/nginx-ingress-controller"
+  tag: "0.8.3"
+  pullPolicy: "IfNotPresent"
+service:
+  name: nginx
+  type: LoadBalancer
+  externalHttpPort: 80
+  externalHttpsPort: 443
+  internalHttpPort: 80
+  internalHttpsPort: 443
+  internalHealthzPort: 18080
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
