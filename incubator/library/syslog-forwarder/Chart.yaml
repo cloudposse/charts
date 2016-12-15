@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart to ship logs to a remote syslog server
+name: syslog-forwarder
+version: 0.1.0
