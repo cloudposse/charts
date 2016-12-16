@@ -18,8 +18,8 @@ spec:
       dnsPolicy: Default
       containers:
         - name: github-authorized-keys
-          image: "{{ .Values.image }}"
-          imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
 {{if .Values.etcdEnabled }}
           command: ["sh", "-c"]
           args:

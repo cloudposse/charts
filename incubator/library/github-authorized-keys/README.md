@@ -87,8 +87,9 @@ The following tables lists the configurable parameters of the Drupal chart and t
 
  Parameter                | Description                                                         | Default                                                                                  |
  -------------------------| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
- `image`                  | Github Authorized Keys image                                        | `cloudposse/github-authorized-keys:{VERSION}`                                            |
- `imagePullPolicy`        | Image pull policy                                                   | `Always` if `image` tag is `latest`, else `IfNotPresent`                                 |
+ `image.repository`       | Github Authorized Keys image repository                             | `cloudposse/github-authorized-keys`                                                      |
+ `image.tag`              | Github Authorized Keys image tag                                    | `latest`                                                                                 |
+ `image.pullPolicy`       | Github Authorized Keys image pull policy                            | `Always`                                                                                 |
  `githubAPIToken`         | Github api token                                                    | **REQUIRED TO BE SPECIFIED**                                                             |
  `githubOrganization`     | Github organization                                                 | **REQUIRED TO BE SPECIFIED**                                                             |
  `githubTeam`             | Github team                                                         | **REQUIRED TO BE SPECIFIED**                                                             |

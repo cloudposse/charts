@@ -3,17 +3,25 @@
 # Declare name/value pairs to be passed into your templates.
 # name: value
 
-## Github Authorized Keys image version
+## Specify Github Authorized Keys image param
 ## ref: https://hub.docker.com/r/cloudposse/github-authorized-keys/tags/
 ##
-## Default: none
-image: cloudposse/github-authorized-keys
+image:
+  ## Specify Image repository
+  ##
+  ## Default: cloudposse/github-authorized-keys
+  repository: cloudposse/github-authorized-keys
 
-## Specify a imagePullPolicy
-## Default to 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
-## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-##
-# imagePullPolicy:
+  ## Specify Image tag
+  ##
+  ## Default: latest
+  tag: latest
+
+  ## Specify a imagePullPolicy
+  ## Default to 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: Always
 
 ## Specify github api token
 ## ref: https://github.com/blog/1509-personal-api-tokens
