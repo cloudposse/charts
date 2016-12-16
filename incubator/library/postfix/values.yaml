@@ -1,0 +1,24 @@
+# Default values for postfix.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: "cloudposse/postfix"
+  tag: "latest"
+  pullPolicy: Always
+smtp:
+  domain: "cloudposse.local"
+  username: "postmaster"
+  password: "secret"
+service:
+  type: ClusterIP
+  externalPort: 25
+  internalPort: 25
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
