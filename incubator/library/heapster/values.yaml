@@ -6,8 +6,7 @@ image:
   repository: "gcr.io/google_containers/heapster"
   tag: "v1.2.0"
   pullPolicy: "Always"
-source: "kubernetes:https://kubernetes.default"
-sink: "influxdb:http://monitoring-influxdb:8086"
+source: "kubernetes"
 service:
   type: ClusterIP
   externalPort: 80
