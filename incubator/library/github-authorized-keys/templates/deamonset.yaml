@@ -20,7 +20,7 @@ spec:
         - name: github-authorized-keys
           image: "{{ .Values.image }}"
           imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
-{{if .Values.cluster.enabled }}
+{{if .Values.etcdEnabled }}
           command: ["sh", "-c"]
           args:
             - "github-authorized-keys --etcd-endpoint http://$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_HOST:$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_PORT"

@@ -53,19 +53,17 @@ githubTeam:
 
 ## ETCD build-in cluster
 ##
-## To crete etcd build-in cluster you have to install etcd-operator before install this chart
+## To create etcd build-in cluster you have to install etcd-operator before install this chart
 ##
 ## To install operator use this command
 ##
 ## helm install stable/etcd-operator
 ##
-cluster:
-  ## Enable cluster
-  enabled: false
-  ## Nodes count
-  size: 3
-  ## Version
-  version: v3.1.0-rc.0
+etcdEnabled: false
+
+## ETCD build-in cluster size
+##
+etcdClusterSize: 3
 
 ## Specify ttl of etcd cache in seconds
 ##

@@ -97,6 +97,8 @@ The following tables lists the configurable parameters of the Drupal chart and t
  `syncUsersGroups`        | Users secondary groups names (comma separated)                      | ``                                                                                       |
  `syncUsersShell`         | Users shell                                                         | `/bin/bash`                                                                              |
  `syncUsersInterval`      | Sync users interval in seconds                                      | `300`                                                                                    |
+ `etcdEnabled`            | Enable etcd fallback cache (read more [Etcd fallback cache])        | `false`                                                                                  |
+ `etcdClusterSize`        | Etcd cache node count                                               | `3`                                                                                      |
  `etcdTTL`                | Etcd cache ttl in seconds                                           | `86400`                                                                                  |
  `tplLinuxUserAdd`        | Template of create user command                                     | `adduser {username} --disabled-password --force-badname --shell {shell}`                 |
  `tplLinuxUserAddWithGid` | Template of create user with specified primary group id command     | `adduser {username} --disabled-password --force-badname --shell {shell} --group {group}` |
@@ -124,3 +126,23 @@ $ helm install --name github-authorized-keys -f values.yaml incubator/github-aut
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
+
+
+## Etcd fallback cache
+
+In case of any problems with availability of [github.com](https://github.com) github authorized keys can use
+etcd build-in cluster as fallback cache. It use fallback cache only for ssh authentication.
+
+
+**WARNING:** If you want to use build-in fallback cache you have to install
+[etcd-operator](https://github.com/kubernetes/charts/tree/master/stable/etcd-operator) previously.
+Use next command for do this
+ ```
+ $ helm install stable/etcd-operator
+ ```
+
+To enable this feature you need to set true ``etcdEnabled`` variable.
+Also you can specify size of build-in etcd cluster with variable ``etcdClusterSize``
+``etcdTTL`` option specify ttl for data we store in etcd fallback cache in seconds.
+From functional point of view this is time between last success login and last guarantied login
+(even if there is problem with connection to github.com).
