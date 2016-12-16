@@ -12,8 +12,7 @@ spec:
     k8s-app: "{{ .Chart.Name }}"
   type: {{ .Values.service.type }}
   ports:
-  - name: http
-    targetPort: http
+  - targetPort: {{ .Values.service.internalPort }}
     port: {{ .Values.service.externalPort }}
     protocol: TCP
 
