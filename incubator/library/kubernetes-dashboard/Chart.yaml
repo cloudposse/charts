@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart that implements the Kubernetes Dashboard
-name: kube-dashboard
+name: kubernetes-dashboard
 version: 0.1.0
