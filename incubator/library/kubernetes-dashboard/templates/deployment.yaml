@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: "{{ .Chart.Name }}"
-  namespace: kube-system
+  namespace: "kube-system"
   labels:
     k8s-app: "{{ .Chart.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -16,6 +16,7 @@ spec:
     metadata:
       labels:
         k8s-app: "{{ .Chart.Name }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
