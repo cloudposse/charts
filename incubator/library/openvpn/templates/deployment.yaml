@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+          - |-
+              ovpn_genconfig -u tcp://vpn.goruha.dev.cloudposse.com &&
+              ovpn_initpki nopass &&
+              easyrsa build-client-full admin nopass &&
+              ovpn_run
+        env:
+          - name: DEBUG
+            value: '0'
+          - name: EASYRSA_BATCH
+            value: '1'
+          - name: EASYRSA_REQ_CN
+            value: 'goruha.dev.cloudposse.com'
+        ports:
+          - name: tcp
+            containerPort: 1194
+            protocol: TCP
+          - name: http
+            containerPort: 80
+            protocol: TCP
+          - name: https
+            containerPort: 443
+            protocol: TCP
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: tcp
+    targetPort: 1194
+    port: 1194
+    protocol: TCP
+  - name: http
+    targetPort: 80
+    port: 80
+    protocol: TCP
+  - name: https
+    targetPort: 443
+    port: 443
+    protocol: TCP
+  selector:
+    app: {{ template "fullname" . }}
