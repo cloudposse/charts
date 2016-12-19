@@ -16,14 +16,14 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["sh", "-c"]
-        args: ["sleep 10h"]
+        args: ["ovpn_run"]
         env:
           - name: DEBUG
             value: '0'
           - name: EASYRSA_BATCH
             value: '1'
           - name: EASYRSA_REQ_CN
-            value: 'goruha.dev.cloudposse.com'
+            value: 'vpn.goruha.dev.cloudposse.com'
         ports:
           - name: tcp
             containerPort: 1194
@@ -39,8 +39,36 @@ spec:
           capabilities:
             add:
               - NET_ADMIN
+        volumeMounts:
+          - name: configs
+            mountPath: /etc/openvpn
+          - name: keys
+            mountPath: /etc/openvpn/pki
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: keys
+          secret:
+            secretName: {{ template "fullname" . }}
+            items:
+              - key: "key"
+                path: "private/vpn.goruha.dev.cloudposse.com.key"
+              - key: "ca"
+                path: "ca.crt"
+              - key: "cert"
+                path: "issued/vpn.goruha.dev.cloudposse.com.crt"
+              - key: "dh"
+                path: "dh.pem"
+              - key: "tls_auth"
+                path: "ta.key"
+        - name: configs
+          secret:
+            secretName: {{ template "fullname" . }}
+            items:
+              - key: "config"
+                path: "openvpn.conf"
+              - key: "vars"
+                path: "ovpn_env.sh"
 ---
 apiVersion: v1
 kind: Service

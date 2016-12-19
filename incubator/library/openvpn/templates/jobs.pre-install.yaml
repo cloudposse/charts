@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+type: Opaque
+data:
+  key: {{ "" | b64enc }}
+  ca : {{ "" | b64enc }}
+  cert: {{ "" | b64enc }}
+  dh: {{ "" | b64enc }}
+  tls_auth : {{ "" | b64enc }}
+  config : {{ "" | b64enc }}
+  vars : {{ "" | b64enc }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}-job"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+          - |-
+              ovpn_genconfig -u tcp://$EASYRSA_REQ_CN &&
+              enable_password_auth &&
+              ovpn_initpki nopass &&
+              easyrsa build-client-full admin nopass &&
+              save_secrets
+        env:
+          - name: SECRET_NAME
+            value: {{ template "fullname" . }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: DEBUG
+            value: '0'
+          - name: EASYRSA_BATCH
+            value: '1'
+          - name: EASYRSA_REQ_CN
+            value: 'vpn.goruha.dev.cloudposse.com'
