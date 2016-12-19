@@ -16,12 +16,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["sh", "-c"]
-        args:
-          - |-
-              ovpn_genconfig -u tcp://vpn.goruha.dev.cloudposse.com &&
-              ovpn_initpki nopass &&
-              easyrsa build-client-full admin nopass &&
-              ovpn_run
+        args: ["sleep 10h"]
         env:
           - name: DEBUG
             value: '0'
