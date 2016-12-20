@@ -16,7 +16,20 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["sh", "-c"]
-        args: ["ovpn_run"]
+        args:
+         - |-
+            ovpn_genconfig -u tcp://$EASYRSA_REQ_CN  \
+              -n $(cat /etc/resolv.conf |grep -i nameserver|head -n1|cut -d ' ' -f2) \
+              -p "dhcp-option DOMAIN-SEARCH cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local"
+              -e "auth-user-pass-verify /bin/verify via-file" \
+              -e "username-as-common-name" \
+              -e "tmp-dir /etc/openvpn/tmp" \
+              -e "script-security 3" &&
+            mkdir /etc/openvpn/tmp &&
+            chmod -R 777 /etc/openvpn/tmp &&
+            ovpn_run
         env:
           - name: DEBUG
             value: '0'
@@ -40,8 +53,6 @@ spec:
             add:
               - NET_ADMIN
         volumeMounts:
-          - name: configs
-            mountPath: /etc/openvpn
           - name: keys
             mountPath: /etc/openvpn/pki
         resources:
@@ -53,6 +64,8 @@ spec:
             items:
               - key: "key"
                 path: "private/vpn.goruha.dev.cloudposse.com.key"
+              - key: "client_key"
+                path: "private/admin.key"
               - key: "ca"
                 path: "ca.crt"
               - key: "cert"
@@ -61,14 +74,6 @@ spec:
                 path: "dh.pem"
               - key: "tls_auth"
                 path: "ta.key"
-        - name: configs
-          secret:
-            secretName: {{ template "fullname" . }}
-            items:
-              - key: "config"
-                path: "openvpn.conf"
-              - key: "vars"
-                path: "ovpn_env.sh"
 ---
 apiVersion: v1
 kind: Service
