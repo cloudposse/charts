@@ -10,6 +10,7 @@ metadata:
 type: Opaque
 data:
   key: {{ "" | b64enc }}
+  client_key: {{ "" | b64enc }}
   ca : {{ "" | b64enc }}
   cert: {{ "" | b64enc }}
   dh: {{ "" | b64enc }}
@@ -43,9 +44,9 @@ spec:
         args:
           - |-
               ovpn_genconfig -u tcp://$EASYRSA_REQ_CN &&
-              enable_password_auth &&
               ovpn_initpki nopass &&
               easyrsa build-client-full admin nopass &&
+              OVPN_OTP_AUTH=true ovpn_getclient_all &&
               save_secrets
         env:
           - name: SECRET_NAME
