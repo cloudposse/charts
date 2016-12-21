@@ -19,11 +19,11 @@ spec:
         args:
          - |-
             ovpn_genconfig -u tcp://$EASYRSA_REQ_CN  \
-              -n $(cat /etc/resolv.conf |grep -i nameserver|head -n1|cut -d ' ' -f2) \
+              -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
               -p "dhcp-option DOMAIN-SEARCH cluster.local" \
               -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
-              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local"
-              -e "auth-user-pass-verify /bin/verify via-file" \
+              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              -e "auth-user-pass-verify /bin/github-pam-plugin via-file" \
               -e "username-as-common-name" \
               -e "tmp-dir /etc/openvpn/tmp" \
               -e "script-security 3" &&
@@ -33,6 +33,8 @@ spec:
         env:
           - name: DEBUG
             value: '0'
+          - name: LOG_LEVEL
+            value: 'debug'
           - name: EASYRSA_BATCH
             value: '1'
           - name: EASYRSA_REQ_CN
