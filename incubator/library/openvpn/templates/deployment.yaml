@@ -59,6 +59,13 @@ spec:
             mountPath: /etc/openvpn/pki
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+      - name: ui
+        image: nginx
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
       volumes:
         - name: keys
           secret:
