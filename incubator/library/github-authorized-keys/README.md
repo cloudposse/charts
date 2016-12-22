@@ -43,9 +43,10 @@ Github Authorized Keys provide user access to Kubernetes nodes based on github t
 
 ## Specific
 **IMPORTANT:**
-Because of nature [Github Authorized Keys](https://github.com/cloudposse/github-authorized-keys)
-that have to be singleton on kubernetes cluster this chart **allow only one release**.
-All releases expect the first one will fail with container name conflict.
+Because of nature of [Github Authorized Keys](https://github.com/cloudposse/github-authorized-keys)
+it must be deployed as a "singleton" inside the kubernetes cluster.
+For this reason, **only one release** at a time is permitted.
+All additional releases will fail due to deliberate container name conflict.
 
 
 ## Installing the Chart
@@ -135,7 +136,7 @@ In case of any problems with availability of [github.com](https://github.com) gi
 etcd build-in cluster as fallback cache. It use fallback cache only for ssh authentication.
 
 
-**WARNING:** If you want to use build-in fallback cache you have to install
+**WARNING:** If you want to use the build-in fallback cache you have to install
 [etcd-operator](https://github.com/kubernetes/charts/tree/master/stable/etcd-operator) previously.
 Use next command for do this
  ```
@@ -143,7 +144,7 @@ Use next command for do this
  ```
 
 To enable this feature you need to set true ``etcdEnabled`` variable.
-Also you can specify size of build-in etcd cluster with variable ``etcdClusterSize``
-``etcdTTL`` option specify ttl for data we store in etcd fallback cache in seconds.
-From functional point of view this is time between last success login and last guarantied login
+Also you can specify size of the built-in etcd cluster by defining the ``etcdClusterSize`` variable.
+Set the ``etcdTTL`` option to the number of seconds the cached data should be persisted before being expired and purged from the cache.
+From functional point of view this is time between last successful login and last guaranteed login
 (even if there is problem with connection to github.com).
