@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
-name: nginx-ingress
-version: 0.2.0
+name: openvpn-umbrella
+version: 0.1.0

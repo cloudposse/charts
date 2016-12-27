@@ -1,15 +1,16 @@
-# Default values for openvpn.
+# Default values for openvpn-dashboard.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: cloudposse/openvpn
-  tag: initial
-  pullPolicy: Always
+  repository: nginx
+  tag: alpine
+  pullPolicy: IfNotPresent
 service:
-  name: openvpn
+  name: nginx
   type: ClusterIP
-  externalPort: 1194
+  externalPort: 80
+  internalPort: 80
 resources:
   limits:
     cpu: 100m
@@ -17,11 +18,4 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-debug: 0
-host:
-port: 1194
-share:
-  host:
-  port:
 secret:
-

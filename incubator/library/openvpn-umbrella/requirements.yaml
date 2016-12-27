@@ -1,0 +1,9 @@
+# requirements.yaml
+dependencies:
+- name: "openvpn"
+  version: "0.1.0"
+  repository: "http://charts.cloudposse.com/incubator/packages"
+- name: "openvpn-dashboard"
+  version: "0.1.0"
+  repository: "http://charts.cloudposse.com/incubator/packages"
+

@@ -1,0 +1,21 @@
+# Default values for route53-mapping.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  service:
+    repository: quay.io/molecule/route53-kubernetes
+    tag: v1.3.0
+    pullPolicy: IfNotPresent
+  ingress:
+    repository: quay.io/digidentity/route53-kubernetes
+    tag: v1.3.2b
+    pullPolicy: IfNotPresent
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
