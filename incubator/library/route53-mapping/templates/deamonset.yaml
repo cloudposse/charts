@@ -15,9 +15,9 @@ spec:
       hostNetwork: true
       dnsPolicy: Default
       containers:
-      - name: "{{ .Chart.Name }}-service"
-        image: "{{ .Values.image.service.repository }}:{{ .Values.image.service.tag }}"
-        imagePullPolicy: {{ .Values.image.service.pullPolicy }}
-      - name: "{{ .Chart.Name }}-ingress"
-        image: "{{ .Values.image.ingress.repository }}:{{ .Values.image.ingress.tag }}"
-        imagePullPolicy: {{ .Values.image.ingress.pullPolicy }}
+      - name: "{{ .Chart.Name }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: INGRESS_SERVICE_SELECTOR
+            value: {{ .Values.ingress_service_selector | quote }}

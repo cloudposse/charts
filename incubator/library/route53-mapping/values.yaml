@@ -3,14 +3,9 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  service:
-    repository: quay.io/molecule/route53-kubernetes
-    tag: v1.3.0
-    pullPolicy: IfNotPresent
-  ingress:
-    repository: quay.io/digidentity/route53-kubernetes
-    tag: v1.3.2b
-    pullPolicy: IfNotPresent
+  repository: cloudposse/route53-kubernetes-ingress
+  tag: feature-ingress-support
+  pullPolicy: Always
 resources:
   limits:
     cpu: 100m
@@ -18,4 +13,5 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+ingress_service_selector: k8s-addon=gateway-nginx-ingress.addons.k8s.io
 
