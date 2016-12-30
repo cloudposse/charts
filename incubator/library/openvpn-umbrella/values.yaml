@@ -30,6 +30,8 @@ openvpn:
   share:
     host: *ui_host
     port: *ui_port
+  proxy:
+    enabled: true
 "openvpn-dashboard":
   service:
     type: ClusterIP

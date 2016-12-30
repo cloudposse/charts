@@ -23,3 +23,11 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "openvpn-dashboard" | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Create a dashboard service name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "openvpn_proxy_upstream" -}}
+{{- printf "%s-%s" .Release.Name "openvpn-dashboard" | trunc 24 | trimSuffix "-" -}}:80
+{{- end -}}
+
