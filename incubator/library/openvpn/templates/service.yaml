@@ -13,6 +13,12 @@ spec:
   - port: {{ .Values.service.externalPort }}
     targetPort: 1194
     protocol: TCP
-    name: {{ .Values.service.name }}
+    name: "{{ .Values.service.name }}-vpn"
+{{ if .Values.proxy.enabled }}
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: "{{ .Values.service.name }}-proxy"
+{{end}}
   selector:
     app: {{ template "fullname" . }}

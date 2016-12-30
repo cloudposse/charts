@@ -6,6 +6,12 @@ image:
   repository: cloudposse/openvpn
   tag: initial
   pullPolicy: Always
+proxy:
+  enabled: false
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: Always
 service:
   name: openvpn
   type: ClusterIP
