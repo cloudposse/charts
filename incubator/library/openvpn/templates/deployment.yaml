@@ -12,7 +12,7 @@ spec:
         app: {{ template "fullname" . }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
+      - name: "{{ .Chart.Name }}-vpn"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["sh", "-c"]
@@ -20,14 +20,12 @@ spec:
          - |-
             ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ .Values.port }} \
               -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
-              {{ block "openvpn_share_port" . }} \
-              {{if or (empty .Values.share.host ) (empty .Values.share.port) | not }} \
-              -e "port-share {{ .Values.share.host }} {{ .Values.share.port }}"
-              {{end}} \
-              {{end}} \
               -p "dhcp-option DOMAIN-SEARCH cluster.local" \
               -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
               -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              {{ block "openvpn_share_port" . }}{{if or (empty .Values.share.host ) (empty .Values.share.port) | not }} \
+              -e "port-share {{ .Values.share.host }} {{ .Values.share.port }}" \
+              {{end}}{{end}} \
               -e "auth-user-pass-verify /bin/github-pam-plugin via-file" \
               -e "username-as-common-name" \
               -e "tmp-dir /etc/openvpn/tmp" \
@@ -56,6 +54,34 @@ spec:
             mountPath: /etc/openvpn/pki
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+{{ if .Values.proxy.enabled }}
+      - name: "{{ .Chart.Name }}-proxy"
+        image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+         - |-
+            ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ .Values.port }} \
+              -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
+              -p "dhcp-option DOMAIN-SEARCH cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              {{ block "openvpn_share_port" . }}{{if or (empty .Values.share.host ) (empty .Values.share.port) | not }} \
+              -e "port-share {{ .Values.share.host }} {{ .Values.share.port }}" \
+              {{end}}{{end}} \
+              -e "auth-user-pass-verify /bin/github-pam-plugin via-file" \
+              -e "username-as-common-name" \
+              -e "tmp-dir /etc/openvpn/tmp" \
+              -e "script-security 3" &&
+            mkdir /etc/openvpn/tmp &&
+            chmod -R 777 /etc/openvpn/tmp &&
+            ovpn_run
+        ports:
+          - name: tcp
+            containerPort: 80
+            protocol: TCP
+{{ toYaml .Values.resources | indent 12 }}
+{{ end }}
       volumes:
         - name: keys
           secret:

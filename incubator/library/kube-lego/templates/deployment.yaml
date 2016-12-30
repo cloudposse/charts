@@ -9,7 +9,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+# This label should be hardcoded https://github.com/jetstack/kube-lego/issues/25
+        app: "kube-lego"
     spec:
       containers:
       - name: {{ .Chart.Name }}

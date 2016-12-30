@@ -6,6 +6,12 @@ image:
   repository: cloudposse/openvpn
   tag: initial
   pullPolicy: Always
+proxy:
+  enabled: false
+  image:
+    repository: cloudposse/openvpn
+    tag: initial
+    pullPolicy: Always
 service:
   name: openvpn
   type: ClusterIP
@@ -20,6 +26,7 @@ resources:
 debug: 0
 host:
 port: 1194
+
 share:
   host:
   port:
