@@ -16,9 +16,6 @@ resources:
     cpu: 100m
     memory: 128Mi
 host: &host vpn.goruha.dev.cloudposse.com
-ui:
-  host: &ui_host ui.vpn.goruha.dev.cloudposse.com
-  port: &ui_port 443
 secret: &secret openvpn-umbrella-openvpn
 ###################################### Glue configs to make subcharts work #############################################
 openvpn:
@@ -27,14 +24,14 @@ openvpn:
     externalPort: 443
   host: *host
   secret: *secret
-  share:
-    host: *ui_host
-    port: *ui_port
   proxy:
     enabled: true
+"letsencrypt-umbrella":
+  letsencrypt:
+    domains: *host
+  secret: openvpn-letsencrypt-umbrella-ssl
 "openvpn-dashboard":
   service:
     type: ClusterIP
-    externalPort: *ui_port
+    externalPort: 80
   secret: *secret
-  host: *ui_host
