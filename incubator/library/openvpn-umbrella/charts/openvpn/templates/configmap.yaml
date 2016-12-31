@@ -12,15 +12,12 @@ data:
     server {
         listen 80 default_server;
         server_name  _;
-
-##        location /.well-known/acme-challenge {
-          location / {
+        location / {
             proxy_pass          http://{{ block "openvpn_proxy_upstream" . }}{{ .Values.share.host }}:80{{end}};
             proxy_set_header    Host $host;
             proxy_set_header    X-Real-IP $remote_addr;
             proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header    X-Forwarded-Proto $scheme;
-            proxy_pass          http://cert_service;
             proxy_read_timeout  90;
         }
     }

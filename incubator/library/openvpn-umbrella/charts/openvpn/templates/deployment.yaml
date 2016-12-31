@@ -49,6 +49,14 @@ spec:
           capabilities:
             add:
               - NET_ADMIN
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 1194
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 1194
         volumeMounts:
           - name: keys
             mountPath: /etc/openvpn/pki
@@ -65,6 +73,15 @@ spec:
         volumeMounts:
           - name: config
             mountPath: /etc/nginx/conf.d
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{ end }}
       volumes:

@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: EMAIL
+              value: "{{ block "letsencrypt_email" . }}{{ .Values.email }}{{ end }}"
+            - name: DOMAINS
+              value: "{{ block "letsencrypt_domains" . }}{{ .Values.domains }}{{ end }}"
+            - name: DEPLOYMENTS
+              value: "{{ block "letsencrypt_deployments" . }}{{ .Values.deployments }}{{ end }}"
+            - name: NAMESPACE
+              value: {{ .Release.Namespace | quote }}
+            - name: SECRET_NAME
+              value: "{{ block "letsencrypt_secret" . }}{{ .Values.secret }}{{ end }}"
+            - name: LETSENCRYPT_ENDPOINT
+              value: https://acme-staging.api.letsencrypt.org/directory
+          ports:
+            - name: ssl-proxy-http
+              containerPort: 80
+      restartPolicy: Always

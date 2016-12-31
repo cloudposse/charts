@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ template "fullname" . }}-initial-{{ randAlphaNum 10  | lower }}"
+  name: "{{ template "fullname" . }}-initial-{{ randAlphaNum 10 | lower }}"
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -23,19 +23,12 @@ spec:
         command: ["sh", "-c"]
         args:
           - |-
-              ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ .Values.port }} &&
-              ovpn_initpki nopass &&
-              easyrsa build-client-full admin nopass &&
-              OVPN_OTP_AUTH=true ovpn_getclient_all &&
-              save_secrets
+              /letsencrypt/generate_selfsigned.sh &&
+              /letsencrypt/save_certs.sh
         env:
-          - name: SECRET_NAME
-            value: {{ .Values.secret | quote }}
+          - name: DOMAINS
+            value: "{{ block "letsencrypt_domains" . }}{{ .Values.domains }}{{ end }}"
           - name: NAMESPACE
             value: {{ .Release.Namespace | quote }}
-          - name: DEBUG
-            value: {{ .Values.debug | quote }}
-          - name: EASYRSA_BATCH
-            value: '1'
-          - name: EASYRSA_REQ_CN
-            value: {{ .Values.host | quote }}
+          - name: SECRET_NAME
+            value: "{{ block "letsencrypt_secret" . }}{{ .Values.secret }}{{ end }}"

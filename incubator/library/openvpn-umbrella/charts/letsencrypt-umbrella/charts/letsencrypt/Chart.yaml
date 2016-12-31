@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Make let's encrypt https frontend
+name: letsencrypt
+version: 0.1.0
