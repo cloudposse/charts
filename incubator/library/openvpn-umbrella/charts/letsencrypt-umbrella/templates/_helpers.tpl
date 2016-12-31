@@ -16,6 +16,17 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Create a dashboard service name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "letsencrypt_endpoint" -}}
+{{- printf "%s-%s" .Release.Name "letsencrypt" | trunc 24 | trimSuffix "-" -}}.{{- .Release.Namespace -}}
+{{- end -}}
 
-
-
+{{/*
+Create a dashboard service name.
+*/}}
+{{- define "letsencrypt_deployments" -}}
+{{- printf "%s-%s" .Release.Name "letsencrypt-umbrella" | trunc 24 | trimSuffix "-" -}}
+{{- end -}}
