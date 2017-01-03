@@ -1,1 +1,21 @@
-@TODO: Add notes if needed
+1. As login\password always use your github credentials.
+   If you use 2 Factor Authorization on github, add MFA code after password separated by space.
+   For more details: https://github.com/cloudposse/github-pam
+2. UI:
+{{- if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+    NOTE: It take time to DNS records became updated and Let's encrypt certificate be generated. Be patient.
+
+    Use UI to get pre-generated client config
+    https://{{- .Values.host -}}
+{{- else if .Values.ui.enabled }}
+    NOTE: It take time to DNS records became updated. Be patient.
+
+    Use UI to get pre-generated client config
+    http://{{- .Values.host -}}
+{{- else }}
+    DISABLED
+
+    To get openpvpn pre-generated client config run this command:
+    kubectl get --namespace {{ .Release.Namespace }} secret {{ .Values.secret }} --template='{{.data.client}}' | base64 -d > client.ovpn
+{{- end }}
+3. Connect to vpn with using pre-generated client config.
