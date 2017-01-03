@@ -21,3 +21,5 @@ spec:
         env:
           - name: INGRESS_SERVICE_SELECTOR
             value: {{ .Values.ingress_service_selector | quote }}
+          - name: DNS_RECORD_TYPE
+            value: {{ .Values.dns_record_type | quote }}

@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "fullname" . }}-initial-{{ randAlphaNum 10  | lower }}"
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.openvpn.image.repository }}:{{ .Values.openvpn.image.tag }}"
+        imagePullPolicy: {{ .Values.openvpn.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+          - |-
+              ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ template "exposed_port" .}} &&
+              ovpn_initpki nopass &&
+              easyrsa build-client-full admin nopass &&
+              OVPN_OTP_AUTH=true ovpn_getclient_all &&
+              save_secrets
+        env:
+          - name: SECRET_NAME
+            value: {{ .Values.secret | quote }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+          - name: DEBUG
+            value: {{ .Values.debug | quote }}
+          - name: EASYRSA_BATCH
+            value: '1'
+          - name: EASYRSA_REQ_CN
+            value: {{ .Values.host | quote }}
