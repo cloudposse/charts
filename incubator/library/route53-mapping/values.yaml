@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: cloudposse/route53-kubernetes-ingress
+  repository: cloudposse/route53-kubernetes
   tag: feature-ingress-support
   pullPolicy: Always
 resources:
@@ -14,4 +14,5 @@ resources:
     cpu: 100m
     memory: 128Mi
 ingress_service_selector: k8s-addon=gateway-nginx-ingress.addons.k8s.io
+dns_record_type: CNAME
 
