@@ -43,7 +43,7 @@ This chart installs [OpenVPN](https://openvpn.net) on a [Kubernetes](http://kube
 
 - Kubernetes 1.4+ with Beta APIs enabled
 - PV provisioner support in the underlying infrastructure
-- [Route53 mapper](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-mapping)
+- [Route53 Kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes)
 
 
 ## Installing the Chart
@@ -85,7 +85,7 @@ The following table lists the configurable parameters of the OpenVPN chart and t
  Parameter         | Description                                 | Default                                             |
  ------------------| ------------------------------------------- | --------------------------------------------------- |
  `host`            | VPN gateway host                            | **REQUIRED TO BE SPECIFIED**                        |
- `secret`          | Secret name to store openvpn certificates   / `openvpn-secret`                                    |
+ `secret`          | Secret name to store openvpn certificates   | `openvpn-secret`                                    |
  `ui.enabled`      | Enable UI                                   | `true`                                              |
  `ui.ssl.enabled`  | Use https for UI                            | `false`                                             |
  `ui.ssl.prod`     | Use production ready ssl certificate        | `false`                                             |

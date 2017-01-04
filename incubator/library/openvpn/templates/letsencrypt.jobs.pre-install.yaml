@@ -28,7 +28,7 @@ spec:
               /letsencrypt/save_certs.sh
         env:
           - name: DOMAINS
-            value: {{ template "letsencrypt_domains" . }}
+            value: {{ template "letsencrypt_host" . }}
           - name: NAMESPACE
             value: {{ .Release.Namespace | quote }}
           - name: SECRET_NAME
