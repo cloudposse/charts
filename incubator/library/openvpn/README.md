@@ -8,13 +8,21 @@ Use [OpenVPN](https://openvpn.net) to access kubernetes cluster resources
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Quick start](#quick-start)
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Specific](#specific)
-- [Installing the Chart](#installing-the-chart)
-- [Uninstalling the Chart](#uninstalling-the-chart)
-- [Configuration](#configuration)
+  - [Quick start](#quick-start)
+  - [Introduction](#introduction)
+    - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Installing the Chart](#installing-the-chart)
+  - [Uninstalling the Chart](#uninstalling-the-chart)
+  - [Configuration](#configuration)
+  - [Github authorization support](#github-authorization-support)
+    - [Two-Factor authorization](#two-factor-authorization)
+  - [UI](#ui)
+    - [HTTPS with Let's Encrypt](#https-with-lets-encrypt)
+  - [Using VPN](#using-vpn)
+    - [Client generated config](#client-generated-config)
+    - [Connect VPN](#connect-vpn)
+- [Understand chart](#understand-chart)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
