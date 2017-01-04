@@ -175,3 +175,37 @@ following [instructions](https://openvpn.net/index.php/access-server/docs/admin-
 depends of your OS.
 
 Connection require login\password use your github.com login\password [read more](#github-authorization-support).
+
+
+# Understand chart
+
+This is quite complex chart so this information can be useful for troubelshooting.
+
+Chart consists of 4 parts
+
+* __OpenVPN__
+* __SSL terminator__     (if ui.enabled and ui.ssl.enabled)
+* __Let's encrypt bot__  (if ui.enabled and ui.ssl.enabled)
+* __UI dashboard__       (if ui.enabled)
+
+Installation process several stages before vpn would became ready to use.
+
+1) __Pre-install stage__
+  * __Open vpn__ generates certificates and save to k8s secret ``{secret}``
+  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ generates https certificates and save to k8s secret ``{ui.ssl.secret}``
+
+2) __Install stage__
+  * If ui.enabled create __Dashboard__ deployment, service, configmap.
+  * If ui.enabled and ui.ssl.enabled create __Let's encrypt bot__ deployment, service.
+  * If ui.enabled and ui.ssl.enabled create __SSL terminator__ deployment, service.
+  * Create __OpenVPN__ deployment, service (annotated for [route53-kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes)), configmap.
+3) __After install stage__
+  * [route53-kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes) adds
+  dns record point to __OpenVPN service__
+  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ waits until new dns records would be resolved
+  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ tries to get new certificate
+  * On success getting new __Let's encrypt__ certificate restart  __SSL terminator deployment__
+
+VPN ready for use.
+
+
