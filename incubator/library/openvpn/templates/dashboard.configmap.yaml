@@ -69,7 +69,8 @@ data:
         server_name  localhost;
 
         #charset koi8-r;
-        #access_log  /var/log/nginx/log/host.access.log  main;
+        access_log /dev/stdout;
+        error_log /dev/stderr;
 
         location / {
             root   /usr/share/nginx/html;
