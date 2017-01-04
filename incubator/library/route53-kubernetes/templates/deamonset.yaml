@@ -23,3 +23,5 @@ spec:
             value: {{ .Values.ingress_service_selector | quote }}
           - name: DNS_RECORD_TYPE
             value: {{ .Values.dns_record_type | quote }}
+          - name: DNS_RECORD_TTL
+            value: {{ .Values.dns_record_ttl | quote }}

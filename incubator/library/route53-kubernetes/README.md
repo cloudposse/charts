@@ -173,6 +173,7 @@ spec:
 
 An "A" record for `test.mydomain.com` will be created as an alias to the ELB that is used by
 ingress controller service by kubernetes. This assumes that a hosted zone exists in Route53 for `mydomain.com`.
+
 Any record that previously existed for that dns record will be updated.
 
 ``dnsRecordType`` and ``dnsRecordTTL`` annotations are optional.
@@ -206,3 +207,4 @@ that node is set up to allow the following, along with the default permissions n
     ]
 }
 ```
+
