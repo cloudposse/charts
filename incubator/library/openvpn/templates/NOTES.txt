@@ -3,12 +3,14 @@
    For more details: https://github.com/cloudposse/github-pam
 2. UI:
 {{- if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
-    NOTE: It take time to DNS records became updated and Let's encrypt certificate be generated. Be patient.
+    NOTE: It takes time for DNS records to update and LetsEncrypt certificates to be generated.
+          Please be patient. Also, we suggest reducing the TTLs on SOA to reduce cache time for non-existent DNS records.
 
     Use UI to get pre-generated client config
     https://{{- .Values.host -}}
 {{- else if .Values.ui.enabled }}
-    NOTE: It take time to DNS records became updated. Be patient.
+    NOTE: It takes time for DNS records to update. Please be patient.
+          Also, we suggest reducing the TTLs on SOA to reduce cache time for non-existent DNS records.
 
     Use UI to get pre-generated client config
     http://{{- .Values.host -}}

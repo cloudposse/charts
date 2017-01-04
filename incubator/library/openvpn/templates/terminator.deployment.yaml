@@ -22,7 +22,7 @@ spec:
           - name: CERT_SERVICE
             value: {{ template "letsencrypt_endpoint" . }}
           - name: SERVER_NAME
-            value: {{ template "letsecrypt_host" . }}
+            value: {{ template "letsencrypt_host" . }}
           - name: TARGET_SERVICE
             value: {{ template "dashboard_endpoint" . }}
         ports:

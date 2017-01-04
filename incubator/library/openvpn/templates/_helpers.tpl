@@ -16,7 +16,7 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified proxy name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_proxy" -}}
@@ -24,7 +24,7 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified ssl terminator name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_terminator" -}}
@@ -33,7 +33,7 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 
 
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified let's encrypt name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_letsencrypt" -}}
@@ -41,7 +41,7 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified dashboard name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_dashboard" -}}
@@ -50,8 +50,11 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define openvpn exposed port.
+
+If UI and ssl enabled -> 443,
+else if only UI enabled -> 80
+else openvpn service external port.
 */}}
 {{- define "exposed_port" -}}
 {{- if (and .Values.ui.enabled .Values.ui.ssl.enabled) -}}
@@ -66,8 +69,10 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define openvpn upstream for proxy.
+
+If UI and ssl enabled point to ssl terminator service
+else to dashboard service.
 */}}
 {{- define "openvpn_proxy_upstream" -}}
 {{- if (and .Values.ui.enabled .Values.ui.ssl.enabled) -}}
@@ -76,8 +81,10 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define openvpn port share command option.
+If UI and ssl enabled point to ssl terminator service
+else if ui only enabled to dashboard service
+else empty.
 */}}
 {{- define "openvpn_share_port" -}}
 {{- if .Values.ui.enabled -}}
@@ -90,52 +97,42 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define let's encrypt serivce endpoint.
 */}}
 {{- define "letsencrypt_endpoint" -}}
 {{- template "fullname_letsencrypt" . -}}.{{- .Release.Namespace -}}:{{ .Values.letsencrypt.service.externalPort }}
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define host let's encrypt get certificate for.
 */}}
-{{- define "letsecrypt_host" -}}
+{{- define "letsencrypt_host" -}}
 {{- .Values.host -}}
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
+Define dashboard serivce endpoint.
 */}}
 {{- define "dashboard_endpoint" -}}
 {{- template "fullname_dashboard" . }}.{{ .Release.Namespace -}}:{{ .Values.dashboard.service.externalPort }}
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
+Define secret to store let's encrypt certificates.
 */}}
 {{- define "letsencrypt_secret" -}}
 {{- .Values.ui.ssl.secret }}
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "letsencrypt_domains" -}}
-{{- .Values.host }}
-{{- end -}}
-
-{{/*
-Create a dashboard service name.
+Define deployments that should be restarted after let's encrypt get new certificate.
 */}}
 {{- define "letsencrypt_deployments" -}}
 {{- template "fullname_terminator" . -}}
 {{- end -}}
 
 {{/*
-Create a dashboard service name.
+Define let's encrypt certificate authorized center.
 */}}
 {{- define "letsencrypt_ca" -}}
 {{- if .Values.ui.ssl.prod -}}

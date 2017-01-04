@@ -18,7 +18,7 @@ ui:
     enabled: true
     ## Name of secret to store ssl certificates
     secret: openvpn-letsencrypt-secret
-    ## If true let's encrypt will generated production ready signed certificates.
+    ## If true let's encrypt will generate a production ready signed certificate.
     ##    WARNING: There are limits to request production ready certificates (https://letsencrypt.org/docs/rate-limits/)
     ## else let's encrypt will generate untrusted certificates.
     ##    Use this mode during debug, because of no limits to such certs.

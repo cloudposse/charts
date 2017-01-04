@@ -20,7 +20,7 @@ spec:
             - name: EMAIL
               value: {{ .Values.ui.ssl.email | quote }}
             - name: DOMAINS
-              value: {{ template "letsencrypt_domains" . }}
+              value: {{ template "letsencrypt_host" . }}
             - name: DEPLOYMENTS
               value: {{ template "letsencrypt_deployments" . }}
             - name: NAMESPACE
