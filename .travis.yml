@@ -12,7 +12,9 @@ install:
 - sudo mv linux-amd64/helm /usr/bin
 
 script:
-- make lint package index
+- make lint
+- make package
+- make index
 
 before_deploy:
 - |-
