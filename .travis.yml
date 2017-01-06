@@ -22,7 +22,7 @@ script:
 - make package
 - make index
 
-after_success:
+before_deploy:
 - |-
   if [ ! -z "$TRAVIS_TAG" ]; then \
     export BUCKET=$DEV_BUCKET
