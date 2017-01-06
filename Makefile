@@ -25,3 +25,9 @@ index:
 clean:
 	@make -C stable $@
 	@make -C incubator $@
+
+.PHONY : lint
+## Lint
+lint:
+	@make -C stable/library $@
+	@make -C incubator/library $@

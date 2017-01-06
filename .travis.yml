@@ -10,12 +10,7 @@ env:
   - DOCKER_IMAGE_NAME=cloudposse/route53-kubernetes
 
 script:
-- make --directory incubator/library lint
-- make --directory incubator package
-- make --directory incubator index
-- make --directory stable/library lint
-- make --directory stable package
-- make --directory stable index
+- make lint package index
 
 before_deploy:
 - |-
