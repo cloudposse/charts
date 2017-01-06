@@ -6,10 +6,6 @@ addons:
     - make
     - curl
 
-env:
- - BUCKET=$MAIN_BUCKET
- - DESTINATON=""
-
 
 install:
 - curl https://kubernetes-helm.storage.googleapis.com/helm-v2.1.3-linux-amd64.tar.gz | tar xvz
@@ -18,9 +14,7 @@ install:
 - helm init --client-only
 
 script:
-- make lint
-- make package
-- make index
+- make lint package index
 
 before_deploy:
 - |-
@@ -64,7 +58,6 @@ deploy:
     local-dir: incubator/packages
     on:
       all_branches: true
-      tags: true
 
   - provider: s3
     access_key_id: $AWS_KEY_ID
@@ -75,5 +68,5 @@ deploy:
     local-dir: stable/packages
     on:
       all_branches: true
-      tags: true
+
 
