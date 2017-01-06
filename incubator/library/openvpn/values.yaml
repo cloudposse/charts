@@ -15,7 +15,7 @@ ui:
   ## SSL certificates generates automatically with let's encrypt service https://letsencrypt.org/
   ssl:
     ## Enable HTTPS
-    enabled: true
+    enabled: false
     ## Name of secret to store ssl certificates
     secret: openvpn-letsencrypt-secret
     ## If true let's encrypt will generate a production ready signed certificate.
