@@ -6,8 +6,8 @@ info:
 
 .PHONY : package
 package:
-	 find library/ -maxdepth 1 -mindepth 1 -type d '!' -name packages  | xargs helm package
-	 find . -maxdepth 1 -mindepth 1 -type f -name '*.tgz' | xargs -I '{}' mv {} packages
+	 find library/ -type d -d 1 '!' -name packages | xargs helm package
+	 find . -type f -name '*.tgz' -d 1 | xargs -I '{}' mv {} packages
 
 .PHONY : index
 index:
