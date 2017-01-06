@@ -18,6 +18,6 @@
     DISABLED
 
     To get openpvpn pre-generated client config run this command:
-    kubectl get --namespace {{ .Release.Namespace }} secret {{ .Values.secret }} --template='{{.data.client}}' | base64 -d > client.ovpn
+    kubectl get --namespace {{ .Release.Namespace }} secret {{ .Values.secret }} --template='{{ printf "%v%v%v" "{{" ".data.client" "}}" }}' | base64 -d > client.ovpn
 {{- end }}
 3. Connect to vpn with using pre-generated client config.
