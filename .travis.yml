@@ -47,6 +47,10 @@ before_deploy:
     export DESTINATON=""
   fi
 
+- |-
+  rm -rf incubator/packages/Makefile &&
+  rm -rf stable/packages/Makefile
+
 deploy:
 
   - provider: s3
