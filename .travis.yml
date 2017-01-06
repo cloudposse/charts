@@ -58,6 +58,7 @@ deploy:
     local-dir: incubator/packages
     on:
       all_branches: true
+      tags: true
 
   - provider: s3
     access_key_id: $AWS_KEY_ID
@@ -68,5 +69,5 @@ deploy:
     local-dir: stable/packages
     on:
       all_branches: true
-
+      tags: true
 
