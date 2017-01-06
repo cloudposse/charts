@@ -71,6 +71,8 @@ deploy:
     skip_cleanup: true
     upload-dir: incubator
     local-dir: incubator/packages
+    on:
+      branch: master
 
   - provider: s3
     access_key_id: $AWS_KEY_ID
@@ -79,3 +81,5 @@ deploy:
     skip_cleanup: true
     upload-dir: stable
     local-dir: stable/packages
+    on:
+      branch: master
