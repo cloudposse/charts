@@ -1,4 +1,10 @@
+TRAVIS_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
+
+ifeq ($(TRAVIS_BRANCH),master)
 export REPO_URL ?= https://charts.cloudposse.com
+else
+export REPO_URL ?= https://charts.dev.cloudposse.com/$(TRAVIS_BRANCH)
+endif
 
 all: package index
 
