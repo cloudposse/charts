@@ -1,0 +1,28 @@
+# Default values for remotecv.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+log:
+  level: "info"
+sentry:
+  url: ""
+redis:
+  host: "redis"
+  port: "6379"
+  database: "0"
+remotecv:
+  loader: "remotecv.http_loader"
+  store: "remotecv.result_store.redis_store"
+  timeout: "60"
+replicaCount: 1
+image:
+  repository: "cloudposse/remotecv"
+  tag: "latest"
+  pullPolicy: "IfNotPresent"
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
