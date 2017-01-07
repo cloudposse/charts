@@ -1,0 +1,20 @@
+# Default values for route53-kubernetes.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+ingress_service_selector: k8s-addon=gateway-nginx-ingress.addons.k8s.io
+dns_record_type: CNAME
+dns_record_ttl: 300
+
+replicaCount: 1
+image:
+  repository: cloudposse/route53-kubernetes
+  tag: latest
+  pullPolicy: Always
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
