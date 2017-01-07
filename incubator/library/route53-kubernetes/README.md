@@ -1,11 +1,11 @@
 # Kubernetes => Route53 Mapping Service
 
-This is a Kubernetes deamonset running on master node that polls services and ingresses
+This is a Kubernetes `DaemonSet` which runs on the master node(s) and polls services and ingresses
 (in all namespaces) that are configured with the label `dns=route53` and
-adds the appropriate alias to the domain specified by the annotation `domainName=sub.mydomain.io`.
+adds the appropriate `ALIAS` to the domain specified by the annotation `domainName=sub.mydomain.io`.
 Multiple domains and top level domains are also supported: `domainName=.mydomain.io,sub1.mydomain.io,sub2.mydomain.io`
 
-Based on [route53-kubernetes](https://github.com/cloudposse/route53-kubernetes).
+It is based on [route53-kubernetes](https://github.com/cloudposse/route53-kubernetes).
 
 ## Table of Contents
 
@@ -45,7 +45,6 @@ This chart installs [Route53-kubernetes](https://github.com/cloudposse/route53-k
 - Kubernetes 1.4+ with Beta APIs enabled
 - PV provisioner support in the underlying infrastructure
 
-
 ## Installing the Chart
 
 Add charts repo
@@ -55,7 +54,7 @@ $ helm repo rm cloudposse-incubator 2>/dev/null
 $ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
 ```
 
-We recommend to install into kube-system namespace.
+We recommend to install into `kube-system` namespace.
 
 To install the chart:
 
@@ -93,7 +92,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install --name route53 \
-  --set dns_record_type=A \
+    --set dns_record_type=A \
     incubator/route53-kubernetes
 ```
 
@@ -109,7 +108,7 @@ $ helm install --name vpn -f values.yaml incubator/openvpn
 
 ## Usage
 
-To create new dns records in route53 service you need to create k8s service \ ingress
+To create new dns records in route53 service you need to create k8s service or ingress
 with appropriate label and annotations
 
 ### Service Configuration
@@ -145,8 +144,8 @@ spec:
   type: LoadBalancer
 ```
 
-An "CNAME" record for `test.mydomain.com` will be created points to the ELB that is
-configured by kubernetes. This assumes that a hosted zone exists in Route53 for mydomain.com.
+A "CNAME" record for `test.mydomain.com` will be created points to the ELB that is
+configured by kubernetes. This assumes that a hosted zone exists in Route53 for `mydomain.com`.
 Any record that previously existed for that dns record will be updated.
 
 ``dnsRecordType`` and ``dnsRecordTTL`` annotations are optional.
@@ -173,7 +172,7 @@ spec:
 ```
 
 An "A" record for `test.mydomain.com` will be created as an alias to the ELB that is used by
-ingress controller service by kubernetes. This assumes that a hosted zone exists in Route53 for mydomain.com.
+ingress controller service by kubernetes. This assumes that a hosted zone exists in Route53 for `mydomain.com`.
 Any record that previously existed for that dns record will be updated.
 
 ``dnsRecordType`` and ``dnsRecordTTL`` annotations are optional.
