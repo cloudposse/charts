@@ -28,7 +28,6 @@ script:
 - make lint package index
 
 before_deploy:
-
 - |-
   rm -rf incubator/packages/Makefile &&
   rm -rf stable/packages/Makefile
