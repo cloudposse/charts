@@ -11,15 +11,15 @@ install:
 - chmod +x linux-amd64/helm
 - sudo mv linux-amd64/helm /usr/bin
 - helm init --client-only
-- conrib/configure-dev.sh
+- contrib/configure-dev.sh
 - |-
   if [[ -z "$TRAVIS_TAG"  &&  -z "$TRAVIS_PULL_REQUEST_BRANCH"  &&  -z "$TRAVIS_BRANCH" ]]; then \
-    conrib/configure.sh
+    contrib/configure.sh
   fi
 
 - |-
   if [[ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]]  && [[ "$TRAVIS_BRANCH" == "master" ]]; then \
-    conrib/configure.sh
+    contrib/configure.sh
   fi
 
 script:
