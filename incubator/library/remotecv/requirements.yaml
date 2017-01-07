@@ -1,0 +1,5 @@
+# requirements.yaml
+dependencies:
+- name: "redis"
+  version: "0.4.2"
+  repository: "https://kubernetes-charts-stable.storage.googleapis.com/"

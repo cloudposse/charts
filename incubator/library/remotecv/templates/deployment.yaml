@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: "LOG_LEVEL"
+          value: "{{ .Values.log.level }}"
+        - name: "REDIS_HOST"
+          value: "{{ .Values.redis.host }}"
+        - name: "REDIS_PORT"
+          value: "{{ .Values.redis.port }}"
+        - name: "REDIS_DATABASE"
+          value: "{{ .Values.redis.database }}"
+        - name: "LOADER"
+          value: "{{ .Values.remotecv.loader }}"
+        - name: "STORE"
+          value: "{{ .Values.remotecv.store }}"
+        - name: "TIMEOUT"
+          value: "{{ .Values.remotecv.timeout }}"
+        - name: "SENTRY_URL"
+          value: "{{ .Values.sentry.url }}"
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
