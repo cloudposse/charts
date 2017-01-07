@@ -13,15 +13,7 @@ install:
 - sudo mv linux-amd64/helm /usr/bin
 - helm init --client-only
 - contrib/configure-dev.sh
-- |-
-  if [[ -z "$TRAVIS_TAG"  &&  -z "$TRAVIS_PULL_REQUEST_BRANCH"  &&  -z "$TRAVIS_BRANCH" ]]; then \
-    contrib/configure.sh
-  fi
-
-- |-
-  if [[ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]]  && [[ "$TRAVIS_BRANCH" == "master" ]]; then \
-    contrib/configure.sh
-  fi
+- contrib/configure.sh
 
 script:
 - make lint package index
