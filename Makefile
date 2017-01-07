@@ -1,4 +1,4 @@
-export REPO_URL ?= https://cloudposse.github.io/charts
+export REPO_URL ?= https://charts.cloudposse.com
 
 all: package index
 
