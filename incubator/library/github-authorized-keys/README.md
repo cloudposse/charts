@@ -27,7 +27,7 @@ Based on [Github Authorized Keys](https://github.com/cloudposse/github-authorize
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator
 $ helm install incubator/github-authorized-keys
 ```
 
@@ -55,7 +55,7 @@ Add charts repo
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator
 ```
 
 We recommend to install into kube-system namespace.

@@ -2,4 +2,4 @@
 dependencies:
 - name: "nginx-default-backend"
   version: "0.2.0"
-  repository: "http://charts.cloudposse.com/incubator/packages"
+  repository: "https://charts.cloudposse.com/incubator"
