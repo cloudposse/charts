@@ -1,0 +1,20 @@
+description: |-
+ Allow to provide ssh access to servers based on github teams
+ WARNING: This chart force to use kube-system namespace and ignore release namespace.
+ Also it could have only one working release per cluster, other releases would fail because of container name conflict.
+name: github-authorized-keys
+version: 0.2.0
+keywords:
+- ssh
+- github
+- pam
+- authenticate
+- authorized_keys
+home: http://cloudposse.com
+sources:
+- https://github.com/cloudposse/github-authorized-keys
+- https://github.com/cloudposse/charts/tree/master/incubator/library/github-authorized-keys
+maintainers:
+- name: Cloud Posse
+  email: hello@cloudposse.com
+engine: gotpl

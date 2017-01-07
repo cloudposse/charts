@@ -1,0 +1,14 @@
+{{ if .Values.etcdEnabled }}
+apiVersion: "coreos.com/v1"
+kind: "EtcdCluster"
+metadata:
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: github-authorized-keys
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+  name: github-authorized-keys-etcd-cluster
+spec:
+  size: {{ .Values.etcdClusterSize }}
+  version: "v3.1.0-rc.0"
+{{end}}
