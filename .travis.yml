@@ -12,8 +12,6 @@ install:
 - chmod +x linux-amd64/helm
 - sudo mv linux-amd64/helm /usr/bin
 - helm init --client-only
-- helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator
-- helm repo add cloudposse-stable https://charts.cloudposse.com/stable
 - contrib/configure-dev.sh
 - |-
   if [[ -z "$TRAVIS_TAG"  &&  -z "$TRAVIS_PULL_REQUEST_BRANCH"  &&  -z "$TRAVIS_BRANCH" ]]; then \
