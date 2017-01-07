@@ -24,7 +24,7 @@ before_deploy:
   rm -rf stable/packages/Makefile
 
 deploy:
-# Deploy to dev branch
+  # Deploy to dev (branch)
   - provider: s3
     access_key_id: $AWS_KEY_ID
     secret_access_key: $AWS_ACCESS_KEY
@@ -44,7 +44,8 @@ deploy:
     local-dir: stable/packages
     on:
       all_branches: true
-# Deploy to dev tag
+
+  # Deploy to dev (tag)
   - provider: s3
     access_key_id: $AWS_KEY_ID
     secret_access_key: $AWS_ACCESS_KEY
@@ -64,7 +65,8 @@ deploy:
     local-dir: stable/packages
     on:
       tags: true
-# Deploy to master
+
+  # Deploy to master
   - provider: s3
     access_key_id: $AWS_KEY_ID
     secret_access_key: $AWS_ACCESS_KEY
