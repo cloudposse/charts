@@ -2,8 +2,6 @@
 # Default makefile to manipulate package repo
 #
 
-export REPO_URL := $(REPO_URL)/packages
-
 .PHONY : info
 info:
 	@echo "REPO_URL: $(REPO_URL)"
