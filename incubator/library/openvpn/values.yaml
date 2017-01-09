@@ -5,6 +5,8 @@
 #################################### REQUIRED CONFIGURATION ############################################################
 ## Host that would be vpn gateway
 host:
+# Github team in format {organization name}/{team name}
+github_team:
 ## Secret to store openvpn certificates
 secret: openvpn-secret
 ## Chart support UI with pre-generated client config and instructions
