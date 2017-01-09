@@ -1,0 +1,11 @@
+# requirements.yaml
+dependencies:
+- name: "github-authorized-key"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
+- name: "kubernetes-dashboard"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
+- name: "syslog-forwarder"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
