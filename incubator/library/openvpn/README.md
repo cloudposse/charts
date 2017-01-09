@@ -16,6 +16,7 @@ Use [OpenVPN](https://openvpn.net) to access kubernetes cluster resources
   - [Uninstalling the Chart](#uninstalling-the-chart)
   - [Configuration](#configuration)
   - [Github authorization support](#github-authorization-support)
+    - [Github team based ACL](#github-team-based-acl)
     - [Two-Factor authorization](#two-factor-authorization)
   - [UI](#ui)
     - [HTTPS with Let's Encrypt](#https-with-lets-encrypt)
