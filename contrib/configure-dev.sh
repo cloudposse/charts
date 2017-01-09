@@ -2,7 +2,7 @@
 REPO_URL=${REPO_URL:-https://charts.dev.cloudposse.com}
 
 if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]; then
-  BRANCH="${TRAVIS_PULL_REQUEST_BRANCH}"
+  BRANCH="pr-${TRAVIS_PULL_REQUEST_BRANCH}"
 elif [ -n "${TRAVIS_BRANCH}" ]; then
   BRANCH="${TRAVIS_BRANCH}"
 elif [ -n "${TRAVIS_TAG}" ]; then
