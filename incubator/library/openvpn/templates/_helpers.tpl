@@ -63,7 +63,7 @@ else openvpn service external port.
 {{- if .Values.ui.enabled -}}
 80
 {{- else -}}
-{{ .Values.openvpn.service.externalPort }}
+{{- .Values.openvpn.service.externalPort -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -91,7 +91,7 @@ else empty.
 {{- if .Values.ui.ssl.enabled -}}
 -e "port-share {{ template "fullname_terminator" . }}.{{ .Release.Namespace }} {{ .Values.ssl_terminator.service.https.externalPort }}"
 {{- else -}}
--e "port-share {{- template "fullname_dashboard" . }}.{{ .Release.Namespace -}} {{ .Values.dashboard.service.externalPort }}"
+-e "port-share {{ template "fullname_dashboard" . }}.{{ .Release.Namespace }} {{ .Values.dashboard.service.externalPort }}"
 {{- end -}}
 {{- end -}}
 {{- end -}}
