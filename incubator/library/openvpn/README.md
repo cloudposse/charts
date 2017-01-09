@@ -131,7 +131,7 @@ Everywhere you will need login\password use your github.com onces.
 ### Github team based ACL
 
 You have to specify github team that would be used as vpn acl.
-Set the team in format `{organization name}/{team name}` as param `github_team`=
+Set the team in format `{organization name}/{team name}` as param `github_team`
 
 ### Two-Factor authorization
 
