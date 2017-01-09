@@ -93,6 +93,7 @@ The following table lists the configurable parameters of the OpenVPN chart and t
  Parameter         | Description                                 | Default                                             |
  ------------------| ------------------------------------------- | --------------------------------------------------- |
  `host`            | VPN gateway host                            | **REQUIRED TO BE SPECIFIED**                        |
+ `github_team`     | Github team in format {org}/{team}          | **REQUIRED TO BE SPECIFIED**                        |
  `secret`          | Secret name to store openvpn certificates   | `openvpn-secret`                                    |
  `ui.enabled`      | Enable UI                                   | `true`                                              |
  `ui.ssl.enabled`  | Use https for UI                            | `false`                                             |
@@ -106,6 +107,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```console
 $ helm install --name vpn \
   --set host=test.com \
+  --set github_team={company}/{team} \
     incubator/openvpn
 ```
 
@@ -125,6 +127,11 @@ $ helm install --name vpn -f values.yaml incubator/openvpn
 
 This chart use [Github PAM](https://github.com/cloudposse/github-pam) for all authorization purpose.
 Everywhere you will need login\password use your github.com onces.
+
+### Github team based ACL
+
+You have to specify github team that would be used as vpn acl.
+Set the team in format `{organization name}/{team name}` as param `github_team`=
 
 ### Two-Factor authorization
 

@@ -38,6 +38,8 @@ spec:
             value: '1'
           - name: EASYRSA_REQ_CN
             value: {{ .Values.host | quote}}
+          - name: GITHUB_PAM_TEAM
+            value: {{ .Values.github_team | quote}}
         ports:
           - name: tcp
             containerPort: 1194
