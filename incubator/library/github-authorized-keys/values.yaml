@@ -126,5 +126,5 @@ etcdClusterSize: 3
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: 64Mi
+    cpu: 100m
