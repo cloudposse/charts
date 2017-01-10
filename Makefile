@@ -49,5 +49,5 @@ clean:
 lint:
 	@make -C stable/library $@
 	@make -C incubator/library $@
-	@make -C distro $@
+	@make -C distro/library $@
 
