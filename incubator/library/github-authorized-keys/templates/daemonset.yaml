@@ -139,9 +139,9 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
-          - name: host-root
-            mountPath: /host
-      volumes:
         - name: host-root
-          hostPath:
-            path: /
+          mountPath: /host
+      volumes:
+      - name: host-root
+        hostPath:
+          path: /

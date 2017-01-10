@@ -5,7 +5,7 @@ Access to the kubernetes servers is now authorized to GitHub team members in {{i
 Users are synchronized every {{ default "300" .Values.syncUsersInterval }} seconds.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!  IMPORTANT  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-|   Github Authorized Keys runs pod on each node as a DaemonSet.       |
+|   Github Authorized Keys runs a pod on each node as a DaemonSet.     |
 |                There is no way to update release.                    |
-| You have to delete and install release again in case of any changes. |
+| You have to delete and install release in order to apply changes.    |
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
