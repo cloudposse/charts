@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 REPO_URL=${REPO_URL:-https://charts.cloudposse.com}
 
+## configure kubernetes charts
+helm repo rm kubernetes-charts 2>/dev/null
+helm repo add kubernetes-charts http://storage.googleapis.com/kubernetes-charts
+
 ## configure stable repo
 helm repo rm cloudposse-stable 2>/dev/null
 helm repo add cloudposse-stable ${REPO_URL}/stable

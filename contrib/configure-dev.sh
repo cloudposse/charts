@@ -11,6 +11,10 @@ else
   BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 fi
 
+## configure kubernetes charts
+helm repo rm kubernetes-charts 2>/dev/null
+helm repo add kubernetes-charts http://storage.googleapis.com/kubernetes-charts
+
 ## configure stable repo
 helm repo rm cloudposse-dev-stable 2>/dev/null
 helm repo add cloudposse-dev-stable ${REPO_URL}/${BRANCH}/stable
