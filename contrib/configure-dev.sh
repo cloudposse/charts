@@ -23,6 +23,10 @@ helm repo add cloudposse-dev-stable ${REPO_URL}/${BRANCH}/stable
 helm repo rm cloudposse-dev-incubator 2>/dev/null
 helm repo add cloudposse-dev-incubator ${REPO_URL}/${BRANCH}/incubator
 
+## configure distro repo
+helm repo rm cloudposse-distro 2>/dev/null
+helm repo add cloudposse-distro ${REPO_URL}/distro
+
 ## Update index
 helm repo update
 

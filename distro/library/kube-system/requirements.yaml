@@ -1,6 +1,6 @@
 # requirements.yaml
 dependencies:
-- name: "github-authorized-key"
+- name: "github-authorized-keys"
   version: "0.1.0"
   repository: "https://charts.cloudposse.com/incubator"
 - name: "kubernetes-dashboard"

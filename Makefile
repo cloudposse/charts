@@ -21,27 +21,33 @@ all: package index
 info:
 	@make -C stable $@
 	@make -C incubator $@
+	@make -C distro $@
 
 .PHONY : package
 ## Generate packages of all charts
 package: 
 	@make -C stable $@
 	@make -C incubator $@
+	@make -C distro $@
 
 .PHONY : index
 ## Index all packages
 index:
 	@make -C stable $@
 	@make -C incubator $@
+	@make -C distro $@
 
 .PHONY : clean
 ## Clean up 
 clean:
 	@make -C stable $@
 	@make -C incubator $@
+	@make -C distro $@
 
 .PHONY : lint
 ## Lint
 lint:
 	@make -C stable/library $@
 	@make -C incubator/library $@
+	@make -C distro $@
+

@@ -1,21 +1,17 @@
-# Default values for kube-system.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-replicaCount: 1
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
-service:
-  name: nginx
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 80
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+github-authorized-keys:
+  image:
+    repository: cloudposse/github-authorized-keys
+    tag: latest
+    pullPolicy: Always
+  githubAPIToken:
+  githubOrganization:
+  githubTeam: ssh
+  # githubTeamID:
+  # syncUsersGID:
+  # syncUsersGroups:
+  # syncUsersShell: "/bin/bash"
+  # syncUsersInterval: 300
+  etcdEnabled: false
+  etcdClusterSize: 3
+  etcdTTL: "86400"
 

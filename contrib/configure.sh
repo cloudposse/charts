@@ -13,6 +13,10 @@ helm repo add cloudposse-stable ${REPO_URL}/stable
 helm repo rm cloudposse-incubator 2>/dev/null
 helm repo add cloudposse-incubator ${REPO_URL}/incubator
 
+## configure distro repo
+helm repo rm cloudposse-distro 2>/dev/null
+helm repo add cloudposse-distro ${REPO_URL}/distro
+
 ## Update index
 helm repo update
 
