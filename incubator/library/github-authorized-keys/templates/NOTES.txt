@@ -1,12 +1,11 @@
-Github Authorized Keys installed
+Github Authorized Keys Installed
 
-It would provide ssh access to kubernetes nodes based on user membership
-in team {{if .Values.githubTeam}}{{ .Values.githubTeam }}{{end}}{{if .Values.githubTeamID}}(id: {{ .Values.githubTeamID }}){{end}} of {{ .Values.githubOrganization }} organization.
+Access to the kubernetes servers is now authorized to GitHub team members in {{if .Values.githubTeam}}{{ .Values.githubTeam }}{{end}}{{if .Values.githubTeamID}}(id: {{ .Values.githubTeamID }}){{end}} of the {{ .Values.githubOrganization }} organization.
 
-Users would be synchronized every {{ default "300" .Values.syncUsersInterval }} seconds.
+Users are synchronized every {{ default "300" .Values.syncUsersInterval }} seconds.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!  IMPORTANT  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-|   Github Authorized Keys run pod on each node based on daemon sets.  |
+|   Github Authorized Keys runs a pod on each node as a DaemonSet.     |
 |                There is no way to update release.                    |
-| You have to delete and install release again in case of any changes. |
+| You have to delete and install release in order to apply changes.    |
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -3,7 +3,7 @@
 # Declare name/value pairs to be passed into your templates.
 # name: value
 
-## Specify Github Authorized Keys image param
+## Specify Github Authorized Keys image
 ## ref: https://hub.docker.com/r/cloudposse/github-authorized-keys/tags/
 ##
 image:
@@ -77,7 +77,7 @@ etcdClusterSize: 3
 ##
 ## This is time we can have access to servers in case github.com down
 ##
-# etcdTTL: 86400
+# etcdTTL: "86400"
 
 ## Template of create user command
 ##
@@ -126,5 +126,5 @@ etcdClusterSize: 3
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: 64Mi
+    cpu: 100m
