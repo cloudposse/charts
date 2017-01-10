@@ -94,7 +94,7 @@ spec:
 {{end}}
 
 {{if .Values.tplLinuxUserAdd}}
-        - name:LINUX_USER_ADD_TPL
+        - name: LINUX_USER_ADD_TPL
           valueFrom:
             secretKeyRef:
               name: github-authorized-keys

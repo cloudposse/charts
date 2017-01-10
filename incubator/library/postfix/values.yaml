@@ -11,6 +11,7 @@ smtp:
   username: "postmaster"
   password: "secret"
 service:
+  name: smtp
   type: ClusterIP
   externalPort: 25
   internalPort: 25
