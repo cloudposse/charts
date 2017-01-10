@@ -17,130 +17,130 @@ spec:
       hostNetwork: true
       dnsPolicy: Default
       containers:
-        - name: github-authorized-keys
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
+      - name: github-authorized-keys
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
 {{if .Values.etcdEnabled }}
-          command: ["sh", "-c"]
-          args:
-            - "github-authorized-keys --etcd-endpoint http://$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_HOST:$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_PORT"
+        command: ["sh", "-c"]
+        args:
+        - "github-authorized-keys --etcd-endpoint http://$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_HOST:$GITHUB_AUTHORIZED_KEYS_ETCD_CLUSTER_SERVICE_PORT"
 {{end}}
-          env:
-            - name: GITHUB_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: github_api_token
-            - name: GITHUB_ORGANIZATION
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: github_organization
+        env:
+        - name: GITHUB_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: github_api_token
+        - name: GITHUB_ORGANIZATION
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: github_organization
 {{if .Values.githubTeam}}
-            - name: GITHUB_TEAM
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: github_team
+        - name: GITHUB_TEAM
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: github_team
 {{end}}
 
 {{if .Values.githubTeamID}}
-            - name: GITHUB_TEAM_ID
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: github_team_id
+        - name: GITHUB_TEAM_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: github_team_id
 {{end}}
 
 {{if .Values.syncUsersGID}}
-            - name: SYNC_USERS_GiD
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: sync_users_gid
+        - name: SYNC_USERS_GiD
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: sync_users_gid
 {{end}}
 
 {{if .Values.syncUsersGroups}}
-            - name: SYNC_USERS_GROUPS
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: sync_users_groups
+        - name: SYNC_USERS_GROUPS
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: sync_users_groups
 {{end}}
 
 {{if .Values.syncUsersShell}}
-            - name: SYNC_USERS_SHELL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: sync_users_shell
+        - name: SYNC_USERS_SHELL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: sync_users_shell
 {{end}}
 
 {{if .Values.syncUsersInterval}}
-            - name: SYNC_USERS_INTERVAL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: sync_users_interval
+        - name: SYNC_USERS_INTERVAL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: sync_users_interval
 {{end}}
 
 
 {{if .Values.etcdTTL}}
-            - name: ETCD_TTL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: etcd_ttl
+        - name: ETCD_TTL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: etcd_ttl
 {{end}}
 
 {{if .Values.tplLinuxUserAdd}}
-            - name:LINUX_USER_ADD_TPL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: tplLinuxUserAdd
+        - name:LINUX_USER_ADD_TPL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: tplLinuxUserAdd
 {{end}}
 
 {{if .Values.tplLinuxUserAddWithGid}}
-            - name: LINUX_USER_ADD_WITH_GID_TPL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: tplLinuxUserAddWithGid
+        - name: LINUX_USER_ADD_WITH_GID_TPL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: tplLinuxUserAddWithGid
 {{end}}
 
 {{if .Values.tplLinuxUserAddToGroup}}
-            - name: LINUX_USER_ADD_TO_GROUP_TPL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: tplLinuxUserAddToGroup
+        - name: LINUX_USER_ADD_TO_GROUP_TPL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: tplLinuxUserAddToGroup
 {{end}}
 
 {{if .Values.tplLinuxUserDelete}}
-            - name: LINUX_USER_DEL_TPL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: tplLinuxUserDelete
+        - name: LINUX_USER_DEL_TPL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: tplLinuxUserDelete
 {{end}}
 
 {{if .Values.tplSSHRestart}}
-            - name: SSH_RESTART_TPL
-              valueFrom:
-                secretKeyRef:
-                  name: github-authorized-keys
-                  key: tplSSHRestart
+        - name: SSH_RESTART_TPL
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: tplSSHRestart
 {{end}}
-            - name: SYNC_USERS_ROOT
-              value: /host
-            - name: INTEGRATE_SSH
-              value: "true"
-          resources:
+        - name: SYNC_USERS_ROOT
+          value: /host
+        - name: INTEGRATE_SSH
+          value: "true"
+        resources:
 {{ toYaml .Values.resources | indent 10 }}
-          volumeMounts:
-            - name: host-root
-              mountPath: /host
+        volumeMounts:
+          - name: host-root
+            mountPath: /host
       volumes:
         - name: host-root
           hostPath:
