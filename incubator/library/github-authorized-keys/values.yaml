@@ -53,11 +53,13 @@ syncUsersGroups: ""
 
 ## Specify users shell
 ##
-syncUsersShell: "/bin/bash"
+# syncUsersShell: "/bin/bash"
+syncUsersShell: ""
 
 ## Specify sync users interval in seconds
 ##
-syncUsersInterval: "300"
+# syncUsersInterval: "300"
+syncUsersInterval: ""
 
 ## ETCD build-in cluster
 ##
@@ -77,7 +79,8 @@ etcdClusterSize: 3
 ##
 ## This is time we can have access to servers in case github.com down
 ##
-etcdTTL: "86400"
+# etcdTTL: "86400"
+etcdTTL: ""
 
 ## Template of create user command
 ##
@@ -86,7 +89,8 @@ etcdTTL: "86400"
 ## {username} - User login name
 ## {shell}    - User shell
 ##
-tplLinuxUserAdd: "adduser {username} --disabled-password --force-badname --shell {shell}"
+# tplLinuxUserAdd: "adduser {username} --disabled-password --force-badname --shell {shell}"
+tplLinuxUserAdd: ""
 
 ## Template of create user with specified primary group id  command
 ##
@@ -97,7 +101,8 @@ tplLinuxUserAdd: "adduser {username} --disabled-password --force-badname --shell
 ## {group}    - User primary group name
 ## {gid}      - User primary group id
 ##
-tplLinuxUserAddWithGid: "adduser {username} --disabled-password --force-badname --shell {shell} --group {group}"
+# tplLinuxUserAddWithGid: "adduser {username} --disabled-password --force-badname --shell {shell} --group {group}"
+tplLinuxUserAddWithGid: ""
 
 ## Template of add user secondary group command
 ##
@@ -106,7 +111,8 @@ tplLinuxUserAddWithGid: "adduser {username} --disabled-password --force-badname 
 ## {username} - User login name
 ## {group}    - User primary group name
 ##
-tplLinuxUserAddToGroup: "adduser {username} {group}"
+# tplLinuxUserAddToGroup: "adduser {username} {group}"
+tplLinuxUserAddToGroup: ""
 
 ## Template of user delete command
 ##
@@ -114,11 +120,13 @@ tplLinuxUserAddToGroup: "adduser {username} {group}"
 ##
 ## {username} - User login name
 ##
-tplLinuxUserDelete: "deluser {username}"
+# tplLinuxUserDelete: "deluser {username}"
+tplLinuxUserDelete: ""
 
 ## Template of ssh restart command
 ##
-tplSSHRestart: "/usr/sbin/service ssh force-reload"
+# tplSSHRestart: "/usr/sbin/service ssh force-reload"
+tplSSHRestart: ""
 
 
 ## Configure resource requests and limits
