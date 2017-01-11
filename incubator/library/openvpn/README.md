@@ -1,6 +1,6 @@
 # OpenVPN
 
-Deploy your own [OpenVPN](https://openvpn.net) server running in Kubernetes to access internal cluster resources.
+Deploy your own [OpenVPN](https://openvpn.net) server running in Kubernetes to access internal cluster resources using GitHub backed authentication for user & group management.
 
 ## Table of Contents
 
