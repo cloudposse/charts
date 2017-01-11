@@ -47,7 +47,7 @@ Do not generate `prod` certificates for testing or you'll probably get rate limi
 
 ## Specific
 **IMPORTANT:**
-You should only deploy one `kube-lego` chart per namespace.
+You should only deploy one `kube-lego` chart per cluster, therefore we recommend you choose the `kube-system` namespace.
 
 ## Installing the Chart
 
