@@ -28,7 +28,7 @@ Based on [kube-lego](https://github.com/jetstack/kube-lego) by Jetstack.
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
 $ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator
-$ helm install incubator/kube-lego
+$ helm install --namespace=kube-system --name kube-lego --set lego.prod=false,lego.email=hello@cloudposse.com incubator/kube-lego
 ```
 
 ## Introduction
@@ -58,10 +58,12 @@ $ helm repo rm cloudposse-incubator 2>/dev/null
 $ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator
 ```
 
+We recommend that you use the `kube-system` namespace, since there should only be one install per cluster.
+
 To install the chart:
 
 ```console
-$ helm install --namespace=default --name=kube-lego incubator/kube-lego
+$ helm install --namespace=kube-system --name=kube-lego incubator/kube-lego
 ```
 
 We recommend to use ``kube-lego`` as the release name.
@@ -99,6 +101,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install \
+    --namespace kube-system
     --name kube-lego \
     --set lego.prod=false,lego.email=hello@cloudposse.com \
     incubator/kube-lego
@@ -109,7 +112,11 @@ The above command sets the `lego.prod` mode to false and the `lego.email` to `he
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
 ```console
-$ helm install --name kube-lego -f values.yaml incubator/kube-lego
+$ helm install \
+    --namespace kube-system \
+    --name kube-lego \
+    -f values.yaml \
+    incubator/kube-lego
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml) as template to get you started.
