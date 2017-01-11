@@ -14,3 +14,14 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Compute the Lego URL depnding on if we're in a prod/staging environment
+*/}}
+{{- define "lego_url" -}}
+{{- if .Values.lego.prod -}}
+{{-   printf "https://acme-v01.api.letsencrypt.org/directory" -}}
+{{- else -}}
+{{-   printf "https://acme-staging.api.letsencrypt.org/directory" -}}
+{{- end -}}
+{{- end -}}

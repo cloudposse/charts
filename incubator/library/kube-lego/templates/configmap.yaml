@@ -7,5 +7,4 @@ metadata:
 data:
   # modify this to specify your address
   lego.email: {{ .Values.lego.email }}
-  # configure letencrypt's production api
-  lego.url: {{ .Values.lego.url }}
+  lego.url: "{{ template "lego_url" . }}"
