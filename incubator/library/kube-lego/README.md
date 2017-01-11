@@ -86,9 +86,9 @@ The following tables lists the configurable parameters of the kube-lego chart an
 
  Parameter                | Description                                                         | Default                                                                                  |
  -------------------------| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
- `image.repository`       | kube-lego image repository                                          | `cloudposse/kube-lego`                                                                   |
- `image.tag`              | kube-lego image tag                                                 | `latest`                                                                                 |
- `image.pullPolicy`       | kube-lego image pull policy                                         | `Always`                                                                                 |
+ `image.repository`       | kube-lego image repository                                          | `jetstack/kube-lego`                                                                     |
+ `image.tag`              | kube-lego image tag                                                 | `0.1.3`                                                                                  |
+ `image.pullPolicy`       | kube-lego image pull policy                                         | `IfNotPresent`                                                                           |
  `lego.email`             | Email to associate with requests to Let's Encrypt                   | **REQUIRED TO BE SPECIFIED**                                                             |
  `lego.prod`              | Whether or not to generate signed certificates                      | `false`                                                                                  |
 
@@ -98,8 +98,9 @@ For more information please refer to the [cloudposse/kube-lego](https://github.c
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm install --name kube-lego \
-  --set lego.prod=false,lego.email=hello@cloudposse.com \
+$ helm install \
+    --name kube-lego \
+    --set lego.prod=false,lego.email=hello@cloudposse.com \
     incubator/kube-lego
 ```
 
