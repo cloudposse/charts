@@ -1,14 +1,15 @@
 description: |-
- Allow to provide ssh access to servers based on github teams
- WARNING: This chart force to use kube-system namespace and ignore release namespace.
- Also it could have only one working release per cluster, other releases would fail because of container name conflict.
+  Use GitHub teams to manage system user accounts and authorized_keys.
+  WARNING: 
+  * We recommend that you install this chart into the `kube-system` namespace.
+  * There should only be one installation per cluster (other releases will fail because of name conflict)
 name: github-authorized-keys
-version: 0.2.0
+version: 0.2.1
 keywords:
 - ssh
 - github
 - pam
-- authenticate
+- authentication
 - authorized_keys
 home: http://cloudposse.com
 sources:

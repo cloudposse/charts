@@ -1,0 +1,5 @@
+# requirements.yaml
+dependencies:
+- name: "influxdb"
+  version: "0.1.0"
+  repository: "http://storage.googleapis.com/kubernetes-charts"

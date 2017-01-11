@@ -1,6 +1,6 @@
 # OpenVPN
 
-Use [OpenVPN](https://openvpn.net) to access kubernetes cluster resources
+Deploy your own [OpenVPN](https://openvpn.net) server running in Kubernetes to access internal cluster resources using GitHub backed authentication for user & group management.
 
 ## Table of Contents
 
@@ -43,17 +43,16 @@ This chart installs [OpenVPN](https://openvpn.net) on a [Kubernetes](http://kube
 
 ### Features
 
- 1) OpenVPN
- 2) VPN authorization based on Github credentials using [Github-PAM](https://github.com/cloudposse/github-pam)
- 3) UI to get generated generated vpn client config
- 4) HTTPS for UI based on [Let's encrypt](https://letsencrypt.org/)
+ 1. OpenVPN
+ 2. VPN authorization based on Github credentials using [Github-PAM](https://github.com/cloudposse/github-pam)
+ 3. Simple web UI to download generated generated OpenVPN client config file
+ 4. HTTPS for UI based on [Let's encrypt](https://letsencrypt.org/)
 
 ## Prerequisites
 
 - Kubernetes 1.4+ with Beta APIs enabled
 - PV provisioner support in the underlying infrastructure
 - [Route53 Kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes)
-
 
 ## Installing the Chart
 
@@ -85,7 +84,7 @@ To uninstall/delete the `vpn` deployment:
 $ helm delete --purge vpn
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+This command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Configuration
 
@@ -93,14 +92,14 @@ The following table lists the configurable parameters of the OpenVPN chart and t
 
  Parameter         | Description                                 | Default                                             |
  ------------------| ------------------------------------------- | --------------------------------------------------- |
- `host`            | VPN gateway host                            | **REQUIRED TO BE SPECIFIED**                        |
- `github_team`     | Github team in format {org}/{team}          | **REQUIRED TO BE SPECIFIED**                        |
+ `host`            | VPN gateway hostname                        | **REQUIRED TO BE SPECIFIED**                        |
+ `github_team`     | GitHub team in format {org}/{team}          | **REQUIRED TO BE SPECIFIED**                        |
  `secret`          | Secret name to store openvpn certificates   | `openvpn-secret`                                    |
  `ui.enabled`      | Enable UI                                   | `true`                                              |
  `ui.ssl.enabled`  | Use https for UI                            | `false`                                             |
- `ui.ssl.prod`     | Use production ready ssl certificate        | `false`                                             |
+ `ui.ssl.prod`     | Use production ready SSL certificate        | `false`                                             |
  `ui.ssl.email`    | Email for notifications                     | **REQUIRED TO BE SPECIFIED** if ui.ssl.enabled=true |
- `ui.ssl.secret`   | Secret name to store ssl certificates       | `openvpn-letsencrypt-secret`                        |
+ `ui.ssl.secret`   | Secret name to store SSL certificates       | `openvpn-letsencrypt-secret`                        |
 
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
@@ -120,24 +119,24 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 $ helm install --name vpn -f values.yaml incubator/openvpn
 ```
 
-> **Tip**: You can use the default [values.yaml](values.yaml)
+> **Tip**: You can use the default [values.yaml](values.yaml) for reference.
 
-> **Tip**: We expose with table only user meaningful options. Developers could find much more options in [values.yaml](values.yaml)
+> **Tip**: We expose only the most common options in the table above. There are many more options that can be tweaked in the [values.yaml](values.yaml).
 
-## Github authorization support
+## GitHub Authorization Support
 
 This chart use [Github PAM](https://github.com/cloudposse/github-pam) for all authorization purpose.
 Everywhere you will need login\password use your github.com onces.
 
-### Github team based ACL
+### GitHub Team Based ACLs
 
-You have to specify github team that would be used as vpn acl.
-Set the team in format `{organization name}/{team name}` as param `github_team`
+You must specify a GitHub team that should be used to control access to the VPN.
+The team in format should be `{organization name}/{team name}` as value for the `github_team` parameter.
 
-### Two-Factor authorization
+### Two-Factor Authorization
 
-If you use Two-Factor authorization on your github.com account you need to add MFA
-to the end of password field, separated with password by space.
+If you use Two-Factor authentication on your github.com account, then you will need to append the MFA code
+to the end of your password, separated by a space.
 
 **Example**:
 
@@ -154,31 +153,33 @@ Login field | Password field  |
 
 ## UI
 
-There is web UI allow users to get pre-generated openvpn client configuration that can be
-used to import vpn connection. To enable UI set value ``ui.enabled=true``. By default UI enabled.
+There is very basic web UI which allow users to download the pre-generated OpenVPN client configuration that can be
+used to import VPN connection to their client. To enable the web UI set the value of ``ui.enabled=true``. By default, the UI is enabled.
 
-UI would be acceptable by url ``http://{host}``.
+UI can be accessed at ``http://{host}``, the same `host` that you would use as the endpoint for the VPN.
 
 ### HTTPS with Let's Encrypt
 
-If ``ui.ssl.enabled=true`` UI would be acceptable by ``https://{host}``.
-SSL certificate would be generated by [Let's encrypt](https://letsencrypt.org/).
+If ``ui.ssl.enabled=true``, then the UI would be accessed at ``https://{host}``.
+The SSL certificate will be signed by [Let's Encrypt](https://letsencrypt.org/) and be accepted by all modern web browsers.
 
-> **WARNING:** You have specify ``ui.ssl.email={your email}`` to make ssl certificate be generated successfully.
+> **WARNING:** You must specify the ``ui.ssl.email={your email}`` in order for the SSL certificates to be generated successfully.
 
-Let's encrypt have [limits](https://letsencrypt.org/docs/rate-limits/).
-Production ready certificates have low limits, so by default it would be [staging purpose certificate](https://letsencrypt.org/docs/staging-environment/).
+Let's Encrypt has **HARD** [rate limits](https://letsencrypt.org/docs/rate-limits/).
+
+Production ready certificates have low rate limits (like ~12 a day), so by default you should use the [staging certificates](https://letsencrypt.org/docs/staging-environment/) to avoid getting blocked! You've been warned.
+
 Set ``ui.ssl.prod=true`` to enable production ready certificate.
 
 ## Using VPN
 
-To connect VPN you need to get pre-generated client configuration and then [connect to openvpn](https://openvpn.net/index.php/access-server/docs/admin-guides-sp-859543150/howto-connect-client-configuration.html)
+To connect to the VPN, you need to download the pre-generated client configuration and then [connect to OpenVPN](https://openvpn.net/index.php/access-server/docs/admin-guides-sp-859543150/howto-connect-client-configuration.html)
 
-### Client generated config
+### Client Generated Config
 
-You can download a connect client configuration (``client.ovpn``) from UI ``http(s)://{host}``.
+You can download the client configuration file (``client.ovpn``) from the UI at ``http(s)://{host}``.
 
-If UI is disabled you can get the configuration with following command
+If the UI is disabled, then you retrieve the client configuration with the following command. It requires access to the Kubernetes API.
 
 ```console
 kubectl get secret {secret} --template='{{.data.client}}' | base64 -d > client.ovpn
@@ -186,42 +187,41 @@ kubectl get secret {secret} --template='{{.data.client}}' | base64 -d > client.o
 
 ### Connect VPN
 
-Connect to VPN using the pre-generated client configuration ``client.ovpn``
-following [instructions](https://openvpn.net/index.php/access-server/docs/admin-guides-sp-859543150/howto-connect-client-configuration.html)
-depends of your OS.
+Connect to the VPN using the pre-generated client configuration ``client.ovpn``by following the
+[instructions](https://openvpn.net/index.php/access-server/docs/admin-guides-sp-859543150/howto-connect-client-configuration.html) for your OS.
 
-Connection require login\password use your github.com login\password [read more](#github-authorization-support).
+All propmpts for login & password will accept your github.com login & password. You can [read more here](#github-authorization-support) about how it works.
 
 
-# Understand chart
+# Understanding this Chart
 
-This is quite complex chart so this information can be useful for troubelshooting.
+This is a necessarily complex chart due to some limitations of Helm, so this information can be useful for troubelshooting.
 
 Chart consists of 4 parts
 
 * __OpenVPN__
-* __SSL terminator__     (if ui.enabled and ui.ssl.enabled)
-* __Let's encrypt bot__  (if ui.enabled and ui.ssl.enabled)
-* __UI dashboard__       (if ui.enabled)
+* __SSL Terminator__     (if ui.enabled and ui.ssl.enabled)
+* __Let's Encrypt Bot__  (if ui.enabled and ui.ssl.enabled)
+* __UI Dashboard__       (if ui.enabled)
 
 Installation process several stages before vpn would became ready to use.
 
-1) __Pre-install stage__
-  * __Open vpn__ generates certificates and save to k8s secret ``{secret}``
-  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ generates https certificates and save to k8s secret ``{ui.ssl.secret}``
+1) __Pre-Install Stage__
+  * __OpenVPN__ generates certificates and save them to the k8s secret ``{secret}``
+  * If `ui.enabled` and `ui.ssl.enabled`, then the __Let's Encrypt Bot__ generates SSL certificates and saves them to the k8s secret ``{ui.ssl.secret}``
 
-2) __Install stage__
+2) __Install Stage__
   * If ui.enabled create __Dashboard__ deployment, service, configmap.
   * If ui.enabled and ui.ssl.enabled create __Let's encrypt bot__ deployment, service.
   * If ui.enabled and ui.ssl.enabled create __SSL terminator__ deployment, service.
   * Create __OpenVPN__ deployment, service (annotated for [route53-kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes)), configmap.
-3) __After install stage__
+3) __Post-Install Stage__
   * [route53-kubernetes](https://github.com/cloudposse/charts/tree/master/incubator/library/route53-kubernetes) adds
-  dns record point to __OpenVPN service__
-  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ waits until new dns records would be resolved
-  * If ui.enabled and ui.ssl.enabled __Let's encrypt bot__ tries to get new certificate
-  * On success getting new __Let's encrypt__ certificate restart  __SSL terminator deployment__
+  DNS record that points to the __OpenVPN Service__
+  * If `ui.enabled` and `ui.ssl.enabled`, then the __Let's Encrypt Bot__ waits until new DNS records are resolved
+  * If `ui.enabled` and `ui.ssl.enabled`, then the __Let's Encrypt Bot__ tries to get a new certificate
+  * Upon successful acquisition of new __Let's Encrypt__ certificate, then restart the __SSL Terminator Deployment__
 
-VPN ready for use.
+VPN is ready for use.
 
 
