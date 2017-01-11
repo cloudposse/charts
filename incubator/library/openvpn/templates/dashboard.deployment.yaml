@@ -27,7 +27,7 @@ spec:
             protocol: TCP
         volumeMounts:
           - name: config
-            mountPath: /etc/nginx/conf.d
+            mountPath: /etc/nginx/sites-enabled
           - name: source
             mountPath: /usr/share/nginx/html
           - name: ovpn-client-config

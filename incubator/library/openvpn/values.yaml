@@ -109,7 +109,7 @@ dashboard:
   image:
     repository: cloudposse/nginx-github-authorization
     tag: initial
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   service:
     name: nginx
     type: ClusterIP

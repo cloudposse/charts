@@ -24,18 +24,13 @@ spec:
               -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
               -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
               {{ template "openvpn_share_port" . }} \
-              -e "auth-user-pass-verify /bin/github-pam-plugin via-file" \
-              -e "setenv GITHUB_PAM_TEAM  {{ .Values.github_team }}" \
-              -e "username-as-common-name" \
-              -e "tmp-dir /etc/openvpn/tmp" \
-              -e "script-security 3" &&
-            mkdir /etc/openvpn/tmp &&
-            chmod -R 777 /etc/openvpn/tmp &&
-            ovpn_run
+            && /init.sh
         env:
           - name: DEBUG
             value: {{ .Values.debug | quote }}
-          - name: EASYRSA_BATCH
+          - name: GITHUB_PAM_TEAM
+            value: {{ .Values.github_team | quote}}
+          - name: OVPN_OTP_AUTH
             value: '1'
           - name: EASYRSA_REQ_CN
             value: {{ .Values.host | quote}}
