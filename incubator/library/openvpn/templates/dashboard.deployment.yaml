@@ -18,6 +18,9 @@ spec:
       - name: nginx
         image: "{{ .Values.dashboard.image.repository }}:{{ .Values.dashboard.image.tag }}"
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
+        env:
+          - name: GITHUB_PAM_TEAM
+            value: {{ .Values.github_team | quote}}
         ports:
           - name: http
             containerPort: {{ .Values.dashboard.service.internalPort }}

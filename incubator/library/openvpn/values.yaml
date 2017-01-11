@@ -107,8 +107,8 @@ letsencrypt:
 dashboard:
   replicaCount: 1
   image:
-    repository: nginx
-    tag: alpine
+    repository: cloudposse/nginx-github-authorization
+    tag: initial
     pullPolicy: IfNotPresent
   service:
     name: nginx
