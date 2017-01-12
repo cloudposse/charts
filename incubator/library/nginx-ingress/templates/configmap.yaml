@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    k8s-addon: {{ template "fullname" . }}.addons.k8s.io
+    k8s-addon: ingress-nginx.addons.k8s.io
 data:
   use-proxy-protocol: "true"
 
