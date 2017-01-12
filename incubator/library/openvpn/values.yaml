@@ -90,7 +90,7 @@ letsencrypt:
   replicaCount: 1
   image:
     repository: cloudposse/letsencrypt
-    tag: initial
+    tag: latest
     pullPolicy: Always
   service:
     name: nginx
