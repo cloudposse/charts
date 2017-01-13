@@ -10,8 +10,8 @@ Domain:
 
 Github:
   OAuth:
-    ClientID: ""
-    ClientSecret: ""
+    ClientID: "e76bd47c25626b6f49a0"
+    ClientSecret: "b97631961f1d51149e4b1971f78b08439af2164e"
   Organization: "cloudposse"
   Admins:
     - goruha
@@ -36,8 +36,8 @@ Master:
   SlaveListenerPort: 50000
 
 Agent:
-  Image: jenkinsci/jnlp-slave
-  ImageTag: 2.52
+  Image: cloudposse/jenkins-slave
+  ImageTag: initial
   Cpu: "200m"
   Memory: "256Mi"
 

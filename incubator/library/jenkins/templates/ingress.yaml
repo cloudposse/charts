@@ -15,10 +15,15 @@ metadata:
     dnsRecordType: {{.Values.Domain.Type | quote}}
     dnsRecordTTL: {{.Values.Domain.TTL | quote}}
 spec:
- rules:
+  tls:
+  - hosts:
+    - {{.Values.Domain.Name | quote}}
+    secretName: {{template "fullname" . }}-ssl
+  rules:
   - host: {{.Values.Domain.Name | quote}}
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: {{template "fullname" . }}
           servicePort: {{.Values.Master.ServicePort}}
