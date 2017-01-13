@@ -8,13 +8,9 @@ info:
 
 .PHONY : index
 index:
-	@echo "Generating index for $(REPO_URL)"
-	@helm repo index . --url $(REPO_URL)
-
-.PHONY : real-clean
-real-clean: clean
-	rm -f *.tgz
+	@echo "## Generating index for $(REPO_URL)"
+	@helm repo index . --url $(REPO_URL) --debug
 
 .PHONY : clean
 clean:
-	rm -f index.yaml
+	@rm -f index.yaml *.tgz

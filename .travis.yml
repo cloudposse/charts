@@ -16,7 +16,7 @@ install:
 - contrib/configure.sh
 
 script:
-- make lint package index
+- make clean lint package index
 
 before_deploy:
 - |-
