@@ -21,7 +21,8 @@ script:
 before_deploy:
 - |-
   rm -rf incubator/packages/Makefile &&
-  rm -rf stable/packages/Makefile
+  rm -rf stable/packages/Makefile &&
+  rm -rf distro/packages/Makefile
 
 deploy:
   # Deploy to dev (branch)
@@ -42,6 +43,16 @@ deploy:
     skip_cleanup: true
     upload-dir: $TRAVIS_BRANCH/stable
     local-dir: stable/packages
+    on:
+      all_branches: true
+
+  - provider: s3
+    access_key_id: $AWS_KEY_ID
+    secret_access_key: $AWS_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_BRANCH/distro
+    local-dir: distro/packages
     on:
       all_branches: true
 
@@ -66,6 +77,17 @@ deploy:
     on:
       tags: true
 
+  - provider: s3
+    access_key_id: $AWS_KEY_ID
+    secret_access_key: $AWS_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_TAG/distro
+    local-dir: distro/packages
+    on:
+      tags: true
+
+
   # Deploy to master
   - provider: s3
     access_key_id: $AWS_KEY_ID
@@ -84,5 +106,15 @@ deploy:
     skip_cleanup: true
     upload-dir: stable
     local-dir: stable/packages
+    on:
+      branch: master  
+
+  - provider: s3
+    access_key_id: $AWS_KEY_ID
+    secret_access_key: $AWS_ACCESS_KEY
+    bucket: $MAIN_BUCKET
+    skip_cleanup: true
+    upload-dir: distro
+    local-dir: distro/packages
     on:
       branch: master
