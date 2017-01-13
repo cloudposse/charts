@@ -5,6 +5,7 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     k8s-addon: ingress-nginx.addons.k8s.io
+    role: entrypoint
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
 spec:
