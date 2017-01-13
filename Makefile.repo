@@ -6,8 +6,11 @@ info:
 
 .PHONY : package
 package:
-	@find library/ -maxdepth 1 -mindepth 1 -type d '!' -name packages  | xargs -n 1 -I '{}' helm dependency update {}
-	@find library/ -maxdepth 1 -mindepth 1 -type d '!' -name packages  | xargs -n 1 -I '{}' helm package {}
+	@echo "## Building packages in $(shell basename $(CURDIR))"
+	@find library -maxdepth 1 -mindepth 1 -type d '!' -name packages  | \
+    xargs -n 1 -I '{}' sh -c 'echo && echo "# Updating dependencies for {}" && helm dependency update --debug {}'
+	@find library -maxdepth 1 -mindepth 1 -type d '!' -name packages  | \
+    xargs -n 1 -I '{}' sh -c 'echo && echo "# Building package for {}" && helm package --debug {}'
 	@find . -maxdepth 1 -mindepth 1 -type f -name '*.tgz' | xargs -I '{}' mv {} packages
 
 .PHONY : index

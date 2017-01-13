@@ -8,8 +8,8 @@ info:
 
 .PHONY : index
 index:
-	@echo "Generating index for $(REPO_URL)"
-	@helm repo index . --url $(REPO_URL)
+	@echo "## Generating index for $(REPO_URL)"
+	@helm repo index . --url $(REPO_URL) --debug
 
 .PHONY : real-clean
 real-clean: clean
