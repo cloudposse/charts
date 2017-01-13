@@ -1,0 +1,48 @@
+# Default values for jenkins.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+Domain:
+  Name: "ci.goruha.dev.cloudposse.com"
+  TTL: "300"
+  Type: "CNAME"
+
+Github:
+  OAuth:
+    ClientID: ""
+    ClientSecret: ""
+  Organization: "cloudposse"
+  Admins:
+    - goruha
+    - osterman
+
+Master:
+  Name: jenkins-master
+  Image: "cloudposse/jenkins"
+  ImageTag: "initial"
+  ImagePullPolicy: "Always"
+  Component: "jenkins-master"
+  AdminUser: admin
+# AdminPassword: <defaults to random>
+  Cpu: "200m"
+  Memory: "256Mi"
+# Set min/max heap here if needed with:
+# JavaOpts: "-Xms512m -Xmx512m"
+  ServicePort: 8080
+# For minikube, set this to NodePort, elsewhere use LoadBalancer
+  ServiceType: ClusterIP
+  ContainerPort: 8080
+  SlaveListenerPort: 50000
+
+Agent:
+  Image: jenkinsci/jnlp-slave
+  ImageTag: 2.52
+  Cpu: "200m"
+  Memory: "256Mi"
+
+Persistence:
+  Enabled: true
+  StorageClass: generic
+  AccessMode: ReadWriteOnce
+  Size: 8Gi

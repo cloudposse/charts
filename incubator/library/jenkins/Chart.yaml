@@ -1,0 +1,13 @@
+description: A Jenkins Helm chart for Kubernetes.
+home: https://jenkins.io/
+icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png
+maintainers:
+- email: lachlan@deis.com
+  name: Lachlan Evenson
+- email: viglesias@google.com
+  name: Vic Iglesias
+name: jenkins
+sources:
+- https://github.com/jenkinsci/jenkins
+- https://github.com/jenkinsci/docker-jnlp-slave
+version: 0.1.7

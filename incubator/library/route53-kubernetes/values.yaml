@@ -8,7 +8,7 @@ dns_record_ttl: 300
 replicaCount: 1
 image:
   repository: cloudposse/route53-kubernetes
-  tag: latest
+  tag: fix-services-reference-issue
   pullPolicy: Always
 resources:
   limits:
