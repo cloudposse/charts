@@ -1,3 +1,4 @@
+## Github Authorized Keys
 github-authorized-keys:
   image:
     repository: cloudposse/github-authorized-keys
@@ -15,3 +16,100 @@ github-authorized-keys:
   etcdClusterSize: 3
   etcdTTL: "86400"
 
+## Kubernetes Dashboard
+kubernetes-dashboard:
+  image:
+    repository: "gcr.io/google_containers/kubernetes-dashboard-amd64"
+    tag: "v1.5.0"
+    pullPolicy: "IfNotPresent"
+  service:
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 9090
+
+## Syslog Forwarder
+syslog-forwarder:
+  image:
+    repository: "cloudposse/fluentd-remote-syslog"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  forward:
+    containers: true
+    etcd: true
+    kubelet: false
+    kube_proxy: true
+    kube_apiserver: false
+    kube_controller_manager: true
+    kube_scheduler: true
+  syslog:
+    kubernetes:
+      host: logs2.papertrailapp.com
+      port: 12345
+    default:
+      host: logs2.papertrailapp.com
+      port: 45678
+
+## Route53 Kubernetes
+route53-kubernetes:
+  image:
+    repository: cloudposse/route53-kubernetes
+    tag: latest
+    pullPolicy: Always
+  ingress_service_selector: k8s-addon=ingress-nginx.addons.k8s.io
+  dns_record_type: CNAME
+  dns_record_ttl: 300
+
+## Heapster
+heapster:
+  image:
+    repository: "gcr.io/google_containers/heapster"
+    tag: "v1.2.0"
+    pullPolicy: "Always"
+  source: "kubernetes"
+  service:
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 8082
+
+## Kube Lego
+kube-lego:
+  image:
+    repository: jetstack/kube-lego
+    tag: 0.1.3
+    pullPolicy: IfNotPresent
+  lego:
+    email: ""
+    prod: false
+
+## Etcd Operator 
+etcd-operator:
+  image:
+    repository: quay.io/coreos/etcd-operator
+    tag: latest
+    pullPolicy: IfNotPresent
+  cluster:
+    enabled: false
+    name: etcd-cluster
+    size: 3
+    version: v3.1.0-rc.0
+    backup:
+      enabled: false
+      provisioner: kubernetes.io/aws-ebs
+      config:
+        # short snapshot interval for testing, do not use this in production!
+        snapshotIntervalInSecond: 86400
+        maxSnapshot: 5
+        volumeSizeInMB: 512
+        storageType: PersistentVolume
+
+## Datadog
+datadog:
+  image:
+    # repository: datadog/docker-dd-agent
+    # tag: latest
+    # pullPolicy: IfNotPresent
+  datadog:
+    # apiKey:
+    # logLevel: WARNING
+    # nonLocalTraffic: true
+    # tags:
