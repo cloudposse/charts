@@ -4,14 +4,14 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    k8s-addon: {{ template "fullname" . }}.addons.k8s.io
+    k8s-addon: ingress-nginx.addons.k8s.io
 spec:
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-        k8s-addon: {{ template "fullname" . }}.addons.k8s.io
+        k8s-addon: ingress-nginx.addons.k8s.io
     spec:
       terminationGracePeriodSeconds: 60
       containers:
