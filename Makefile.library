@@ -1,3 +1,8 @@
+.PHONY : clean
+clean:
+	@find . -maxdepth 3 -mindepth 3 -type f -name '*.tgz' -delete
+
+.PHONY : lint
 lint:
 	@echo "## Linting charts $(shell pwd)"
 	@find . -maxdepth 1 -mindepth 1 -type d | \

@@ -20,7 +20,5 @@ index:
 .PHONY : clean
 clean:
 	@rm -f *.tgz
-  
-.PHONY : real-clean
-real-clean: clean
+	@make -C library/ $@
 	@make -C packages/ $@

@@ -11,10 +11,6 @@ index:
 	@echo "## Generating index for $(REPO_URL)"
 	@helm repo index . --url $(REPO_URL) --debug
 
-.PHONY : real-clean
-real-clean: clean
-	rm -f *.tgz
-
 .PHONY : clean
 clean:
-	rm -f index.yaml
+	@rm -f index.yaml *.tgz
