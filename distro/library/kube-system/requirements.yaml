@@ -1,11 +1,52 @@
 # requirements.yaml
 dependencies:
+
+#
+# Cloud Posse Charts
+#
+
+## Github Authorized Keys
 - name: "github-authorized-keys"
   version: "0.2.1"
   repository: "https://charts.cloudposse.com/incubator"
+
+## Kubernetes Dashboard
 - name: "kubernetes-dashboard"
   version: "0.1.0"
   repository: "https://charts.cloudposse.com/incubator"
+
+## Syslog Forwarder
 - name: "syslog-forwarder"
   version: "0.1.0"
   repository: "https://charts.cloudposse.com/incubator"
+
+## Route53 Kubernetes
+- name: "route53-kubernetes"
+  version: "0.1.1"
+  repository: "https://charts.cloudposse.com/incubator"
+
+## Heapster
+- name: "heapster"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
+
+## Kube Lego
+- name: "kube-lego"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
+
+#
+# Kubernetes Offical Charts
+#
+
+## Etcd Operator 
+- name: "etcd-operator"
+  version: "0.1.0"
+  repository: "http://storage.googleapis.com/kubernetes-charts"
+
+## Datadog
+- name: "datadog"
+  version: "0.1.0"
+  repository: "http://storage.googleapis.com/kubernetes-charts"
+
+
