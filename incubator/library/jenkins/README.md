@@ -1,10 +1,10 @@
 # Jenkins Helm Chart
 
-Jenkins master and slave cluster utilizing the Jenkins Kubernetes plugin
+Jenkins master and slave cluster utilizing the [Jenkins Kubernetes plugin](https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin)
 
-* https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin
+## Credit
+This Chart was forked from https://github.com/kubernetes/charts/blob/master/stable/jenkins/ in order to provide the Cloud Posse flavor of CI/CD to Kubernetes. It's based largely on the effort of Lachlan Evenson, Vic Iglesias to produce the original Chart, who were inspired by the awesome work of Carlos Sanchez <carlos@apache.org>.
 
-Inspired by the awesome work of Carlos Sanchez <carlos@apache.org>
 
 ## Chart Details
 This chart will do the following:
@@ -17,7 +17,7 @@ This chart will do the following:
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release stable/jenkins
+$ helm install --name my-release cloudposse-incubator/jenkins
 ```
 
 ## Configuration
