@@ -3,7 +3,7 @@
 Jenkins master and slave cluster utilizing the [Jenkins Kubernetes plugin](https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin)
 
 ## Credit
-This Chart was forked from https://github.com/kubernetes/charts/blob/master/stable/jenkins/ in order to provide the Cloud Posse flavor of CI/CD to Kubernetes. It's based largely on the effort of Lachlan Evenson, Vic Iglesias to produce the original Chart, who were inspired by the awesome work of Carlos Sanchez <carlos@apache.org>.
+This Chart was forked from https://github.com/kubernetes/charts/blob/master/stable/jenkins/ in order to provide the Cloud Posse flavor of CI/CD for Kubernetes. It's based largely on the effort of Lachlan Evenson, Vic Iglesias to produce the original Chart, who were inspired by the awesome work of Carlos Sanchez <carlos@apache.org>.
 
 
 ## Chart Details
@@ -29,7 +29,7 @@ The following tables lists the configurable parameters of the Jenkins chart and 
 | Parameter                  | Description                        | Default                                                    |
 | -----------------------    | ---------------------------------- | ---------------------------------------------------------- |
 | `Master.Name`              | Jenkins master name                | `jenkins-master`                                           |
-| `Master.Image`             | Master image name                  | `gcr.io/kubernetes-charts-ci/jenkins-master-k8s`           |
+| `Master.Image`             | Master image name                  | `cloudposse/jenkins`                                       |
 | `Master.ImageTag`          | Master image tag                   | `v0.1.0`                                                   |
 | `Master.ImagePullPolicy`   | Master image pull policy           | `Always`                                                   |
 | `Master.Component`         | k8s selector key                   | `jenkins-master`                                           |
@@ -43,10 +43,29 @@ The following tables lists the configurable parameters of the Jenkins chart and 
 
 | Parameter               | Description                        | Default                                                    |
 | ----------------------- | ---------------------------------- | ---------------------------------------------------------- |
-| `Agent.Image`           | Agent image name                   | `jenkinsci/jnlp-slave`                                     |
+| `Agent.Image`           | Agent image name                   | `jenkinsci/cloudposse-slave`                               |
 | `Agent.ImageTag`        | Agent image tag                    | `2.52`                                                     |
+| `Agent.ImagePullPolicy` | Agent image pull policy            | `Always`                                                   |
 | `Agent.Cpu`             | Agent requested cpu                | `200m`                                                     |
 | `Agent.Memory`          | Agent requested memory             | `256Mi`                                                    |
+
+### Github OAuth 
+
+| Parameter                     | Description                        | Default                                         |
+| ----------------------------- | ---------------------------------- | ----------------------------------------------- |
+| `Github.OAuth.ClientID`       | GitHub OAuth Client ID             | **REQUIRED**                                    |
+| `Github.OAuth.ClientSecret`   | GitHub OAuth Client Secret         | **REQUIRED**                                    |
+| `Github.Organization`         | Github Organization                | **REQUIRED**                                    |
+| `Github.Admins`               | Github Usernames for Jenkins Admin | **REQUIRED**                                    |
+
+### Ingress
+
+| Parameter                     | Description                        | Default                                         |
+| ----------------------------- | ---------------------------------- | ----------------------------------------------- |
+| `DNS.Hostname`                | Hostname to associate with Service | **REQUIRED**                                    |
+| `DNS.TTL`                     | Time-to-Live                       | 300                                             |
+| `DNS.Type`                    | Resource Record Type               | `CNAME`                                         |
+
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
