@@ -1,13 +1,16 @@
-description: A Jenkins Helm chart for Kubernetes.
+# This Chart was forked from https://github.com/kubernetes/charts/blob/master/stable/jenkins/ 
+# in order to provide the Cloud Posse flavor of CI/CD to Kubernetes.
+#
+# It's based largely on the AWESOME WORK of Lachlan Evenson, Vic Iglesias
+#
+description: A Jenkins Helm chart for Kubernetes
 home: https://jenkins.io/
 icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png
 maintainers:
-- email: lachlan@deis.com
-  name: Lachlan Evenson
-- email: viglesias@google.com
-  name: Vic Iglesias
+- email: hello@cloudposse.com
+  name: Cloud Posse
 name: jenkins
 sources:
-- https://github.com/jenkinsci/jenkins
-- https://github.com/jenkinsci/docker-jnlp-slave
-version: 0.1.7
+- https://github.com/cloudposse/jenkins
+- https://github.com/cloudposse/jenkins-slave
+version: 0.1.0
