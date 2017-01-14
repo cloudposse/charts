@@ -29,7 +29,6 @@ spec:
                   "name": "copy-default-config",
                   "image": "{{.Values.Master.Image}}:{{.Values.Master.ImageTag}}",
                   "imagePullPolicy": "{{.Values.Master.ImagePullPolicy}}",
-                  # `-n` ensures w do not overwrite an existing file
                   "command": ["cp", "-n", "/var/jenkins_config/config.xml", "/var/jenkins_home"],
                   "volumeMounts": [
                       {
