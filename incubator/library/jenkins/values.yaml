@@ -37,6 +37,7 @@ Master:
 Agent:
   Image: cloudposse/jenkins-slave
   ImageTag: latest
+  ImagePullPolicy: "Always"
   Cpu: "200m"
   Memory: "256Mi"
 

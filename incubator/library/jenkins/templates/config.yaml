@@ -14,7 +14,7 @@ data:
       <authorizationStrategy class="org.jenkinsci.plugins.GithubAuthorizationStrategy" plugin="github-oauth@0.25">
         <rootACL>
           <organizationNameList class="linked-list">
-            <string>{{ .Values.Github.Organization }}</string>
+            <string>{{ .Values.Github.Organization | printf "%v" }}</string>
           </organizationNameList>
           <adminUserNameList class="linked-list">
 {{- range $index, $element := .Values.Github.Admins }}
@@ -33,8 +33,8 @@ data:
       <securityRealm class="org.jenkinsci.plugins.GithubSecurityRealm">
         <githubWebUri>https://github.com</githubWebUri>
         <githubApiUri>https://api.github.com</githubApiUri>
-        <clientID>{{ .Values.Github.OAuth.ClientID }}</clientID>
-        <clientSecret>{{ .Values.Github.OAuth.ClientSecret}}</clientSecret>
+        <clientID>{{ .Values.Github.OAuth.ClientID | printf "%v" }}</clientID>
+        <clientSecret>{{ .Values.Github.OAuth.ClientSecret | printf "%v" }}</clientSecret>
         <oauthScopes>read:org,user:email</oauthScopes>
       </securityRealm>
       <disableRememberMe>false</disableRememberMe>
@@ -62,7 +62,7 @@ data:
                   <name>jnlp</name>
                   <image>{{ .Values.Agent.Image }}:{{ .Values.Agent.ImageTag }}</image>
                   <privileged>false</privileged>
-                  <alwaysPullImage>false</alwaysPullImage>
+                  <alwaysPullImage>{{ eq .Values.Agent.ImagePullPolicy "Always" | printf "%t" }}</alwaysPullImage>
                   <workingDir>/home/jenkins</workingDir>
                   <command></command>
                   <args>${computer.jnlpmac} ${computer.name}</args>
