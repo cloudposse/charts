@@ -76,16 +76,18 @@ spec:
             httpGet:
               path: /login
               port: {{.Values.Master.ContainerPort}}
+            initialDelaySeconds: 60
             periodSeconds: 1
-            timeoutSeconds: 1
+            timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 10
           livenessProbe:
             httpGet:
               path: /login
               port: {{.Values.Master.ContainerPort}}
+            initialDelaySeconds: 60
             periodSeconds: 1
-            timeoutSeconds: 1
+            timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 10
           volumeMounts:
