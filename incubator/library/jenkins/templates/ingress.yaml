@@ -11,16 +11,16 @@ metadata:
   annotations:
     "helm.sh/created": {{.Release.Time.Seconds | quote }}
     kubernetes.io/tls-acme: "true"
-    domainName: {{.Values.Domain.Name | quote}}
-    dnsRecordType: {{.Values.Domain.Type | quote}}
-    dnsRecordTTL: {{.Values.Domain.TTL | quote}}
+    domainName: {{.Values.DNS.Hostname | quote}}
+    dnsRecordType: {{.Values.DNS.Type | quote}}
+    dnsRecordTTL: {{.Values.DNS.TTL | quote}}
 spec:
   tls:
   - hosts:
-    - {{.Values.Domain.Name | quote}}
+    - {{.Values.DNS.Hostname | quote}}
     secretName: {{template "fullname" . }}-ssl
   rules:
-  - host: {{.Values.Domain.Name | quote}}
+  - host: {{.Values.DNS.Hostname | quote}}
     http:
       paths:
       - path: /
