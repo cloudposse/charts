@@ -16,6 +16,15 @@ endif
 
 all: package index
 
+.PHONY : fix-perms
+## Fix filesystem permissions
+fix-perms:
+	@find . -type f -name '*.yaml' -exec chmod 644 {} \;
+	@find . -type f -name '*.txt' -exec chmod 644 {} \;
+	@find . -type f -name '*.tpl' -exec chmod 644 {} \;
+	@find . -type f -name '*.md' -exec chmod 644 {} \;
+	@find . -type f -name '*.tgz' -exec chmod 644 {} \;
+
 .PHONY : info
 ## Show information about each repo
 info:
