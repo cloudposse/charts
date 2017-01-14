@@ -4,23 +4,23 @@
 # name: value
 
 Domain:
-  Name: "ci.goruha.dev.cloudposse.com"
+  Name: ""
   TTL: "300"
   Type: "CNAME"
 
 Github:
   OAuth:
-    ClientID: "e76bd47c25626b6f49a0"
-    ClientSecret: "b97631961f1d51149e4b1971f78b08439af2164e"
-  Organization: "cloudposse"
+    ClientID: ""
+    ClientSecret: ""
+  Organization: ""
   Admins:
-    - goruha
-    - osterman
+  #  - goruha
+  #  - osterman
 
 Master:
   Name: jenkins-master
   Image: "cloudposse/jenkins"
-  ImageTag: "initial"
+  ImageTag: "latest"
   ImagePullPolicy: "Always"
   Component: "jenkins-master"
   AdminUser: admin
@@ -37,7 +37,7 @@ Master:
 
 Agent:
   Image: cloudposse/jenkins-slave
-  ImageTag: initial
+  ImageTag: latest
   Cpu: "200m"
   Memory: "256Mi"
 
