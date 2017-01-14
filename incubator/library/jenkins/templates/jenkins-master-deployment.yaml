@@ -72,6 +72,22 @@ spec:
             requests:
               cpu: "{{.Values.Master.Cpu}}"
               memory: "{{.Values.Master.Memory}}"
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: {{.Values.Master.ContainerPort}}
+            periodSeconds: 1
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: {{.Values.Master.ContainerPort}}
+            periodSeconds: 1
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 10
           volumeMounts:
             -
               mountPath: /var/jenkins_home
