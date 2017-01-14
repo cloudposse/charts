@@ -1,5 +1,5 @@
 # This Chart was forked from https://github.com/kubernetes/charts/blob/master/stable/jenkins/ 
-# in order to provide the Cloud Posse flavor of CI/CD to Kubernetes.
+# in order to provide the Cloud Posse flavor of CI/CD for Kubernetes.
 #
 # It's based largely on the AWESOME WORK of Lachlan Evenson, Vic Iglesias
 #
