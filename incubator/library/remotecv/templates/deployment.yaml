@@ -17,20 +17,20 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: "LOG_LEVEL"
-          value: "{{ .Values.log.level }}"
+          value: {{ .Values.log.level | quote }}
         - name: "REDIS_HOST"
-          value: "{{ .Values.redis.host }}"
+          value: {{ .Values.redis.host | quote }}
         - name: "REDIS_PORT"
-          value: "{{ .Values.redis.port }}"
+          value: {{ .Values.redis.port | quote }}
         - name: "REDIS_DATABASE"
-          value: "{{ .Values.redis.database }}"
+          value: {{ .Values.redis.database | quote }}
         - name: "LOADER"
-          value: "{{ .Values.remotecv.loader }}"
+          value: {{ .Values.remotecv.loader | quote }}
         - name: "STORE"
-          value: "{{ .Values.remotecv.store }}"
+          value: {{ .Values.remotecv.store | quote }}
         - name: "TIMEOUT"
-          value: "{{ .Values.remotecv.timeout }}"
+          value: {{ .Values.remotecv.timeout | quote }}
         - name: "SENTRY_URL"
-          value: "{{ .Values.sentry.url }}"
+          value: {{ .Values.sentry.url | quote }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
