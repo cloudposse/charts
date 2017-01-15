@@ -1,5 +1,5 @@
 # requirements.yaml
 dependencies:
-- name: "redis"
-  version: "0.4.2"
+- name: "remotecv"
+  version: "0.1.0"
   repository: "https://charts.cloudposse.com/incubator"

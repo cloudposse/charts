@@ -11,6 +11,11 @@ app:
   auto_webp: "True"
   use_gifsicle_engine: "False"
 
+dns:
+  hostname: ""
+  ttl: "300"
+  type: "CNAME"
+
 image:
   repository: cloudposse/thumbor
   tag: stable
