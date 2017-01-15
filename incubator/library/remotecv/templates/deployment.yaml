@@ -25,11 +25,11 @@ spec:
         - name: "REDIS_DATABASE"
           value: {{ .Values.redis.database | quote }}
         - name: "LOADER"
-          value: {{ .Values.remotecv.loader | quote }}
+          value: {{ .Values.app.loader | quote }}
         - name: "STORE"
-          value: {{ .Values.remotecv.store | quote }}
+          value: {{ .Values.app.store | quote }}
         - name: "TIMEOUT"
-          value: {{ .Values.remotecv.timeout | quote }}
+          value: {{ .Values.app.timeout | quote }}
         - name: "SENTRY_URL"
           value: {{ .Values.sentry.url | quote }}
         resources:

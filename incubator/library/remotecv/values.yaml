@@ -9,7 +9,7 @@ redis:
   host: "redis"
   port: "6379"
   database: "0"
-remotecv:
+app:
   loader: "remotecv.http_loader"
   store: "remotecv.result_store.redis_store"
   timeout: "60"
