@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+     spec:
+      volumes:
+        name: storage
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim: 
+          claimName: {{ template "fullname" . }}
+        {{- else }}
+        emptyDir: {}
+        {{- end -}}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: REDIS_QUEUE_SERVER_HOST
+          value:
+        - name: REDIS_QUEUE_SERVER_PORT
+          value:
+        - name: REDIS_QUEUE_SERVER_PASSWORD
+          value:
+        - name: REDIS_QUEUE_SERVER_DB
+          value:
+        - name: REDIS_STORAGE_SERVER_PORT
+          value:
+        - name: REDIS_STORAGE_SERVER_PASSWORD
+          value:
+        - name: REDIS_STORAGE_SERVER_HOST
+          value:
+        - name: REDIS_STORAGE_SERVER_DB
+        - name: MIXED_STORAGE_DETECTOR_STORAGE
+        - name: STORAGE
+        - name: DETECTORS
+        - name: SECURITY_KEY
+        - name: AUTO_WEBP
+        - name: USE_GIFSICLE_ENGINE
+        volumeMounts:
+        - name: storage
+          mountPath: /app
+          readOnly: false
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+       resources:
+{{ toYaml .Values.resources | indent 12 }}

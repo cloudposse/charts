@@ -1,0 +1,63 @@
+# Default values for thumbor.
+
+replicaCount: 1
+
+app:
+  log_level: "debug"
+  mixed_storage_detector_storage: "tc_redis.storages.redis_storage"
+  storage: "thumbor.storages.mixed_storage"
+  detectors: "['thumbor.detectors.queued_detector.queued_complete_detector']"
+  security_key: 
+  auto_webp: "True"
+  use_gifsicle_engine: "False"
+
+image:
+  repository: cloudposse/thumbor
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+
+persistence:
+  enabled: true
+  storageClass: generic
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+remotecv:
+  log:
+    level: "info"
+  sentry:
+    url: ""
+  redis:
+    host: "redis"
+    port: "6379"
+    database: "0"
+  remotecv:
+    loader: "remotecv.http_loader"
+    store: "remotecv.result_store.redis_store"
+    timeout: "60"
+
+redis:
+  image: bitnami/redis:3.2.5-r0
+  imagePullPolicy: IfNotPresent
+# redisPassword:
+  persistence:
+    enabled: true
+    storageClass: generic
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+
