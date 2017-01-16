@@ -99,10 +99,17 @@ spec:
               mountPath: /var/jenkins_config
               name: jenkins-config
               readOnly: true
+            -
+              mountPath: /cloudposse/jenkins/jobs.d
+              name: jenkins-jobs
+              readOnly: true
       volumes:
       - name: jenkins-config
         configMap:
           name: {{ template "fullname" . }}
+      - name: jenkins-jobs
+        configMap:
+          name: "{{ template "fullname" . }}-jobs"
       - name: jenkins-home
       {{- if .Values.Persistence.Enabled }}
         persistentVolumeClaim:
