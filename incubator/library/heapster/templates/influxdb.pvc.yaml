@@ -3,9 +3,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "influxdb.fullname" . }}
+  name: {{ template "influxdb_fullname" . }}
   labels:
-    app: {{ template "influxdb.fullname" . }}
+    app: {{ template "influxdb_fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
