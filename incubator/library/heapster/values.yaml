@@ -12,7 +12,7 @@ heapster:
   service:
     type: ClusterIP
     externalPort: 80
-    externalPort: 8082
+    internalPort: 8082
 
 influxdb:
   image:

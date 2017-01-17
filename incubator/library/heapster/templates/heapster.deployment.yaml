@@ -6,7 +6,7 @@ metadata:
     task: "monitoring"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     k8s-app: {{ template "fullname" . }}
-    version: "{{ .Values.image.tag }}"
+    version: "{{ .Values.heapster.image.tag }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   template:
@@ -31,14 +31,14 @@ spec:
         image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
         command:
           - /eventer
-          - --source={{ .Values.source }}
+          - --source={{ .Values.heapster.source }}
           - --sink=influxdb:http://{{ template "influxdb.fullname" . }}:8086
       - name: heapster
         image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
         imagePullPolicy: {{ .Values.heapster.image.pullPolicy }}
         command:
         - /heapster
-        - --source={{ .Values.source }}
+        - --source={{ .Values.heapster.source }}
         - --sink=influxdb:http://{{ template "influxdb.fullname" . }}:8086
         volumeMounts:
         - name: ssl-certs
