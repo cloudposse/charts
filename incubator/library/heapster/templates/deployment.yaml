@@ -3,16 +3,18 @@ kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
   labels:
+    task: "monitoring"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     k8s-app: {{ template "fullname" . }}
-    version: "v1.2.0"
+    version: "{{ .Values.image.tag }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
+        task: "monitoring"
         k8s-app: {{ template "fullname" . }}
-        version: "v1.2.0"
+        version: "{{ .Values.image.tag }}"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
         scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
@@ -25,7 +27,13 @@ spec:
         hostPath:
           path: "/usr/share/ca-certificates"
       containers:
-      - name: {{ .Chart.Name }}
+      - name: eventer
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command:
+          - /eventer
+          - --source={{ .Values.source }}
+          - --sink=influxdb:http://{{ template "influxdb.fullname" . }}:8086
+      - name: heapster
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:

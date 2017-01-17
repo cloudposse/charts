@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: {{ template "fullname" . }}
   labels:
+    task: "monitoring"
     kubernetes.io/name: "Heapster"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
@@ -10,7 +11,5 @@ spec:
   ports:
   - port: {{ .Values.service.externalPort }}
     targetPort: {{ .Values.service.internalPort }}
-    protocol: TCP
-    name: http
   selector:
     k8s-app: {{ template "fullname" . }}
