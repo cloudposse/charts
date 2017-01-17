@@ -36,3 +36,5 @@ Session.vim
 
 
 **/requirements.lock
+
+**/**/.values.yaml
