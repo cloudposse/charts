@@ -13,3 +13,5 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl port-forward $POD_NAME 8080:{{ .Values.heapster.service.externalPort }}
 {{- end }}
+
+IMPORTANT: this is a singleton chart; only install once per cluster and into the `kube-system` namespace
