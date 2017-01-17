@@ -11,7 +11,8 @@ heapster:
   source: "kubernetes"
   service:
     type: ClusterIP
-    externalPort: 80
+    # Kubernetes Dashboard expects service to be exposed on 8082
+    externalPort: 8082
     internalPort: 8082
 
 influxdb:
