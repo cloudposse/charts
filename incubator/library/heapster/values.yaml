@@ -24,10 +24,10 @@ influxdb:
     type: ClusterIP
     externalPort: 8086
   persistence:
-	enabled: true
-	storageClass: generic
-	accessMode: ReadWriteOnce
-	size: 8Gi
+    enabled: true
+    storageClass: generic
+    accessMode: ReadWriteOnce
+    size: 8Gi
 
 resources:
   limits:

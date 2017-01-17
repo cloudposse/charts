@@ -18,20 +18,21 @@ spec:
         task: monitoring
         k8s-app: {{ template "influxdb.fullname" . }}
     spec:
-      volumes:
-      - name: {{ template "influxdb.fullname" . }}-storage
-        {{- if .Values.influxdb.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ template "influxdb.fullname" . }}
-        {{- else }}
-        emptyDir: {}
-        {{- end -}}
       containers:
-      - name: {{ template "influxdb.fullname" . }}-storage
+      - name: {{ template "influxdb.fullname" . }}
         image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
         ports: 
         - containerPort: 8083
         - containerPort: 8086
         volumeMounts:
         - mountPath: /data
-          name: {{ template "influxdb.fullname" . }}-storage
+          name: {{ template "influxdb.fullname" . }}
+      volumes:
+      - name: {{ template "influxdb.fullname" . }}
+      {{- if .Values.influxdb.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "influxdb.fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+
