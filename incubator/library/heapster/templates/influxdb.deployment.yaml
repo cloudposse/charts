@@ -20,7 +20,12 @@ spec:
     spec:
       volumes:
       - name: {{ template "influxdb.fullname" . }}-storage
+        {{- if .Values.influxdb.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "influxdb.fullname" . }}
+        {{- else }}
         emptyDir: {}
+        {{- end -}}
       containers:
       - name: {{ template "influxdb.fullname" . }}-storage
         image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
