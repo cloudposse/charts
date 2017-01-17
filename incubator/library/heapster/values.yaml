@@ -2,15 +2,28 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
-image:
-  repository: "gcr.io/google_containers/heapster"
-  tag: "v1.2.0"
-  pullPolicy: "Always"
-source: "kubernetes"
-service:
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 8082
+
+heapster:
+  image:
+    repository: "gcr.io/google_containers/heapster"
+    tag: "v1.2.0"
+    pullPolicy: "IfNotPresent"
+  source: "kubernetes"
+  service:
+    type: ClusterIP
+    externalPort: 80
+    externalPort: 8082
+
+influxdb:
+  image:
+    repository: "gcr.io/google_containers/heapster_influxdb:v0.7"
+    tag: "v0.7"
+    pullPolicy: "IfNotPresent"
+  source: "kubernetes"
+  service:
+    type: ClusterIP
+    externalPort: 8086
+
 resources:
   limits:
     cpu: 100m

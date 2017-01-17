@@ -4,12 +4,13 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     task: "monitoring"
+    kubernetes.io/cluster-service: 'true'
     kubernetes.io/name: "Heapster"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.heapster.service.type }}
   ports:
-  - port: {{ .Values.service.externalPort }}
-    targetPort: {{ .Values.service.internalPort }}
+  - port: {{ .Values.heapster.service.externalPort }}
+    targetPort: {{ .Values.heapster.service.internalPort }}
   selector:
     k8s-app: {{ template "fullname" . }}
