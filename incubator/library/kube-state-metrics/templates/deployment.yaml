@@ -20,7 +20,7 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-		version: "{{ .Values.image.tag }}"
+        version: "{{ .Values.image.tag }}"
     spec:
       containers:
       - name: {{ .Chart.Name }}
