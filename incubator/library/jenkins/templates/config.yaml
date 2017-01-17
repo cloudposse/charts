@@ -115,14 +115,14 @@ kind: ConfigMap
 metadata:
   name: "{{ template "fullname" . }}-jobs"
 data:
-  Deploy-App: |-
+  deploy-chart-template: |-
    <?xml version='1.0' encoding='UTF-8'?>
    <project>
      <description></description>
      <keepDependencies>false</keepDependencies>
      <properties>
        <org.jenkins.plugin.templateWorkflows.TemplateWorkflowProperty plugin="template-workflows@1.2">
-         <templateName>Deploy</templateName>
+         <templateName>deploy</templateName>
          <isStartingWorkflowJob>true</isStartingWorkflowJob>
        </org.jenkins.plugin.templateWorkflows.TemplateWorkflowProperty>
        <hudson.model.ParametersDefinitionProperty>
