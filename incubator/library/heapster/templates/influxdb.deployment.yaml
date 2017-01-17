@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{- define "influxdb.fullname" -}}
+  name: {{ template "influxdb.fullname" }}
   labels:
     task: monitoring
-    k8s-app: {{- define "influxdb.fullname" -}}
+    k8s-app: {{ template "influxdb.fullname" }}
 spec:
   revisionHistoryLimit: 10
   replicas: 1
@@ -16,17 +16,17 @@ spec:
     metadata:
       labels:
         task: monitoring
-        k8s-app: {{- define "influxdb.fullname" -}}
+        k8s-app: {{ template "influxdb.fullname" }}
     spec:
       volumes:
-      - name: {{- define "influxdb.fullname" -}}-storage
+      - name: {{ template "influxdb.fullname" }}-storage
         emptyDir: {}
       containers:
-      - name: {{- define "influxdb.fullname" -}}-storage
+      - name: {{ template "influxdb.fullname" }}-storage
         image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
         ports: 
         - containerPort: 8083
         - containerPort: 8086
         volumeMounts:
         - mountPath: /data
-          name: {{- define "influxdb.fullname" -}}-storage
+          name: {{ template "influxdb.fullname" }}-storage

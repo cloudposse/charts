@@ -5,7 +5,7 @@ metadata:
     task: monitoring
     kubernetes.io/cluster-service: 'true'
     kubernetes.io/name: monitoring-influxdb
-  name: {{- define "influxdb.fullname" -}}
+  name: {{ template "influxdb.fullname" }}
 spec:
   type: {{ .Values.influxdb.service.type }}
   ports:
@@ -13,4 +13,4 @@ spec:
     port: {{ .Values.influxdb.service.externalPort }}
     targetPort: 8086
   selector:
-    k8s-app: {{- define "influxdb.fullname" -}}
+    k8s-app: {{ template "influxdb.fullname" }}
