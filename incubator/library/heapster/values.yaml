@@ -16,7 +16,7 @@ heapster:
 
 influxdb:
   image:
-    repository: "gcr.io/google_containers/heapster_influxdb:v0.7"
+    repository: "gcr.io/google_containers/heapster_influxdb"
     tag: "v0.7"
     pullPolicy: "IfNotPresent"
   source: "kubernetes"
