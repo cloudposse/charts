@@ -21,3 +21,9 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- define "influxdb.fullname" -}}
 {{- printf "%s-%s" .Release.Name "influxdb" | trunc 24 -}}
 {{- end -}}
+{{/*
+Use `_SERVICE_HOST` env to work around bug that affects alpine images not able to use search-domain
+*/}}
+{{- define "influxdb.env.host" -}}
+{{- printf "%s_%s_service_host" .Release.Name "influxdb" | trunc 24 | upper -}}
+{{- end -}}

@@ -30,16 +30,16 @@ spec:
       - name: eventer
         image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
         command:
-          - /eventer
-          - --source={{ .Values.heapster.source }}
-          - --sink=influxdb:http://{{ template "influxdb.fullname" . }}:8086
+        - /eventer
+        - --source={{ .Values.heapster.source }}
+        - --sink=influxdb:http://${{ template "influxdb.env.host" . }}:8086
       - name: heapster
         image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
         imagePullPolicy: {{ .Values.heapster.image.pullPolicy }}
         command:
         - /heapster
         - --source={{ .Values.heapster.source }}
-        - --sink=influxdb:http://{{ template "influxdb.fullname" . }}:8086
+        - --sink=influxdb:http://${{ template "influxdb.env.host" .}}:8086
         volumeMounts:
         - name: ssl-certs
           mountPath: /etc/ssl/certs
