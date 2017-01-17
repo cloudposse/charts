@@ -1,11 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: "{{ .Chart.Name }}"
   labels:
     task: "monitoring"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    k8s-app: {{ template "fullname" . }}
+    k8s-app: "{{ .Chart.Name }}"
     version: "{{ .Values.heapster.image.tag }}"
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -13,11 +13,8 @@ spec:
     metadata:
       labels:
         task: "monitoring"
-        k8s-app: {{ template "fullname" . }}
+        k8s-app: "{{ .Chart.Name }}"
         version: "{{ .Values.heapster.image.tag }}"
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
-        scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       volumes:
       - name: ssl-certs
