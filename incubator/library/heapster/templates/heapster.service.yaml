@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Chart.Name }}"
+  labels:
+    task: "monitoring"
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: "Heapster"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: {{ .Values.heapster.service.type }}
+  ports:
+  - port: {{ .Values.heapster.service.externalPort }}
+    targetPort: {{ .Values.heapster.service.internalPort }}
+  selector:
+    k8s-app: "{{ .Chart.Name }}"
