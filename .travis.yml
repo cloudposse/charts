@@ -26,8 +26,8 @@ before_deploy:
 deploy:
   # Deploy to dev (branch)
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
     upload-dir: $TRAVIS_BRANCH/incubator
@@ -36,8 +36,8 @@ deploy:
       all_branches: true
 
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
     upload-dir: $TRAVIS_BRANCH/stable
@@ -47,8 +47,8 @@ deploy:
 
   # Deploy to dev (tag)
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
     upload-dir: $TRAVIS_TAG/incubator
@@ -57,8 +57,8 @@ deploy:
       tags: true
 
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
     upload-dir: $TRAVIS_TAG/stable
@@ -68,8 +68,8 @@ deploy:
 
   # Deploy to master
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $MAIN_BUCKET
     skip_cleanup: true
     upload-dir: incubator
@@ -78,8 +78,8 @@ deploy:
       branch: master
 
   - provider: s3
-    access_key_id: $AWS_KEY_ID
-    secret_access_key: $AWS_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $MAIN_BUCKET
     skip_cleanup: true
     upload-dir: stable
