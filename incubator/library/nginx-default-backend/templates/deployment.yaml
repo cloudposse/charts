@@ -12,12 +12,19 @@ spec:
       labels:
         app: {{ template "fullname" . }}
         k8s-addon: ingress-nginx.addons.k8s.io
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
     spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: config
+            mountPath: /etc/nginx/conf.d
+          - name: errors
+            mountPath: /usr/share/nginx/html
         ports:
         - name: http
           containerPort: {{ .Values.service.internalPort }}
@@ -31,3 +38,14 @@ spec:
           timeoutSeconds: 5
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: "{{ template "fullname" . }}-config"
+        - name: errors
+          configMap:
+{{- if eq .Values.errors.configmap "default" }}
+            name: "{{ template "fullname" . }}"
+{{- else }}
+            name: {{ .Values.errors.configmap  | quote}}
+{{- end -}}
