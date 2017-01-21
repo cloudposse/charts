@@ -23,6 +23,11 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: log.level
+        - name: "REDIS_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "redis_fullname" . }}
+              key: redis-password
         - name: "REDIS_HOST"
           valueFrom:
             configMapKeyRef:
