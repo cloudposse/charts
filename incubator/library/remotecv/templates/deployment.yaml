@@ -10,6 +10,8 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
