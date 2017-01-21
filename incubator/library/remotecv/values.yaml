@@ -10,7 +10,7 @@ app:
   store: "remotecv.result_store.redis_store"
   timeout: "60"
 redis:
-  database: "remotecv"
+  database: "0"
   port: 6379
 replicaCount: 1
 image:
