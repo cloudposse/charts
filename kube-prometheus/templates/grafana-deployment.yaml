@@ -1,0 +1,58 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: grafana
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "fullname" . }}-grafana
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $.Chart.Name "/templates/grafana-configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "name" . }}
+        component: grafana
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: grafana
+          image: "{{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}"
+          imagePullPolicy: "{{ .Values.grafana.image.pullPolicy }}"
+          env:
+            - name: GF_AUTH_BASIC_ENABLED
+              value: "true"
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 3000
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/grafana-storage
+          resources:
+{{ toYaml .Values.grafana.resources | indent 12 }}
+        - name: grafana-watcher
+          image: "{{ .Values.grafanaWatcher.image.repository }}:{{ .Values.grafanaWatcher.image.tag }}"
+          imagePullPolicy: "{{ .Values.grafanaWatcher.image.pullPolicy }}"
+          args:
+            - --watch-dir=/var/grafana-dashboards
+            - --grafana-url=http://admin:admin@localhost:3000
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/grafana-dashboards
+          resources:
+{{ toYaml .Values.grafanaWatcher.resources | indent 12 }}
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/grafana-dashboards
+      volumes:
+        - name: grafana-storage
+          emptyDir: {}
+        - name: grafana-dashboards
+          configMap:
+            name: {{ template "fullname" . }}-grafana

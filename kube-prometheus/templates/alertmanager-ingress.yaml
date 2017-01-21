@@ -1,0 +1,34 @@
+{{- $root := . -}}
+{{- range .Values.alertmanager.ingress }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .annotations }}
+  annotations:
+{{ toYaml .annotations | indent 4 }}
+{{- end }}
+  labels:
+    alertmanager: "{{ $root.Values.alertmanager.name }}"
+    app: {{ template "name" $root }}
+    chart: {{ $root.Chart.Name }}-{{ $root.Chart.Version }}
+    component: alertmanager
+    heritage: {{ $root.Release.Service }}
+    release: {{ $root.Release.Name }}
+  name: {{ template "fullname" $root }}-alertmanager-{{ .name }}
+spec:
+  rules:
+  {{- range .hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: alertmanager-{{ $root.Values.alertmanager.name }}
+              servicePort: 9093
+  {{- end }}
+{{- if .tls }}
+  tls:
+{{ toYaml .tls | indent 4 }}
+{{- end }}
+{{- end }}

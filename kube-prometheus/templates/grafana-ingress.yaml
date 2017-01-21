@@ -1,0 +1,33 @@
+{{- $root := . -}}
+{{- range .Values.grafana.ingress }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .annotations }}
+  annotations:
+{{ toYaml .annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "name" $root }}
+    chart: {{ $root.Chart.Name }}-{{ $root.Chart.Version }}
+    component: grafana
+    heritage: {{ $root.Release.Service }}
+    release: {{ $root.Release.Name }}
+  name: {{ template "fullname" $root }}-{{ .name }}
+spec:
+  rules:
+  {{- range .hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "fullname" $root }}-grafana
+              servicePort: 3000
+  {{- end }}
+{{- if .tls }}
+  tls:
+{{ toYaml .tls | indent 4 }}
+{{- end }}
+{{- end }}
