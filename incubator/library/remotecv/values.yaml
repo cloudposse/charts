@@ -9,6 +9,9 @@ app:
   loader: "remotecv.http_loader"
   store: "remotecv.result_store.redis_store"
   timeout: "60"
+redis:
+  database: "remotecv"
+  port: 6379
 replicaCount: 1
 image:
   repository: "cloudposse/remotecv"

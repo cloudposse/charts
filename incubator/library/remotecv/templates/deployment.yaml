@@ -17,20 +17,44 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: "LOG_LEVEL"
-          value: {{ .Values.log.level | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: log.level
         - name: "REDIS_HOST"
-          value: {{ .Values.redis.host | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: redis.host
         - name: "REDIS_PORT"
-          value: {{ .Values.redis.port | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: redis.port
         - name: "REDIS_DATABASE"
-          value: {{ .Values.redis.database | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: redis.database
         - name: "LOADER"
-          value: {{ .Values.app.loader | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: app.loader
         - name: "STORE"
-          value: {{ .Values.app.store | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: app.store
         - name: "TIMEOUT"
-          value: {{ .Values.app.timeout | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: app.timeout
         - name: "SENTRY_URL"
-          value: {{ .Values.sentry.url | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: sentry.url
         resources:
 {{ toYaml .Values.resources | indent 12 }}
