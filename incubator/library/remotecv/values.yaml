@@ -5,10 +5,6 @@ log:
   level: "info"
 sentry:
   url: ""
-redis:
-  host: "redis"
-  port: "6379"
-  database: "0"
 app:
   loader: "remotecv.http_loader"
   store: "remotecv.result_store.redis_store"
@@ -17,7 +13,7 @@ replicaCount: 1
 image:
   repository: "cloudposse/remotecv"
   tag: "latest"
-  pullPolicy: "IfNotPresent"
+  pullPolicy: "Always"
 resources:
   limits:
     cpu: 100m
