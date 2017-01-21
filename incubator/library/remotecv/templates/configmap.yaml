@@ -6,7 +6,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 data:
   log.level: {{ .Values.log.level | quote }}
-  redis.host: {{ template "fullname" . }}
+  redis.host: {{ template "redis_fullname" . }}
   redis.port: {{ .Values.redis.port | quote }}
   redis.database: {{ .Values.redis.database | quote }}
   app.loader: {{ .Values.app.loader | quote }}
