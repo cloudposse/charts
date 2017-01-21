@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    k8s-addon: ingress-nginx.addons.k8s.io
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    targetPort: http
+    port: {{ .Values.service.externalPort }}
+    protocol: TCP
+  selector:
+    app: {{ template "fullname" . }}
