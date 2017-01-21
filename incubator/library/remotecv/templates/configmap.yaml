@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+data:
+  log.level: {{ .Values.log.level | quote }}
+  redis.host: {{ template "fullname" . }}
+  redis.port: {{ .Values.redis.port | quote }}
+  redis.database: {{ .Values.redis.database | quote }}
+  app.loader: {{ .Values.app.loader | quote }}
+  app.store: {{ .Values.app.store | quote }}
+  app.timeout: {{ .Values.app.timeout | quote }}
+  sentry.url: {{ .Values.sentry.url | quote }}
+ 
