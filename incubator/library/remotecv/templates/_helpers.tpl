@@ -20,5 +20,5 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 */}}
 {{- define "redis_fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s-redis" .Release.Name $name | trunc 24 | trimSuffix "-" -}}
+{{- printf "%s-redis" .Release.Name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
