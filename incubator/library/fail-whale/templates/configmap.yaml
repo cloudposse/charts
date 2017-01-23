@@ -13,10 +13,10 @@ data:
         listen {{ .Values.service.internalPort }} default_server;
         listen [::]:{{ .Values.service.internalPort }} default_server ipv6only=on;
         root /usr/share/nginx/html;
-        index index.html;
+        index maintenance.html;
 
         location / {
-           try_files $uri /index.html;
+           try_files $uri /maintenance.html;
         }
 
         location /healthz {
@@ -35,7 +35,7 @@ metadata:
     k8s-addon: ingress-nginx.addons.k8s.io
     app: {{ template "fullname" . }}
 data:
- index.html: |-
+ maintenance.html: |-
     <!DOCTYPE html>
     <html>
       <head>
