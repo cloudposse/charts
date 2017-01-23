@@ -37,7 +37,7 @@
     }
   ],
   "id": null,
-  "title": "Deployment",
+  "title": "Deployments",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -782,7 +782,7 @@
         "datasource": "${DS_PROMETHEUS}",
         "hide": 0,
         "includeAll": false,
-        "label": "Deployment",
+        "label": "Deployments",
         "multi": false,
         "name": "deployment_name",
         "options": [],
