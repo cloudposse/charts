@@ -45,12 +45,12 @@ data:
         scheme: https
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          # Skip verification until we have resolved why the certificate validation
-          # for the kubelet on API server nodes fail.
+          # Kubelet certificates fail validation because they don't include
+          # external IP address. Circumvent for now.
           insecure_skip_verify: true
 
-      # Scrapes the endpoint lists for the kube-dns server. Which we consider
-      # part of a default setup.
+      # Scrape the endpoint lists for kube-apiserver, kube-controller-manager,
+      # kube-dns and kube-scheduler.
       - job_name: kube-components
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
@@ -72,9 +72,12 @@ data:
             target_label: __scheme__
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          # API server certificates fail validation because they don't
+          # include external IP address. Circumvent for now.
+          insecure_skip_verify: true
 
-      # Scrapes the endpoint lists for the Kubernetes API server, kube-state-metrics,
-      # and node-exporter, which we all consider part of a default setup.
+      # Scrape the endpoint lists for Prometheus, node-exporters, and
+      # kube-state-metrics.
       - job_name: standard-endpoints
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         kubernetes_sd_configs:
@@ -88,6 +91,3 @@ data:
             target_label: job
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-          # As for kubelets, certificate validation fails for the API server (node)
-          # and we circumvent it for now.
-          insecure_skip_verify: true
