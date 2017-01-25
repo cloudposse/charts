@@ -14,7 +14,7 @@ RUN set -ex \
     			bash \
     	&& make init \
     	&& make helm:install \
-    	&& make helm:repo:add \
+    	&& make helm:repo:add_remote \
       && make helm:repo:clean \
       && make helm:repo:fix-perms \
       && make helm:repo:lint \
