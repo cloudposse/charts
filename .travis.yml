@@ -10,26 +10,29 @@ addons:
 env:
   global:
     - DOCKER_IMAGE_NAME=cloudposse/charts
+    - REPO_TYPE=incubator
 services:
   - docker
 
 install:
   - make init
   - sudo make helm:install
-  - make helm:add_repo
+  - make helm:repo:add_remote
   - make docker:login
 
 script:
-  - make helm:clean helm:fix-perms helm:lint helm:package helm:index
+  - make helm:repo:clean
+  - make helm:repo:fix-perms
+  - make helm:repo:lint
+  - make helm:repo:package
+  - make helm:repo:index
   - make docker:build
 
 after_success:
   - make travis:docker-tag-and-push
 
 before_deploy:
-  - |-
-    rm -rf incubator/packages/Makefile &&
-    rm -rf stable/packages/Makefile
+  - rm -rf packages/Makefile
 
 deploy:
   # Deploy to dev (branch)
@@ -38,18 +41,8 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
-    upload-dir: $TRAVIS_BRANCH/incubator
-    local-dir: incubator/packages
-    on:
-      all_branches: true
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: $DEV_BUCKET
-    skip_cleanup: true
-    upload-dir: $TRAVIS_BRANCH/stable
-    local-dir: stable/packages
+    upload-dir: $TRAVIS_BRANCH/$REPO_TYPE
+    local-dir: packages
     on:
       all_branches: true
 
@@ -59,18 +52,8 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
-    upload-dir: $TRAVIS_TAG/incubator
-    local-dir: incubator/packages
-    on:
-      tags: true
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: $DEV_BUCKET
-    skip_cleanup: true
-    upload-dir: $TRAVIS_TAG/stable
-    local-dir: stable/packages
+    upload-dir: $TRAVIS_TAG/$REPO_TYPE
+    local-dir: packages
     on:
       tags: true
 
@@ -80,17 +63,7 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $MAIN_BUCKET
     skip_cleanup: true
-    upload-dir: incubator
-    local-dir: incubator/packages
-    on:
-      branch: master
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    bucket: $MAIN_BUCKET
-    skip_cleanup: true
-    upload-dir: stable
-    local-dir: stable/packages
+    upload-dir: $REPO_TYPE
+    local-dir: packages
     on:
       branch: master

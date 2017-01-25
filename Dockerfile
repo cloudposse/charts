@@ -14,9 +14,12 @@ RUN set -ex \
     			bash \
     	&& make init \
     	&& make helm:install \
-    	&& make helm:add_repo \
-      && make helm:clean helm:fix-perms helm:lint helm:package helm:index \
+    	&& make helm:repo:add \
+      && make helm:repo:clean \
+      && make helm:repo:fix-perms \
+      && make helm:repo:lint \
+      && make helm:repo:package \
+      && make helm:repo:index \
       && apk del .build-deps;
-
 
 ENTRYPOINT ["helm"]
