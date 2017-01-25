@@ -1,11 +1,11 @@
 export REPO_URL := $(REPO_URL)/$(shell basename $(CURDIR))
 
 .PHONY : info
-info:
+helm\:info:
 	@make -C packages/ $@
 
 .PHONY : package
-package:
+helm\:package:
 	@echo "## Building packages in $(shell basename $(CURDIR))"
 	@find library -maxdepth 1 -mindepth 1 -type d '!' -name packages  | \
     xargs -n 1 -I '{}' sh -c 'echo && echo "# Updating dependencies for {}" && helm dependency update --debug {}'
@@ -14,11 +14,11 @@ package:
 	@find . -maxdepth 1 -mindepth 1 -type f -name '*.tgz' | xargs -I '{}' mv {} packages
 
 .PHONY : index
-index:
+helm\:index:
 	@make -C packages/ $@
 
 .PHONY : clean
-clean:
+helm\:clean:
 	@rm -f *.tgz
 	@make -C library/ $@
 	@make -C packages/ $@

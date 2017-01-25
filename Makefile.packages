@@ -3,14 +3,14 @@
 #
 
 .PHONY : info
-info:
+helm\:info:
 	@echo "REPO_URL: $(REPO_URL)"
 
 .PHONY : index
-index:
+helm\:index:
 	@echo "## Generating index for $(REPO_URL)"
 	@helm repo index . --url $(REPO_URL) --debug
 
 .PHONY : clean
-clean:
+helm\:clean:
 	@rm -f index.yaml *.tgz
