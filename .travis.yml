@@ -6,11 +6,10 @@ addons:
       - git
       - make
       - curl
-
 env:
   global:
-    - DOCKER_IMAGE_NAME=cloudposse/charts
     - REPO_TYPE=incubator
+    - DOCKER_IMAGE_NAME=cloudposse/charts-$REPO_TYPE
 services:
   - docker
 
