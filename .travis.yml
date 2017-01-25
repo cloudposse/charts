@@ -10,7 +10,6 @@ addons:
 install:
   - make init
   - sudo make helm:install
-  - make helm:add_dev_repo
   - make helm:add_repo
 
 script:
