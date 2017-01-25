@@ -43,7 +43,7 @@ deploy:
     upload-dir: $TRAVIS_BRANCH/$REPO_TYPE
     local-dir: packages
     on:
-      all_branches: true
+      branch: **
 
   # Deploy to dev (tag)
   - provider: s3
