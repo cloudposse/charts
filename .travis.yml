@@ -7,13 +7,24 @@ addons:
       - make
       - curl
 
+env:
+  global:
+    - DOCKER_IMAGE_NAME=cloudposse/charts
+services:
+  - docker
+
 install:
   - make init
   - sudo make helm:install
   - make helm:add_repo
+  - make docker:login
 
 script:
   - make helm:clean helm:fix-perms helm:lint helm:package helm:index
+  - make docker:build
+
+after_success:
+  - make travis:docker-tag-and-push
 
 before_deploy:
   - |-
