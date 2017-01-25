@@ -9,7 +9,7 @@ addons:
 
 install:
   - make init
-  - make helm:install
+  - sudo make helm:install
   - make helm:add_dev_repo
   - make helm:add_repo
 
