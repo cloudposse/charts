@@ -14,7 +14,6 @@ RUN set -ex \
     			bash \
     	&& make init \
     	&& make helm:install \
-    	&& make helm:add_dev_repo \
     	&& make helm:add_repo \
       && make helm:clean helm:fix-perms helm:lint helm:package helm:index \
       && apk del .build-deps;
