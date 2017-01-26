@@ -8,7 +8,7 @@ addons:
       - curl
 env:
   global:
-    - DOCKER_IMAGE_NAME=cloudposse/charts-$REPO_TYPE
+    - DOCKER_IMAGE_NAME=cloudposse/charts
 services:
   - docker
 
