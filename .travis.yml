@@ -20,11 +20,10 @@ install:
   - make docker:login
 
 script:
-  - make helm:repo:clean
-  - make helm:repo:fix-perms
-  - make helm:repo:lint
-  - make helm:repo:package
-  - make helm:repo:index
+  - make helm:repo:build REPO_PATH=incubator
+  - make helm:repo:build REPO_PATH=stable
+  - make helm:repo:index REPO_PATH=incubator
+  - make helm:repo:index REPO_PATH=stable
   - make docker:build
 
 after_success:

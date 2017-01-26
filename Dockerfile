@@ -15,11 +15,8 @@ RUN set -ex \
     	&& make init \
     	&& make helm:install \
     	&& make helm:repo:add_remote \
-      && make helm:repo:clean \
-      && make helm:repo:fix-perms \
-      && make helm:repo:lint \
-      && make helm:repo:package \
-      && make helm:repo:index \
+      && make helm:repo:build REPO_PATH=incubator \
+      && make helm:repo:build REPO_PATH=stable \
       && apk del .build-deps;
 
 ENTRYPOINT ["helm"]
