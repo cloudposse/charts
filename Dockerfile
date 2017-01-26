@@ -4,13 +4,14 @@ ADD ./ /opt/charts
 
 WORKDIR /opt/charts
 
+ENV CURRENT_REPO_URL=
+
 RUN set -ex \
       && apk update \
       && apk add --no-cache --virtual .build-deps \
     	    curl \
     			git \
     			make \
-    			jq \
     			bash \
     	&& make init \
     	&& make helm:install \
@@ -19,4 +20,8 @@ RUN set -ex \
       && make helm:repo:build REPO_PATH=stable \
       && apk del .build-deps;
 
-ENTRYPOINT ["helm"]
+EXPOSE 8879
+
+ENTRYPOINT ["make"]
+
+CMD ["helm:serve"]
