@@ -28,9 +28,6 @@ script:
 after_success:
   - make travis:docker-tag-and-push
 
-before_deploy:
-  - rm -rf packages/Makefile
-
 deploy:
   # Deploy to dev (branch)
   - provider: s3
