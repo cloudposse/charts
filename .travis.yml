@@ -8,7 +8,6 @@ addons:
       - curl
 env:
   global:
-    - REPO_TYPE=incubator
     - DOCKER_IMAGE_NAME=cloudposse/charts-$REPO_TYPE
 services:
   - docker
@@ -39,8 +38,19 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
-    upload-dir: $TRAVIS_BRANCH/$REPO_TYPE
-    local-dir: packages
+    upload-dir: $TRAVIS_BRANCH/incubator
+    local-dir: incubator/packages
+    on:
+      all_branches: true
+
+  # Deploy to dev (branch)
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_BRANCH/stable
+    local-dir: stable/packages
     on:
       all_branches: true
 
@@ -50,8 +60,19 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $DEV_BUCKET
     skip_cleanup: true
-    upload-dir: $TRAVIS_TAG/$REPO_TYPE
-    local-dir: packages
+    upload-dir: $TRAVIS_TAG/incubator
+    local-dir: incubator/packages
+    on:
+      tags: true
+
+  # Deploy to dev (tag)
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $DEV_BUCKET
+    skip_cleanup: true
+    upload-dir: $TRAVIS_TAG/stable
+    local-dir: stable/packages
     on:
       tags: true
 
@@ -61,7 +82,18 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket: $MAIN_BUCKET
     skip_cleanup: true
-    upload-dir: $REPO_TYPE
-    local-dir: packages
+    upload-dir: $REPO_TYPE/incubator
+    local-dir: incubator/packages
+    on:
+      branch: master
+
+  # Deploy to master
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket: $MAIN_BUCKET
+    skip_cleanup: true
+    upload-dir: $REPO_TYPE/stable
+    local-dir: stable/packages
     on:
       branch: master
