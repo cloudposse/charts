@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm charts repos server for kubernetes
+name: charts-repo-server
+version: 0.1.0
