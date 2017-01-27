@@ -19,14 +19,12 @@ spec:
         - name: CURRENT_REPO_URL
           value: {{ template "server_url" . }}
         ports:
-        - containerPort: {{ .Values.service.internalPort }}
+        - containerPort: 8879
         livenessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.service.internalPort }}
+          tcpSocket:
+            port: 8879
         readinessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.service.internalPort }}
+          tcpSocket:
+            port: 8879
         resources:
 {{ toYaml .Values.resources | indent 12 }}

@@ -1,5 +1,7 @@
 FROM alpine
 
+ADD rootfs /
+
 ADD ./ /opt/charts
 
 WORKDIR /opt/charts
@@ -21,6 +23,6 @@ RUN set -ex \
 
 EXPOSE 8879
 
-ENTRYPOINT ["make"]
+ENTRYPOINT ["sh", "-c"]
 
-CMD ["helm:serve"]
+CMD ["/init.sh"]
