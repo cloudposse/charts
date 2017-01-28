@@ -13,3 +13,12 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl port-forward $POD_NAME 8080:{{ .Values.service.externalPort }}
 {{- end }}
+
+To install helm charts run
+
+  helm repo add {{ template "fullname" . }}-incubator  {{ template "server_url" . }}/incubator
+  helm repo add {{ template "fullname" . }}-stable  {{ template "server_url" . }}/stable
+
+  helm install {{ template "fullname" . }}-incubator/{CHART NAME}
+
+  WARNING: Be sure that {{ template "server_url" . }} resolves correctly from place you want to install helm
