@@ -15,7 +15,7 @@ services:
 install:
   - make init
   - sudo make helm:install
-  - make helm:repo:add_remote
+  - make helm:repo:add-remote
   - make docker:login
 
 script:
