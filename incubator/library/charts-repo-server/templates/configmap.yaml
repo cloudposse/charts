@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: {{ template "fullname" . }}
+data:
+  default.conf: |-
+    upstream backend {
+      server localhost:8879;
+    }
+
+    server {
+      listen {{ .Values.service.internalPort }} default_server;
+      listen [::]:{{ .Values.service.internalPort }} default_server ipv6only=on;
+
+      location / {
+          rewrite ^(/\w+)((?!.*packages).*)$ $1/packages/$2 last;
+          proxy_pass http://backend;
+      }
+    }
