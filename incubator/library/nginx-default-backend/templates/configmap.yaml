@@ -18,8 +18,20 @@ data:
         }
 
         location / {
+          if ($http_x_code =  "500" ) {
+            return 500;
+          }
+
+          if ($http_x_code =  "502" ) {
+            return 502;
+          }
+
           if ($http_x_code =  "503" ) {
             return 503;
+          }
+
+          if ($http_x_code =  "504" ) {
+            return 504;
           }
           return 404;
         }
@@ -30,7 +42,7 @@ data:
                 internal;
         }
 
-        error_page 503 /50x.html;
+        error_page 500 502 503 504 /50x.html;
         location = /50x.html {
                 root /usr/share/nginx/html;
                 internal;
