@@ -1,14 +1,10 @@
-kube-prometheus: prometheus-operator kube-prometheus-*.tgz
-
-prometheus-operator: prometheus-operator-*.tgz
-
-kube-prometheus-*.tgz:
-	cp prometheus-operator-*.tgz kube-prometheus/charts
+kube-prometheus: kube-prometheus-*.tgz
+	helm lint kube-prometheus
 	helm package kube-prometheus
 
-prometheus-operator-*.tgz:
+prometheus-operator: prometheus-operator-*.tgz
+	helm lint prometheus-operator
 	helm package prometheus-operator
 
 clean:
-	rm -f kube-prometheus/charts/*
 	rm -f *.tgz
