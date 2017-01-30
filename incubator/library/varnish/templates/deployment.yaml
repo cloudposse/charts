@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Chart.Name "/templates/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: VARNISH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "secret_name" . }}
+              key: secret
+        - name: VARNISH_THREAD_POOLS
+          value: {{ .Values.varnish.thread.pools | quote }}
+        - name: VARNISH_THREAD_POOL_MIN
+          value: {{ .Values.varnish.thread.pool_min | quote }}
+        - name: VARNISH_CLI_TIMEOUT
+          value: {{ .Values.varnish.cli_timeout | quote }}
+        - name: VARNISH_STORAGE
+          value: {{ .Values.varnish.storage | quote }}
+        - name: VARNISH_BACKEND_CONNECT_TIMEOUT
+          value: {{ .Values.varnish.backend.timeout.connect | quote }}
+        - name: VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT
+          value: {{ .Values.varnish.backend.timeout.between_bytes | quote }}
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        volumeMounts:
+        - mountPath: /etc/varnish/configs
+          name: config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "config_name" . }}
+          items:
+          - key: {{ .Values.config }}
+            path: default.vcl
+
