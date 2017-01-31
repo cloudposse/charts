@@ -6,6 +6,6 @@ metadata:
     k8s-addon: ingress-nginx.addons.k8s.io
 data:
   use-proxy-protocol: "true"
-  custom-http-errors: 404,503
+  custom-http-errors: 404,502,503,504
 
 
