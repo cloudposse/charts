@@ -5,7 +5,7 @@ export BUILD_HARNESS_PATH ?= $(shell until [ -d "build-harness" ] || [ "`pwd`" =
 .PHONY : init
 ## Init build-harness
 init:
-	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/feature-support-helm/bin/install.sh | bash /dev/stdin build-harness feature-support-helm
+	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/install.sh | bash
 
 .PHONY : clean
 ## Clean build-harness
