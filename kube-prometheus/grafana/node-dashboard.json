@@ -2,8 +2,8 @@
   "dashboard": {
     "__inputs": [
       {
-        "name": "DS_PROMETHEUS",
-        "label": "prometheus",
+        "name": "DS_PROMETHEUS-K8S",
+        "label": "prometheus-k8s",
         "description": "",
         "type": "datasource",
         "pluginId": "prometheus",
@@ -56,7 +56,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -133,7 +133,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -238,7 +238,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -326,7 +326,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "format": "percent",
@@ -410,7 +410,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -520,7 +520,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "format": "percentunit",
@@ -604,7 +604,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -687,7 +687,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -785,7 +785,7 @@
         {
           "allValue": null,
           "current": {},
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_PROMETHEUS-K8S}",
           "hide": 0,
           "includeAll": false,
           "label": null,
@@ -839,10 +839,10 @@
   },
   "inputs": [
     {
-      "name": "DS_PROMETHEUS",
+      "name": "DS_PROMETHEUS-K8S",
       "pluginId": "prometheus",
       "type": "datasource",
-      "value": "prometheus"
+      "value": "prometheus-k8s"
     }
   ],
   "overwrite": true

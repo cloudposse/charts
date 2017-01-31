@@ -13,8 +13,8 @@ data:
     {
         "access": "proxy",
         "basicAuth": false,
-        "name": "prometheus",
+        "name": "prometheus-k8s",
         "type": "prometheus",
-        "url": "http://prometheus-{{ .Values.prometheus.name }}.{{ .Release.Namespace }}.svc:9090"
+        "url": "http://prometheus-k8s.{{ .Release.Namespace }}.svc:9090"
     }
 {{ (.Files.Glob "grafana/*.json").AsConfig | indent 2 }}

@@ -6,13 +6,13 @@ metadata:
 {{ toYaml .Values.alertmanager.service.annotations | indent 4 }}
 {{- end }}
   labels:
-    alertmanager: "{{ .Values.alertmanager.name }}"
+    alertmanager: main
     app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: alertmanager
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: alertmanager-{{ .Values.alertmanager.name }}
+  name: alertmanager-main
 spec:
   ports:
     - name: http
@@ -23,5 +23,5 @@ spec:
       targetPort: 9093
       protocol: TCP
   selector:
-    alertmanager: alertmanager-{{ .Values.alertmanager.name }}
+    alertmanager: alertmanager-main
   type: "{{ .Values.alertmanager.service.type }}"

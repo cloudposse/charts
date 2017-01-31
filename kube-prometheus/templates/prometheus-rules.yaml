@@ -6,8 +6,8 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: prometheus
     heritage: {{ .Release.Service }}
-    prometheus: "{{ .Values.prometheus.name }}"
+    prometheus: k8s
     release: {{ .Release.Name }}
-  name: prometheus-{{ .Values.prometheus.name }}-rules
+  name: prometheus-k8s-rules
 data:
 {{ (.Files.Glob "rules/*.rules").AsConfig | indent 2 }}

@@ -6,13 +6,13 @@ apiVersion: monitoring.coreos.com/v1alpha1
 kind: Alertmanager
 metadata:
   labels:
-    alertmanager: "{{ .Values.alertmanager.name }}"
+    alertmanager: main
     app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: alertmanager
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: alertmanager-{{ .Values.alertmanager.name }}
+  name: alertmanager-main
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.alertmanager.replicaCount }}
@@ -31,9 +31,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: prometheus
     heritage: {{ .Release.Service }}
-    prometheus: "{{ .Values.prometheus.name }}"
+    prometheus: k8s
     release: {{ .Release.Name }}
-  name: prometheus-{{ .Values.prometheus.name }}
+  name: prometheus-k8s
   namespace: {{ .Release.Namespace }}
 spec:
   resources:

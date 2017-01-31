@@ -9,11 +9,6 @@ global:
     pullPolicy: IfNotPresent
 
 alertmanager:
-  ## name to use when creating Alertmanager StatefulSet & Service
-  ## Ex: 'main' will create resources named 'alertmanager-main'
-  ##
-  name: main
-
   ## if true, delete Alertmanager StatefulSet & Service when release is deleted
   ##
   cleanup: true
@@ -198,11 +193,6 @@ nodeExporter:
     nodePort: 9100
 
 prometheus:
-  ## name to use when creating Prometheus StatefulSet & Service
-  ## Ex: 'k8s' will create resources named 'prometheus-k8s'
-  ##
-  name: k8s
-
   ## if true, delete Prometheus StatefulSet & Service when release is deleted
   ##
   cleanup: true

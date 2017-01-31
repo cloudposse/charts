@@ -19,13 +19,9 @@ spec:
       name: {{ template "fullname" . }}-delete-alertmanager
     spec:
       containers:
-        - name: delete-service
+        - name: hyperkube
           image: "{{ .Values.global.hyperkube.repository }}:{{ .Values.global.hyperkube.tag }}"
           imagePullPolicy: "{{ .Values.global.hyperkube.pullPolicy }}"
-          command: ["./kubectl","-n","{{ .Release.Namespace }}","delete","svc/alertmanager"]
-        - name: delete-statefulset
-          image: "{{ .Values.global.hyperkube.repository }}:{{ .Values.global.hyperkube.tag }}"
-          imagePullPolicy: "{{ .Values.global.hyperkube.pullPolicy }}"
-          command: ["./kubectl","-n","{{ .Release.Namespace }}","delete","statefulsets/alertmanager-{{ .Values.alertmanager.name }}"]
+          command: ["./kubectl","-n","{{ .Release.Namespace }}","delete","alertmanager/alertmanager-main"]
       restartPolicy: Never
 {{- end }}

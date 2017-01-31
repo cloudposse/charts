@@ -10,9 +10,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: prometheus
     heritage: {{ .Release.Service }}
-    prometheus: "{{ .Values.prometheus.name }}"
+    prometheus: k8s
     release: {{ .Release.Name }}
-  name: prometheus-{{ .Values.prometheus.name }}
+  name: prometheus-k8s
 spec:
   ports:
     - name: http
@@ -23,5 +23,5 @@ spec:
       targetPort: 9090
       protocol: TCP
   selector:
-    prometheus: prometheus-{{ .Values.prometheus.name }}
+    prometheus: prometheus-k8s
   type: "{{ .Values.prometheus.service.type }}"

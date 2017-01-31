@@ -2,8 +2,8 @@
   "dashboard": {
     "__inputs": [
       {
-        "name": "DS_PROMETHEUS",
-        "label": "prometheus",
+        "name": "DS_PROMETHEUS-K8S",
+        "label": "prometheus-k8s",
         "description": "",
         "type": "datasource",
         "pluginId": "prometheus",
@@ -56,7 +56,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -88,7 +88,7 @@
                 "expr": "sum(rate(node_cpu{mode=\"idle\"}[2m])) * 100",
                 "hide": false,
                 "intervalFactor": 10,
-                "legendFormat": "",
+                "legendFormat": "idle cpu",
                 "refId": "A",
                 "step": 50
               }
@@ -133,7 +133,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -238,7 +238,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -326,7 +326,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "format": "percent",
@@ -410,7 +410,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -520,7 +520,7 @@
               "rgba(237, 129, 40, 0.89)",
               "rgba(50, 172, 45, 0.97)"
             ],
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "format": "percentunit",
@@ -604,7 +604,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -641,7 +641,7 @@
                 "expr": "sum(irate(node_network_receive_bytes{device!~\"lo\"}[5m]))",
                 "hide": false,
                 "intervalFactor": 2,
-                "legendFormat": "",
+                "legendFormat": "bytes received",
                 "refId": "A",
                 "step": 10,
                 "target": ""
@@ -687,7 +687,7 @@
             "alerting": {},
             "aliasColors": {},
             "bars": false,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "${DS_PROMETHEUS-K8S}",
             "editable": true,
             "error": false,
             "fill": 1,
@@ -724,7 +724,7 @@
                 "expr": "sum(irate(node_network_transmit_bytes{device!~\"lo\"}[5m]))",
                 "hide": false,
                 "intervalFactor": 2,
-                "legendFormat": "",
+                "legendFormat": "bytes transmitted",
                 "refId": "B",
                 "step": 10,
                 "target": ""
@@ -818,10 +818,10 @@
   },
   "inputs": [
     {
-      "name": "DS_PROMETHEUS",
+      "name": "DS_PROMETHEUS-K8S",
       "pluginId": "prometheus",
       "type": "datasource",
-      "value": "prometheus"
+      "value": "prometheus-k8s"
     }
   ],
   "overwrite": true
