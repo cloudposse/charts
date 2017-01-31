@@ -19,10 +19,10 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 Create secret name.
 */}}
 {{- define "secret_name" -}}
-{{- if eq .Values.secret_name "default" -}}
+{{- if eq .Values.varnish.secret.name "default" -}}
 {{ template "fullname" . }}
 {{- else -}}
-{{ .Values.secret_name }}
+{{ .Values.varnish.secret.name }}
 {{- end -}}
 {{- end -}}
 
@@ -30,9 +30,9 @@ Create secret name.
 Create config name.
 */}}
 {{- define "config_name" -}}
-{{- if eq .Values.configmap "default" -}}
+{{- if eq .Values.varnish.config.map "default" -}}
 {{ template "fullname" . }}
 {{- else -}}
-{{ .Values.configmap }}
+{{ .Values.varnish.config.map }}
 {{- end -}}
 {{- end -}}

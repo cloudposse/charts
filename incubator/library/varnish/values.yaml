@@ -2,13 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
-configmap: default
-config: default
-secret_name: default
-secret:
-debug: false
 varnish:
+  debug: false
   canonical_host:
+  config:
+    map: default
+    choose: default
+  secret:
+    name: default
+    default:
   backend:
     host: localhost
     port: 80
@@ -22,6 +24,7 @@ varnish:
     pools: 25
     pool_min: 100
   probe:
+    enabled: false
     timeout: 15000ms
     interval: 5s
     window: 5

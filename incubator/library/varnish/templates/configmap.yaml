@@ -1,4 +1,4 @@
-{{- if eq .Values.configmap "default" }}
+{{- if eq .Values.varnish.config.map "default" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -20,19 +20,21 @@ data:
       backend cluster {
         .host = {{ .Values.varnish.backend.host | quote}};
         .port = {{ .Values.varnish.backend.port | quote }};
-        .first_byte_timeout = {{ .Values.varnish.backend.timeout.first_byte }}s;
-        #.probe = {
-        #  .url = "/robots.txt";
-        #  .timeout = 25000ms;
-        #  .interval = 5s;
-        #  .window = 4;
-        #  .threshold = 3;
-        #  .request =
-        #          "GET /robots.txt HTTP/1.1"
-        #          "Host: mocktheweb.com"
-        #          "Connection: close";
-        #}
-
+        .first_byte_timeout = {{ .Values.varnish.backend.timeout.first_byte }};
+        .connect_timeout = {{ .Values.varnish.backend.timeout.connect }};
+        .between_bytes_timeout = {{ .Values.varnish.backend.timeout.between_bytes }};
+{{- if .Values.varnish.probe.enabled -}}
+        .probe = {
+          .timeout = {{ .Values.varnish.probe.timeout }};
+          .interval = {{ .Values.varnish.probe.interval }};
+          .window = {{ .Values.varnish.probe.window }};
+          .threshold = {{ .Values.varnish.probe.threshold }};
+          .request =
+                    "{{ .Values.varnish.probe.request }}"
+                    "Host: {{ .Values.varnish.probe.host }}"
+                    "Connection: close";
+        }
+{{- end -}}
       }
 
       #
@@ -104,7 +106,7 @@ data:
       }
 
       sub vcl_hit {
-{{- if .Values.debug -}}
+{{- if .Values.varnish.debug -}}
         set req.http.X-Cache-TTL-Remaining = obj.ttl;
 {{- end -}}
         return (deliver);
@@ -120,7 +122,7 @@ data:
             beresp.http.Surrogate-control ~ "no-store" ||
             (!beresp.http.Surrogate-Control &&
               beresp.http.Cache-Control ~ "no-cache|no-store|private") ||
-            beresp.http.Vary == "*") {
+              beresp.http.Vary == "*") {
               /*
               * Mark as "Hit-For-Pass" for the next 2 minutes
               */
@@ -131,7 +133,7 @@ data:
       }
 
       sub vcl_deliver {
-{{- if .Values.debug -}}
+{{- if .Values.varnish.debug -}}
         if (obj.hits > 0) {
           set resp.http.X-Cache = "HIT";
           set resp.http.X-Cache-TTL-Remaining = req.http.X-Cache-TTL-Remaining;
@@ -191,30 +193,30 @@ data:
       # man page for details on VCL syntax and semantics.
 
       # default health check
-      probe healthcheck {
-        #.url = "/robots.txt";
-        .timeout = {{ .Values.varnish.probe.timeout }};
-        .interval = {{ .Values.varnish.probe.interval }};
-        .window = {{ .Values.varnish.probe.window }};
-        .threshold = {{ .Values.varnish.probe.threshold }};
-        .request =
-                "{{ .Values.varnish.probe.request }}"
-                "Host: {{ .Values.varnish.probe.host }}"
-                "Connection: close";
-      }
+      probe healthcheck
 
       #
       # Default backend definition.  Set this to point to your content
       # server.
       #
-
       backend cluster {
         .host = {{ .Values.varnish.backend.host | quote}};
         .port = {{ .Values.varnish.backend.port | quote }};
         .first_byte_timeout = {{ .Values.varnish.backend.timeout.first_byte }};
         .connect_timeout = {{ .Values.varnish.backend.timeout.connect }};
         .between_bytes_timeout = {{ .Values.varnish.backend.timeout.between_bytes }};
-        .probe = healthcheck;
+{{- if .Values.varnish.probe.enabled -}}
+        .probe = {
+          .timeout = {{ .Values.varnish.probe.timeout }};
+          .interval = {{ .Values.varnish.probe.interval }};
+          .window = {{ .Values.varnish.probe.window }};
+          .threshold = {{ .Values.varnish.probe.threshold }};
+          .request =
+                    "{{ .Values.varnish.probe.request }}"
+                    "Host: {{ .Values.varnish.probe.host }}"
+                    "Connection: close";
+        }
+{{- end -}}
       }
 
       #

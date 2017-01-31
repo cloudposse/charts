@@ -55,6 +55,6 @@ spec:
         configMap:
           name: {{ template "config_name" . }}
           items:
-          - key: {{ .Values.config }}
+          - key: {{ .Values.varnish.config.choose }}
             path: default.vcl
 
