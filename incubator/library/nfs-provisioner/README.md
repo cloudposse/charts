@@ -1,7 +1,11 @@
-# nfs-provisioner
+# NFS Provisioner
 
-nfs-provisioner is an out-of-tree dynamic provisioner for Kubernetes 1.4.
+The NFS Provisioner is a dynamic provisioner for Kubernetes 1.4.
 You can use it to quickly & easily deploy shared storage that works almost anywhere.
+
+It's based on the version by @ekozan, which can be found here: 
+   https://github.com/ekozan/charts/tree/nfs-provisioner/incubator/nfs-provisioner
+
 
 ## Prerequisites Details
 * Kubernetes 1.4 with alpha APIs enabled
@@ -9,7 +13,7 @@ You can use it to quickly & easily deploy shared storage that works almost anywh
 ## Chart Details
 This chart will do the following:
 
-* Setup an fonctional nfs provisioner
+* Setup a functional nfs provisioner
 
 ## Installing the Chart
 
