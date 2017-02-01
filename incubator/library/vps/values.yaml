@@ -1,0 +1,33 @@
+# Default values for vps.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+vps:
+  user: admin
+  password:
+  group: admin
+  enableSudo: true
+  githubUsers:
+  envvars:
+mounts:
+## Mounts
+#  html-data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+#    path: /var/www/html # Path
+#    volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+#      emptyDir: {}
+image:
+  repository: cloudposse/ubuntu-vps
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: vps
+  type: ClusterIP
+  externalPort: 22
+  internalPort: 22
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
