@@ -1,0 +1,4 @@
+apiVersion: v1
+name: nfs-provisioner
+version: 1.0.1-a
+description: nfs-provisioner Chart for Kubernetes.
