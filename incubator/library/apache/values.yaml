@@ -3,6 +3,8 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 env:
+  APACHE_SERVER_NAME:                       localhost
+  
   APACHE_WORKER_START_SERVERS:              2
   APACHE_WORKER_MIN_SPARE_THREADS:          2
   APACHE_WORKER_MAX_SPARE_THREADS:          10
@@ -10,8 +12,7 @@ env:
   APACHE_WORKER_THREADS_PER_CHILD:          25
   APACHE_WORKER_MAX_REQUEST_WORKERS:        4
   APACHE_WORKER_MAX_CONNECTIONS_PER_CHILD:  0
-  APACHE_SERVER_NAME:                       localhost
-
+  
   APACHE_EVENT_START_SERVERS:             2
   APACHE_EVENT_MIN_SPARE_THREADS:         25
   APACHE_EVENT_MAX_SPARE_THREADS:         75
