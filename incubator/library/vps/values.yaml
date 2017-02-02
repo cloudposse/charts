@@ -17,9 +17,9 @@ mounts:
 image:
   repository: cloudposse/ubuntu-vps
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 service:
-  name: vps
+  name: ssh
   type: ClusterIP
   externalPort: 22
   internalPort: 22
