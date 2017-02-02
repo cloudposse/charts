@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: VPS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: password
+        - name: VPS_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: login
+        - name: VPS_GROUP
+          value: {{ .Values.vps.group | quote }}
+        - name: VPS_ENABLE_SUDO
+          value: {{ .Values.vps.enableSudo | quote }}
+        - name: VPS_GITHUB_USERS
+          value: {{ .Values.vps.githubUsers | quote }}
+{{- range $name, $value := .Values.vps.envvars }}
+        - name: {{ $name | quote }}
+          value: {{ $value | quote }}
+{{- end }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        volumeMounts:
+{{- range $name, $config := .Values.mounts }}
+          - mountPath: {{ $config.path | quote }}
+            name: {{ $name | quote }}
+{{- end }}
+      volumes:
+{{- range $name, $config := .Values.mounts }}
+        - name: {{ $name | quote }}
+{{ toYaml $config.volume | indent 10 }}
+{{- end }}
