@@ -12,6 +12,7 @@ metadata:
     heritage: {{ .Release.Service }}
     prometheus: k8s
     release: {{ .Release.Name }}
+{{ toYaml .labels | indent 4 }}
   name: prometheus-k8s
 spec:
   ports:

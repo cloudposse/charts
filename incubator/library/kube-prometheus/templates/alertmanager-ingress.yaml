@@ -15,7 +15,7 @@ metadata:
     component: alertmanager
     heritage: {{ $root.Release.Service }}
     release: {{ $root.Release.Name }}
-    dns: route53
+{{ toYaml .labels | indent 4 }}
   name: {{ template "fullname" $root }}-alertmanager-{{ .name }}
 spec:
   rules:

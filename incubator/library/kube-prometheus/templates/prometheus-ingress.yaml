@@ -15,7 +15,7 @@ metadata:
     heritage: {{ $root.Release.Service }}
     prometheus: k8s
     release: {{ $root.Release.Name }}
-    dns: route53
+{{ toYaml .labels | indent 4 }}
   name: {{ template "fullname" $root }}-prometheus-{{ .name }}
 spec:
   rules:

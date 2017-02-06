@@ -14,7 +14,7 @@ metadata:
     component: grafana
     heritage: {{ $root.Release.Service }}
     release: {{ $root.Release.Name }}
-    dns: route53
+{{ toYaml .labels | indent 4 }}
   name: {{ template "fullname" $root }}-{{ .name }}
 spec:
   rules:
