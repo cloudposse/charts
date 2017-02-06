@@ -6,4 +6,5 @@ Just run `make` to generate all packages and corresponding repository indexes.
 
 ## Configuring Helm
 
-Just run `contrib/configure.sh` 
+Just run `make init && make helm:repo:add-remote`
+

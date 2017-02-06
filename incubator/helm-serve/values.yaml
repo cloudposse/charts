@@ -5,7 +5,7 @@ url:
 replicaCount: 1
 image:
   repository: cloudposse/charts
-  tag: feature-helm-chart
+  tag: latest
   pullPolicy: Always
 service:
   name: charts-repo
