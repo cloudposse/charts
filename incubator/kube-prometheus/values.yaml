@@ -95,7 +95,14 @@ grafana:
   env:
     GF_AUTH_BASIC_ENABLED: true
     GF_AUTH_ANONYMOUS_ENABLED: false
-
+##    GF_AUTH_BASIC_ENABLED: true
+##    GF_AUTH_ANONYMOUS_ENABLED: false
+##    GF_SERVER_ROOT_URL: http://grafana.goruha.dev.cloudposse.com
+##    GF_AUTH_GITHUB_ENABLED: true
+##    GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS: cloudposse
+##    GF_AUTH_GITHUB_TEAM_IDS: "2197143"
+##    GF_AUTH_GITHUB_ALLOW_SIGN_UP: true
+##    GF_AUTH_GITHUB_SCOPES: user:email,read:org
 
   ## Grafana image
   ##
