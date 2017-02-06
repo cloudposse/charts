@@ -2,19 +2,19 @@ FROM alpine
 
 ADD rootfs /
 
-ADD ./ /opt/charts
+ADD ./ /charts
 
-WORKDIR /opt/charts
+WORKDIR /charts
 
 ENV CURRENT_REPO_URL=
 
 RUN set -ex \
       && apk update \
       && apk add --no-cache \
-    	    curl \
-    			git \
-    			make \
-    			bash \
+          curl \
+          git \
+          make \
+          bash \
     	&& make init \
     	&& make helm:install \
     	&& make helm:repo:add-remote \

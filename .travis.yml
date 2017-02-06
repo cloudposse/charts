@@ -19,10 +19,10 @@ install:
   - make docker:login
 
 script:
-  - make helm:repo:build REPO_PATH=incubator
-  - make helm:repo:build REPO_PATH=stable
-  - make helm:repo:index REPO_PATH=incubator
-  - make helm:repo:index REPO_PATH=stable
+  - make helm:repo:build REPO_NAME=incubator
+  - make helm:repo:build REPO_NAME=stable
+  - make helm:repo:index REPO_NAME=incubator
+  - make helm:repo:index REPO_NAME=stable
   - make docker:build
 
 after_success:
@@ -58,6 +58,6 @@ deploy:
     bucket: $MAIN_BUCKET
     skip_cleanup: true
     upload-dir: $REPO_TYPE
-    local-dir: /packages
+    local-dir: packages
     on:
       branch: master
