@@ -18,8 +18,8 @@ RUN set -ex \
     	&& make init \
     	&& make helm:install \
     	&& make helm:repo:add-remote \
-      && make helm:repo:build REPO_PATH=incubator \
-      && make helm:repo:build REPO_PATH=stable ;
+      && make helm:repo:build REPO_NAME=incubator \
+      && make helm:repo:build REPO_NAME=stable ;
 
 EXPOSE 8879
 
