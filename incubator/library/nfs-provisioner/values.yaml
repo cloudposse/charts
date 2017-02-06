@@ -1,0 +1,9 @@
+image: quay.io/kubernetes_incubator/nfs-provisioner
+imageTag: v1.0.3
+provisionerName: "cluster.local/nfs"
+storageClass: local-nfs
+defaultClass: false
+mount:
+  # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+  hostPath: /srv
+#serviceIp:
