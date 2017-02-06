@@ -15,9 +15,9 @@ RUN set -ex \
           git \
           make \
           bash \
-    	&& make init \
-    	&& make helm:install \
-    	&& make helm:repo:add-remote \
+      && make init \
+      && make helm:install \
+      && make helm:repo:add-remote \
       && make helm:repo:build REPO_NAME=incubator \
       && make helm:repo:build REPO_NAME=stable ;
 
