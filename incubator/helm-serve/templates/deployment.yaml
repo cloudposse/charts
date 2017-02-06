@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: "charts-server"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: CURRENT_REPO_URL
+          value: {{ template "server_url" . }}
+        ports:
+        - containerPort: 8879
+        livenessProbe:
+          tcpSocket:
+            port: 8879
+        readinessProbe:
+          tcpSocket:
+            port: 8879
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
