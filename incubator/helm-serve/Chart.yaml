@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart that implements the `helm serve` repository server for Helm on Kubernetes
+name: helm-serve
+version: 0.1.0

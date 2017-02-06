@@ -38,3 +38,5 @@ Session.vim
 **/requirements.lock
 
 **/**/.values.yaml
+
+build-harness
