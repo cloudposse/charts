@@ -74,6 +74,16 @@ alertmanager:
   #       storage: 4Gi
 
 grafana:
+  plugins:
+  ## To override default grafana configs use envvars http://docs.grafana.org/installation/configuration/#using-environment-variables
+  ## GF_<SectionName>_<KeyName>
+  security:
+
+  env:
+    GF_AUTH_BASIC_ENABLED: false
+    GF_AUTH_ANONYMOUS_ENABLED: false
+
+
   ## Grafana image
   ##
   image:
