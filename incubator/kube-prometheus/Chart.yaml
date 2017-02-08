@@ -3,7 +3,7 @@ description: Manifests, dashboards, and alerting rules for end-to-end Kubernetes
 engine: gotpl
 home: https://github.com/coreos/kube-prometheus
 maintainers:
-  - name: Michael Goodness
-    email: mgoodness@gmail.com
+  - name: Cloud Posse
+    email: hello@cloudposse.com
 name: kube-prometheus
 version: 0.2.0
