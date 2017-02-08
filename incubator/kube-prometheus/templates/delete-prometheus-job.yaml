@@ -9,14 +9,14 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-delete-prometheus
+  name: "{{ template "fullname" . }}-delete-prometheus-{{ randAlphaNum 10 | lower }}"
 spec:
   template:
     metadata:
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
-      name: {{ template "fullname" . }}-delete-prometheus
+      name: "{{ template "fullname" . }}-delete-prometheus"
     spec:
       containers:
         - name: hyperkube

@@ -157,6 +157,9 @@ grafana:
       cpu: 100m
       memory: 100Mi
 
+  storage:
+    emptyDir: {}
+
   service:
     ## annotations for Grafana Service
     ##
