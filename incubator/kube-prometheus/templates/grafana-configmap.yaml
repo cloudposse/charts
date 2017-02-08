@@ -7,7 +7,7 @@ metadata:
     component: grafana
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-grafana
+  name: "{{ template "fullname" . }}-grafana"
 data:
   prometheus-datasource.json: |
     {
@@ -18,3 +18,17 @@ data:
         "url": "http://prometheus-k8s.{{ .Release.Namespace }}.svc:9090"
     }
 {{ (.Files.Glob "grafana/*.json").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: grafana
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: "{{ template "fullname" . }}-grafana-config"
+data:
+  grafana.ini: |-
+{{ include "grafana_ini" . | indent 8 }}
