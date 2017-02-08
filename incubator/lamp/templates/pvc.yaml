@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.storage.name | quote }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ .Values.storage.class | quote }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.size| quote }}
