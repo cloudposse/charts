@@ -15,7 +15,7 @@ app:
       pullPolicy: Always
     source: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       gitRepo:
-        repository: "https://goruha:4df7837b3fcfb02ee7fe81450fea3d6cbbe84a5b@github.com/cloudposse/apache.git"
+        repository: "https://goruha:???????@github.com/cloudposse/apache.git"
 
     destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       persistentVolumeClaim:
