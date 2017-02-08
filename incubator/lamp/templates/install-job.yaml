@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: post-install
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "fullname" . }}-{{ randAlphaNum 10 | lower }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+      name: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: init
+        image: "{{ .Values.app.init.image.repository }}:{{ .Values.app.init.image.tag }}"
+        imagePullPolicy: "{{ .Values.app.init.image.pullPolicy }}"
+        volumeMounts:
+        - mountPath: /source/code
+          name: source
+        - mountPath: /destination/code
+          name: destination
+      restartPolicy: OnFailure
+      volumes:
+        - name: source
+{{ toYaml .Values.app.init.source | indent 10 }}
+        - name: destination
+{{ toYaml .Values.app.init.destination | indent 10 }}
+

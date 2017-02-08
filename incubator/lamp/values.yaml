@@ -1,0 +1,156 @@
+# Default values for lamp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+storage:
+  name: wordpress-test
+  size: 1Gi
+  class: local-nfs
+
+app:
+  init:
+    image:
+      repository: cloudposse/init-wordpress
+      tag: init
+      pullPolicy: Always
+    source: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      gitRepo:
+        repository: "https://goruha:4df7837b3fcfb02ee7fe81450fea3d6cbbe84a5b@github.com/cloudposse/apache.git"
+
+    destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      persistentVolumeClaim:
+        claimName: wordpress-test
+
+mysql:
+  ## mysql image version
+  ## ref: https://hub.docker.com/r/library/mysql/tags/
+  ##
+  imageTag: "5.7.14"
+
+  ## Specify password for root user
+  ##
+  ## Default: random 10 character string
+  # mysqlRootPassword: testing
+
+  ## Create a database user
+  ##
+  # mysqlUser:
+  # mysqlPassword:
+
+  ## Allow unauthenticated access, uncomment to enable
+  ##
+  # mysqlAllowEmptyPassword: true
+
+  ## Create a database
+  ##
+  # mysqlDatabase:
+
+  ## Specify an imagePullPolicy (Required)
+  ## It's recommended to change this to 'Always' if the image tag is 'latest'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
+  ##
+  imagePullPolicy: IfNotPresent
+
+  ## Persist data to a persitent volume
+  persistence:
+    enabled: true
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+
+apache:
+  replicaCount: 1
+  env:
+    APACHE_SERVER_NAME:                       localhost
+
+    APACHE_WORKER_START_SERVERS:              2
+    APACHE_WORKER_MIN_SPARE_THREADS:          2
+    APACHE_WORKER_MAX_SPARE_THREADS:          10
+    APACHE_WORKER_THREAD_LIMIT:               64
+    APACHE_WORKER_THREADS_PER_CHILD:          25
+    APACHE_WORKER_MAX_REQUEST_WORKERS:        4
+    APACHE_WORKER_MAX_CONNECTIONS_PER_CHILD:  0
+
+    APACHE_EVENT_START_SERVERS:             2
+    APACHE_EVENT_MIN_SPARE_THREADS:         25
+    APACHE_EVENT_MAX_SPARE_THREADS:         75
+    APACHE_EVENT_THREAD_LIMIT:              64
+    APACHE_EVENT_THREADS_PER_CHILD:         25
+    APACHE_EVENT_MAX_REQUEST_WORKERS:       150
+    APACHE_EVENT_MAX_CONNECTIONS_PER_CHILD: 0
+
+    PHP_FPM_PM:                   ondemand
+    PHP_FPM_MAX_CHILDREN:         10
+    PHP_FPM_START_SERVERS:        1
+    PHP_FPM_SPARE_SERVERS:        1
+    PHP_FPM_MAX_SPARE_SERVERS:    10
+    PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
+    PHP_FPM_MAX_REQUESTS:         500
+  mounts:
+    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+      path: /var/www/html # Path
+      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+        persistentVolumeClaim:
+          claimName: wordpress-test
+
+  image:
+    repository: cloudposse/apache
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: apache
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 80
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+
+vps:
+  vps:
+    user: admin
+    password:
+    group: admin
+    enableSudo: true
+    githubUsers:
+    envvars:
+  mounts:
+  ## Mounts
+    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+      path: /data # Path
+      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+        persistentVolumeClaim:
+          claimName: wordpress-test
+  image:
+    repository: cloudposse/ubuntu-vps
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: ssh
+    type: ClusterIP
+    externalPort: 22
+    internalPort: 22
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
