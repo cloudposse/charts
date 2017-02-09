@@ -32,7 +32,7 @@ githubAPIToken: ""
 ## Specify github organization
 ##
 ## REQUIRED
-githubOrganizationa: ""
+githubOrganization: ""
 
 ## Specify github team
 ##
