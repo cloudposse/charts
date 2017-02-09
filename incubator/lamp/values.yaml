@@ -15,11 +15,25 @@ app:
       pullPolicy: Always
     source: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       gitRepo:
-        repository: "https://goruha:???????@github.com/cloudposse/apache.git"
+        repository: "https://goruha:???@github.com/goruha/blog.git"
+        revision: "dbcc6c47cf759cf83849e47c18784e33c814c27f"
 
     destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       persistentVolumeClaim:
         claimName: wordpress-test
+    env:
+      SOURCE: blog
+      DB: "https://s3-us-west-1.amazonaws.com/cloudposse-blog/mysqldump.sql-20170207_081003.gz"
+      DB_USER: root
+      DB_NAME: wp
+
+  config:
+    name: wordpress-config
+    value: |-
+      define('DB_HOST', $MYSQL_DB_HOST);
+      define('DOMAIN_CURRENT_SITE', 'a1a9d017deedb11e6918706d4c20806f-39169221.us-west-2.elb.amazonaws.com');
+
+
 
 mysql:
   ## mysql image version
@@ -34,8 +48,8 @@ mysql:
 
   ## Create a database user
   ##
-  # mysqlUser:
-  # mysqlPassword:
+  mysqlUser: wp
+  mysqlPassword: wp-password
 
   ## Allow unauthenticated access, uncomment to enable
   ##
@@ -43,7 +57,7 @@ mysql:
 
   ## Create a database
   ##
-  # mysqlDatabase:
+  mysqlDatabase: wp
 
   ## Specify an imagePullPolicy (Required)
   ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -68,7 +82,6 @@ mysql:
     requests:
       memory: 256Mi
       cpu: 100m
-
 
 apache:
   replicaCount: 1
@@ -98,15 +111,26 @@ apache:
     PHP_FPM_MAX_SPARE_SERVERS:    10
     PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
     PHP_FPM_MAX_REQUESTS:         500
+
+    DB_USER: wp
+    DB_PASS: wp-password
+    DB_NAME: wp
+    DB_HOST: lamp-mysql
+
   mounts:
     data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
       path: /var/www/html # Path
       volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
         persistentVolumeClaim:
           claimName: wordpress-test
+    config: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+      path: /var/www/html/wp-config.d # Path
+      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+        configMap:
+          name: wordpress-config
 
   image:
-    repository: cloudposse/apache
+    repository: cloudposse/apache-php-fpm
     tag: latest
     pullPolicy: Always
   service:
