@@ -14,22 +14,3 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
-
-
-{{/*
-Mysql host
-*/}}
-{{- define "mysql_fullname" -}}
-{{- printf "%s-%s" .Release.Name "mysql" | trunc 24 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Mysql host
-*/}}
-{{- define "mysql_host" -}}
-{{- if ne .Release.Namespace "default" -}}
-{{ template "mysql_fullname" . }}.{{ .Release.Namespace }}
-{{- else -}}
-{{ template "mysql_fullname" . }}
-{{- end -}}
-{{- end -}}
