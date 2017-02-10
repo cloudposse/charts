@@ -13,28 +13,18 @@ app:
       repository: cloudposse/init-wordpress
       tag: init
       pullPolicy: Always
-    source: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      gitRepo:
-        repository: "https://goruha:???@github.com/goruha/blog.git"
-        revision: "dbcc6c47cf759cf83849e47c18784e33c814c27f"
 
     destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       persistentVolumeClaim:
         claimName: wordpress-test
     env:
+      GIT_REPO: ""
+      GIT_BRANCH: "master"
       SOURCE: blog
       DB: "https://s3-us-west-1.amazonaws.com/cloudposse-blog/mysqldump.sql-20170207_081003.gz"
       DB_USER: root
       DB_NAME: wp
-
-  config:
-    name: wordpress-config
-    value: |-
-      define('DB_HOST', $MYSQL_DB_HOST);
-      define('DOMAIN_CURRENT_SITE', 'a1a9d017deedb11e6918706d4c20806f-39169221.us-west-2.elb.amazonaws.com');
-
-
-
+      DB_HOST: release-mysql
 mysql:
   ## mysql image version
   ## ref: https://hub.docker.com/r/library/mysql/tags/
@@ -115,7 +105,7 @@ apache:
     DB_USER: wp
     DB_PASS: wp-password
     DB_NAME: wp
-    DB_HOST: lamp-mysql
+    DB_HOST: release-mysql
 
   mounts:
     data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
@@ -123,11 +113,6 @@ apache:
       volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
         persistentVolumeClaim:
           claimName: wordpress-test
-    config: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-      path: /var/www/html/wp-config.d # Path
-      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-        configMap:
-          name: wordpress-config
 
   image:
     repository: cloudposse/apache-php-fpm
