@@ -1,0 +1,25 @@
+{{- if .Values.frontend.ingress.enabled }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sock-shop
+  labels:
+    dns: route53
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    domainName: {{ .Values.frontend.ingress.domain | quote }}
+spec:
+  tls:
+  - secretName: sock-shop-tls
+    hosts:
+    - {{ .Values.frontend.ingress.domain  | quote }}
+  rules:
+  - host: {{ .Values.frontend.ingress.domain  | quote }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: "front-end"
+          servicePort: 80
+{{- end -}}

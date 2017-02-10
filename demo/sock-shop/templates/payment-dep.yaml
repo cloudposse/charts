@@ -1,0 +1,47 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: payment
+  labels:
+    name: payment
+
+spec:
+  replicas: {{ .Values.payments.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: payment
+    spec:
+      containers:
+      - name: payment
+        image: "{{ .Values.payments.app.image.repository }}:{{ .Values.payments.app.image.tag }}"
+        imagePullPolicy: {{ .Values.payments.app.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: ZIPKIN
+          value: http://zipkin:9411/api/v1/spans
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+            add:
+              - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 180
+          periodSeconds: 3
+        resources:
+{{ toYaml .Values.payments.app.resources | indent 12 }}

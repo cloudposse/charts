@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zipkin-cron
+  labels:
+    name: zipkin-cron
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: zipkin-cron
+    spec:
+      containers:
+      - name: zipkin-cron
+        image: "{{ .Values.zipkin.cron.image.repository }}:{{ .Values.zipkin.cron.image.tag }}"
+        imagePullPolicy: {{ .Values.zipkin.cron.image.pullPolicy }}
+        env:
+        - name: STORAGE_TYPE
+          value: mysql
+        - name: MYSQL_HOST
+          value: zipkin-mysql
+        - name: MYSQL_USER
+          value: zipkin
+        - name: MYSQL_PASS
+          value: zipkin
+        command: ["crond"]
+        args: ["-f"]
+        resources:
+{{ toYaml .Values.zipkin.cron.resources | indent 12 }}

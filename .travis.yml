@@ -21,8 +21,10 @@ install:
 script:
   - make helm:repo:build REPO_NAME=incubator
   - make helm:repo:build REPO_NAME=stable
+  - make helm:repo:build REPO_NAME=demo
   - make helm:repo:index REPO_NAME=incubator
   - make helm:repo:index REPO_NAME=stable
+  - make helm:repo:index REPO_NAME=demo
   - make docker:build
 
 after_success:

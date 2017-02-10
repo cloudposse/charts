@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zipkin
+  labels:
+    name: zipkin
+
+spec:
+  replicas: {{ .Values.zipkin.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: zipkin
+    spec:
+      containers:
+      - name: zipkin
+        image: "{{ .Values.zipkin.app.image.repository }}:{{ .Values.zipkin.app.image.tag }}"
+        imagePullPolicy: {{ .Values.zipkin.app.image.pullPolicy }}
+        ports:
+        - containerPort: 9411
+        env:
+        - name: STORAGE_TYPE
+          value: mysql
+        - name: MYSQL_HOST
+          value: zipkin-mysql
+        resources:
+{{ toYaml .Values.zipkin.app.resources | indent 12 }}

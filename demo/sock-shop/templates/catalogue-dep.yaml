@@ -1,0 +1,47 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: catalogue
+  labels:
+    name: catalogue
+
+spec:
+  replicas: {{ .Values.catalogue.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: catalogue
+    spec:
+      containers:
+      - name: catalogue
+        image: "{{ .Values.catalogue.app.image.repository }}:{{ .Values.catalogue.app.image.tag }}"
+        imagePullPolicy: {{ .Values.catalogue.app.image.pullPolicy }}
+        env:
+         - name: ZIPKIN
+           value: http://zipkin:9411/api/v1/spans
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+            add:
+              - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 180
+          periodSeconds: 3
+        resources:
+{{ toYaml .Values.catalogue.app.resources | indent 12 }}
