@@ -27,8 +27,6 @@ spec:
             secretKeyRef:
               name: {{ template "mysql_fullname" . }}
               key: mysql-root-password
-        - name: DB_HOST
-          value: {{ template "mysql_host" . }}
 {{- range $name, $value := .Values.app.init.env }}
 {{- if not (empty $value) }}
         - name: {{ $name | quote }}
@@ -36,21 +34,12 @@ spec:
 {{- end }}
 {{- end }}
         volumeMounts:
-        - mountPath: /source/code
-          name: source
         - mountPath: /destination/code
           name: destination
-        - mountPath: /destination/code/wp-config.d
-          name: config
       restartPolicy: OnFailure
       volumes:
-        - name: source
-{{ toYaml .Values.app.init.source | indent 10 }}
         - name: destination
 {{ toYaml .Values.app.init.destination | indent 10 }}
-        - name: config
-          configMap:
-            name: {{ .Values.app.config.name | indent 10 }}
 
 
 
