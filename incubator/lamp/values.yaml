@@ -3,18 +3,20 @@
 # Declare variables to be passed into your templates.
 
 storage:
-  name: wordpress-test
-  size: 1Gi
+  name: nfs
+  size: 3Gi
   class: local-nfs
 
 app:
   init:
+    enabled: false
     image:
       repository: cloudposse/init-wordpress
       tag: init
       pullPolicy: Always
 
-    destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+    # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+    destination: 
       persistentVolumeClaim:
         claimName: wordpress-test
     env:
@@ -25,6 +27,7 @@ app:
       DB_USER: root
       DB_NAME: wp
       DB_HOST: release-mysql
+
 mysql:
   ## mysql image version
   ## ref: https://hub.docker.com/r/library/mysql/tags/
@@ -108,21 +111,26 @@ apache:
     DB_HOST: release-mysql
 
   mounts:
-    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-      path: /var/www/html # Path
-      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+    # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+    data: 
+      # Path inside container
+      path: /var/www/html 
+      # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      volume: 
         persistentVolumeClaim:
-          claimName: wordpress-test
+          claimName: nfs
 
   image:
     repository: cloudposse/apache-php-fpm
     tag: latest
     pullPolicy: Always
+
   service:
     name: apache
     type: ClusterIP
     externalPort: 80
     internalPort: 80
+
   resources:
     limits:
       cpu: 100m
@@ -131,31 +139,36 @@ apache:
       cpu: 100m
       memory: 128Mi
 
-
 vps:
-  vps:
+  shell:
     user: admin
     password:
     group: admin
     enableSudo: true
     githubUsers:
-    envvars:
-  mounts:
+    env:
+
   ## Mounts
-    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-      path: /data # Path
-      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+  mounts:
+    # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+    data: 
+      # Path inside container
+      path: /data 
+      # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      volume: 
         persistentVolumeClaim:
-          claimName: wordpress-test
+          claimName: nfs
   image:
     repository: cloudposse/ubuntu-vps
     tag: latest
     pullPolicy: Always
+
   service:
     name: ssh
     type: ClusterIP
     externalPort: 22
     internalPort: 22
+
   resources:
     limits:
       cpu: 100m

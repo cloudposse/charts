@@ -29,12 +29,12 @@ spec:
               name: {{ template "fullname" . }}
               key: login
         - name: VPS_GROUP
-          value: {{ .Values.vps.group | quote }}
+          value: {{ .Values.shell.group | quote }}
         - name: VPS_ENABLE_SUDO
-          value: {{ .Values.vps.enableSudo | quote }}
+          value: {{ .Values.shell.enableSudo | quote }}
         - name: VPS_GITHUB_USERS
-          value: {{ .Values.vps.githubUsers | quote }}
-{{- range $name, $value := .Values.vps.envs }}
+          value: {{ .Values.shell.githubUsers | quote }}
+{{- range $name, $value := .Values.shell.envs }}
         - name: {{ $name | quote }}
           value: {{ $value | quote }}
 {{- end }}
