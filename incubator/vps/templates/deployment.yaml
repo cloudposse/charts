@@ -34,7 +34,7 @@ spec:
           value: {{ .Values.vps.enableSudo | quote }}
         - name: VPS_GITHUB_USERS
           value: {{ .Values.vps.githubUsers | quote }}
-{{- range $name, $value := .Values.vps.envvars }}
+{{- range $name, $value := .Values.vps.envs }}
         - name: {{ $name | quote }}
           value: {{ $value | quote }}
 {{- end }}
