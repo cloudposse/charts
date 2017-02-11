@@ -1,0 +1,33 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    name: rabbitmq
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: "{{ .Values.queue.db.image.repository }}:{{ .Values.queue.db.image.tag }}"
+        imagePullPolicy: {{ .Values.queue.db.image.pullPolicy }}
+        ports:
+        - containerPort: 5672
+        securityContext:
+          capabilities:
+            drop:
+              - all
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+              - DAC_OVERRIDE
+          readOnlyRootFilesystem: true
+        resources:
+{{ toYaml .Values.queue.db.resources | indent 12 }}

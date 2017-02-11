@@ -1,0 +1,52 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: orders
+  labels:
+    name: orders
+
+spec:
+  replicas: {{ .Values.orders.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: orders
+    spec:
+      containers:
+      - name: orders
+        image: "{{ .Values.orders.app.image.repository }}:{{ .Values.orders.app.image.tag }}"
+        imagePullPolicy: {{ .Values.orders.app.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+            add:
+              - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 180
+          periodSeconds: 3
+        resources:
+{{ toYaml .Values.orders.app.resources | indent 12 }}
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+

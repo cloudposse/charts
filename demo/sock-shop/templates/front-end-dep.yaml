@@ -1,0 +1,40 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: front-end
+
+spec:
+  replicas: {{ .Values.frontend.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: front-end
+    spec:
+      containers:
+      - name: front-end
+        image: "{{ .Values.frontend.app.image.repository }}:{{ .Values.frontend.app.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.app.image.pullPolicy }}
+        resources:
+{{ toYaml .Values.frontend.app.resources | indent 12 }}
+        ports:
+        - containerPort: 8079
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8079
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8079
+          initialDelaySeconds: 180
+          periodSeconds: 3
