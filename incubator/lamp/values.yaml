@@ -19,6 +19,8 @@ app:
     destination: 
       persistentVolumeClaim:
         claimName: wordpress-test
+
+    # Environment Variables to be defined for the container
     env:
       GIT_REPO: ""
       GIT_BRANCH: "master"
