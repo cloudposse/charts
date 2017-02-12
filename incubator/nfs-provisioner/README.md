@@ -36,7 +36,6 @@ The following tables lists the configurable parameters of the etcd chart and the
 | `provisionerName`       | Provisoner Name                        | `cluster.local/nfs`                                        |
 | `storageClass`          | The provisioner storage Class          | `local-nfs`                                                |
 | `defaultClass`          | Set-up as default class                | `false`                                                    |
-| `hostPath`              | Set-up where data is store on the host | `/srv`                                                     |
 | `serviceIp`             | Setup the service ip                   | ``                                                         |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
