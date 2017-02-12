@@ -5,14 +5,14 @@
 #
 
 DNS:
-  Hostname: ""
-  TTL: "300"
-  Type: "CNAME"
+  Hostname: "{{ getenv "DNS_HOSTNAME" }}"
+  TTL: "{{ getenv "DNS_TTL" "300" }}"
+  Type: "{{ getenv "DNS_TYPE" "CNAME" }}"
 
 storage:
-  name: "release"
-  size: "3Gi"
-  class: "local-nfs"
+  name: "{{ getenv "RELEASE_NAME" "release" }}"
+  size: "{{ getenv "STORAGE_SIZE" "3Gi" }}"
+  class: "{{ getenv "STORAGE_CLASS" "local-nfs" }}"
 
 mysql:
   ## mysql image version
@@ -27,8 +27,8 @@ mysql:
 
   ## Create a database user
   ##
-  mysqlUser: "app"
-  mysqlPassword: ""
+  mysqlUser: "{{ getenv "DB_USER" "app" }}"
+  mysqlPassword: "{{ getenv "DB_PASS" "" }}"
 
   ## Allow unauthenticated access, uncomment to enable
   ##
@@ -36,7 +36,7 @@ mysql:
 
   ## Create a database
   ##
-  mysqlDatabase: "default"
+  mysqlDatabase: "{{ getenv "DB_NAME" "default" }}"
 
   ## Specify an imagePullPolicy (Required)
   ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -63,7 +63,7 @@ mysql:
       cpu: 100m
 
 apache:
-  replicaCount: 1
+  replicaCount: {{ getenv "APACHE_REPLICA_COUNT" "1" }}
   env:
     APACHE_SERVER_NAME:                       localhost
 
@@ -91,10 +91,10 @@ apache:
     PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
     PHP_FPM_MAX_REQUESTS:         500
 
-    DB_USER: "app"
-    DB_PASS: ""
-    DB_NAME: "default"
-    DB_HOST: "default-mysql"
+    DB_USER: "{{ getenv "DB_USER" "app" }}"
+    DB_PASS: "{{ getenv "DB_PASS" "" }}"
+    DB_NAME: "{{ getenv "DB_NAME" "default" }}"
+    DB_HOST: "{{ getenv "RELEASE_NAME" "default" }}-mysql"
 
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
@@ -104,7 +104,7 @@ apache:
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       volume: 
         persistentVolumeClaim:
-          claimName: release
+          claimName: {{ getenv "RELEASE_NAME" "release"}}
 
   image:
     repository: cloudposse/apache-php-fpm
@@ -143,7 +143,7 @@ vps:
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       volume: 
         persistentVolumeClaim:
-          claimName: release
+          claimName: {{ getenv "RELEASE_NAME" "release"}}
   image:
     repository: cloudposse/ubuntu-vps
     tag: latest
