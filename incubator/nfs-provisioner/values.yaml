@@ -1,0 +1,11 @@
+image: quay.io/kubernetes_incubator/nfs-provisioner
+imageTag: v1.0.3
+provisionerName: "cluster.local/nfs"
+storageClass: local-nfs
+defaultClass: false
+#serviceIp:
+persistence:
+  enabled: true
+  storageClass: generic
+  accessMode: ReadWriteOnce
+  size: 8Gi

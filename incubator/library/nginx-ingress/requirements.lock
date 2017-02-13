@@ -1,6 +1,0 @@
-dependencies:
-- name: nginx-default-backend
-  repository: http://charts.cloudposse.com/incubator/packages
-  version: 0.1.0
-digest: sha256:c6335d6ff43ca0e9f545721b1415a8cdfdc9782b7e0a903367d61cafb4b1fc77
-generated: 2016-12-14T15:46:22.723598898-08:00

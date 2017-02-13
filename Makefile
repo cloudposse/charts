@@ -1,47 +1,14 @@
-ifneq ($(TRAVIS_PULL_REQUEST_BRANCH),)
-  BRANCH=pr-$(TRAVIS_PULL_REQUEST_BRANCH)
-else ifneq ($(TRAVIS_BRANCH),)
-  BRANCH=$(TRAVIS_BRANCH)
-else ifneq ($(TRAVIS_TAG),)
-  BRANCH=$(TRAVIS_TAG)
-else
-  BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
-endif
+SHELL = /bin/bash
+export BUILD_HARNESS_PATH ?= $(shell until [ -d "build-harness" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/build-harness
+-include $(BUILD_HARNESS_PATH)/Makefile
 
-ifeq ($(BRANCH),master)
-export REPO_URL ?= https://charts.cloudposse.com
-else
-export REPO_URL ?= https://charts.dev.cloudposse.com/$(BRANCH)
-endif
-
-all: package index
-
-.PHONY : info
-## Show information about each repo
-info:
-	@make -C stable $@
-	@make -C incubator $@
-
-.PHONY : package
-## Generate packages of all charts
-package: 
-	@make -C stable $@
-	@make -C incubator $@
-
-.PHONY : index
-## Index all packages
-index:
-	@make -C stable $@
-	@make -C incubator $@
+.PHONY : init
+## Init build-harness
+init:
+	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/install.sh | bash
 
 .PHONY : clean
-## Clean up 
+## Clean build-harness
 clean:
-	@make -C stable $@
-	@make -C incubator $@
+	@rm -rf $(BUILD_HARNESS_PATH)
 
-.PHONY : lint
-## Lint
-lint:
-	@make -C stable/library $@
-	@make -C incubator/library $@

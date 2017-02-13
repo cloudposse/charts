@@ -1,0 +1,21 @@
+# Default values for charts-repo-server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+url:
+replicaCount: 1
+image:
+  repository: cloudposse/charts
+  tag: latest
+  pullPolicy: Always
+service:
+  name: charts-repo
+  type: ClusterIP
+  externalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

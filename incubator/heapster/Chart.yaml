@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for heapster (must be installed to kube-system namespace)
+name: heapster
+version: 0.1.0

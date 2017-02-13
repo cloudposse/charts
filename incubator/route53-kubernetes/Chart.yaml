@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Map k8s services to route53 domains
+name: route53-kubernetes
+version: 0.1.1

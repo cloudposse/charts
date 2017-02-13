@@ -1,0 +1,140 @@
+# Default values for github-authorized-keys.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+## Specify Github Authorized Keys image
+## ref: https://hub.docker.com/r/cloudposse/github-authorized-keys/tags/
+##
+image:
+  ## Specify Image repository
+  ##
+  ## Default: cloudposse/github-authorized-keys
+  repository: cloudposse/github-authorized-keys
+
+  ## Specify Image tag
+  ##
+  ## Default: latest
+  tag: latest
+
+  ## Specify a imagePullPolicy
+  ## Default to 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: Always
+
+## Specify github api token
+## ref: https://github.com/blog/1509-personal-api-tokens
+##
+## REQUIRED
+githubAPIToken: ""
+
+## Specify github organization
+##
+## REQUIRED
+githubOrganization: ""
+
+## Specify github team
+##
+## REQUIRED
+githubTeam: ""
+
+## Specify github team id
+##
+githubTeamID: ""
+
+## Specify users primary group id
+##
+syncUsersGID: ""
+
+## Specify users secondary groups name
+##
+syncUsersGroups: ""
+
+## Specify users shell
+##
+syncUsersShell: "/bin/bash"
+
+## Specify sync users interval in seconds
+##
+syncUsersInterval: "300"
+
+## ETCD build-in cluster
+##
+## To create etcd build-in cluster you have to install etcd-operator before install this chart
+##
+## To install operator use this command
+##
+## helm install stable/etcd-operator
+##
+etcdEnabled: false
+
+## ETCD build-in cluster size
+##
+etcdClusterSize: 3
+
+## Specify ttl of etcd cache in seconds
+##
+## This is time we can have access to servers in case github.com down
+##
+etcdTTL: "86400"
+
+## Template of create user command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {shell}    - User shell
+##
+## If empty - use default value 
+## Default: "adduser {username} --disabled-password --force-badname --shell {shell}"
+tplLinuxUserAdd: ""
+
+## Template of create user with specified primary group id  command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {shell}    - User shell
+## {group}    - User primary group name
+## {gid}      - User primary group id
+##
+## If empty - use default value 
+## Default: "adduser {username} --disabled-password --force-badname --shell {shell} --group {group}"
+tplLinuxUserAddWithGid: ""
+
+## Template of add user secondary group command
+##
+## Available placeholders
+##
+## {username} - User login name
+## {group}    - User primary group name
+##
+## If empty - use default value 
+## Default: "adduser {username} {group}"
+tplLinuxUserAddToGroup: ""
+
+## Template of user delete command
+##
+## Available placeholders
+##
+## {username} - User login name
+##
+## If empty - use default value 
+## Default: "deluser {username}"
+tplLinuxUserDelete: ""
+
+## Template of ssh restart command
+##
+## If empty - use default value 
+## Default: "/usr/sbin/service ssh force-reload"
+tplSSHRestart: ""
+
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 100m

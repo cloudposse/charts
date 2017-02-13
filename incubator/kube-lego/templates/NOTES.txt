@@ -1,0 +1,4 @@
+Kube Lego has been installed to the {{ .Release.Namespace }} as {{ template "fullname" . }}.
+
+Lego endpoint: {{ template "lego_url" . }}
+

@@ -1,0 +1,20 @@
+{{- if .Values.influxdb.persistence.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "influxdb_fullname" . }}
+  labels:
+    app: {{ template "influxdb_fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    volume.alpha.kubernetes.io/storage-class: {{ .Values.influxdb.persistence.storageClass | quote }}
+spec:
+  accessModes:
+    - {{ .Values.influxdb.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.influxdb.persistence.size | quote }}
+{{- end }}

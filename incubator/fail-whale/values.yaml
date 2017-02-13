@@ -1,0 +1,29 @@
+# Default values for nginx-default-backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: nginx
+  tag: alpine
+  pullPolicy: IfNotPresent
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8080
+resources:
+  limits:
+    cpu: 10m
+    memory: 20Mi
+  requests:
+    cpu: 10m
+    memory: 20Mi
+errors:
+  configmap: default
+  default:
+    email: hello@cloudposse.com
+    site: http://cloudposse.com
+    refresh: 120
+    content:
+      title: "We'll be back soon!"
+      message: "This website is currently undergoing maintenance and will be back online shortly.<br/>Thanks for your patience."

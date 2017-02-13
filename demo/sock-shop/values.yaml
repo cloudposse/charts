@@ -1,0 +1,141 @@
+# Default values for sock-shop.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+cart:
+  db:
+    image:
+      repository: mongo
+      tag: latest
+      pullPolicy: Always
+    resources: {}
+
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/cart
+      tag: 0.4.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+catalogue:
+  db:
+    image:
+      repository: weaveworksdemos/catalogue-db
+      tag: 0.3.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/catalogue
+      tag: 0.3.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+frontend:
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/front-end
+      tag: 0.3.1
+      pullPolicy: IfNotPresent
+    resources: {}
+  ingress:
+    enabled: false
+    domain:
+
+orders:
+  db:
+    image:
+      repository: mongo
+      tag: latest
+      pullPolicy: Always
+    resources: {}
+
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/orders
+      tag: 0.4.2
+      pullPolicy: IfNotPresent
+    resources: {}
+
+payments:
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/payment
+      tag: 0.4.1
+      pullPolicy: IfNotPresent
+    resources: {}
+
+queue:
+  db:
+    image:
+      repository: rabbitmq
+      tag: 3
+      pullPolicy: IfNotPresent
+    resources: {}
+
+  app:
+    image:
+      repository:  weaveworksdemos/queue-master
+      tag: 0.3.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+
+shipping:
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/shipping
+      tag: 0.4.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+
+users:
+  db:
+    image:
+      repository: weaveworksdemos/user-db
+      tag: 0.3.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+
+  app:
+    replicaCount: 1
+    image:
+      repository: weaveworksdemos/user
+      tag: 0.4.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+zipkin:
+  db:
+    image:
+      repository: openzipkin/zipkin-mysql
+      tag: 1.20.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+
+  app:
+    replicaCount: 1
+    image:
+      repository: openzipkin/zipkin
+      tag: latest
+      pullPolicy: Always
+    resources: {}
+
+
+  cron:
+    image:
+      repository: openzipkin/zipkin-dependencies
+      tag: 1.4.0
+      pullPolicy: IfNotPresent
+    resources: {}
+
+

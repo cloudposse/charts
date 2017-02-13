@@ -1,0 +1,58 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}"
+  labels:
+    task: "monitoring"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    k8s-app: "{{ .Chart.Name }}"
+    version: "{{ .Values.heapster.image.tag }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        task: "monitoring"
+        k8s-app: "{{ .Chart.Name }}"
+        version: "{{ .Values.heapster.image.tag }}"
+    spec:
+      volumes:
+      - name: ssl-certs
+        hostPath:
+          path: "/etc/ssl/certs"
+      - name: usr-ca-certs
+        hostPath:
+          path: "/usr/share/ca-certificates"
+      containers:
+      - name: eventer
+        image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
+        command:
+        - /eventer
+        - --source={{ .Values.heapster.source }}
+        - --sink=influxdb:http://${{ template "influxdb_env_host" . }}:8086
+      - name: heapster
+        image: "{{ .Values.heapster.image.repository }}:{{ .Values.heapster.image.tag }}"
+        imagePullPolicy: {{ .Values.heapster.image.pullPolicy }}
+        command:
+        - /heapster
+        - --source={{ .Values.heapster.source }}
+        - --sink=influxdb:http://${{ template "influxdb_env_host" .}}:8086
+        volumeMounts:
+        - name: ssl-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true
+        - name: usr-ca-certs
+          mountPath: /usr/share/ca-certificates
+          readOnly: true
+        ports:
+        - containerPort: {{ .Values.heapster.service.internalPort }}
+          name: http
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.heapster.service.internalPort }}
+            scheme: HTTP
+          initialDelaySeconds: 180
+          timeoutSeconds: 5
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
