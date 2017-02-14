@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        checksum/configmap: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: MONGODB_URI
+            value: "{{ template "mongodb_uri" . }}/pritunl"
+          - name: PRITUNL_CONFIG
+            value: "/etc/pritunl.d/custom.conf"
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        - containerPort: 1194
+        - containerPort: 443
+        - containerPort: 80
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        volumeMounts:
+          - mountPath: "/etc/pritunl.d"
+            name: config
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}

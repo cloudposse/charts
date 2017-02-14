@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+data:
+  custom.conf: |-
+    {{- range $name, $value := .Values.pritunl }}
+      {{ $name }} {{ $value }}
+    {{- end }}
