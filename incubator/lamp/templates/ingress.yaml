@@ -1,4 +1,4 @@
-{{- if .Values.DNS.Hostname }}
+{{- if .Values.DNS.Enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

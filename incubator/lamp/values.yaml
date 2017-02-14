@@ -4,15 +4,26 @@
 # Declare variables to be passed into your templates.
 #
 
+define:
+  - &RELEASE_NAME "release"
+  - &DNS_HOSTNAME "localhost"
+  - &DB_USER "app"
+  - &DB_PASS "secret"
+  - &DB_NAME "app"
+  - &DB_HOST "mysql"
+  - &STORAGE_CLASS "local-nfs"
+
+
 DNS:
-  Hostname: ""
+  Enabled: false
+  Hostname: *DNS_HOSTNAME
   TTL: "300"
   Type: "CNAME"
 
 storage:
-  name: "release"
+  name: *RELEASE_NAME
   size: "3Gi"
-  class: "local-nfs"
+  class: *STORAGE_CLASS
 
 mysql:
   ## mysql image version
@@ -27,8 +38,8 @@ mysql:
 
   ## Create a database user
   ##
-  mysqlUser: "app"
-  mysqlPassword: ""
+  mysqlUser: *DB_USER
+  mysqlPassword: *DB_PASS
 
   ## Allow unauthenticated access, uncomment to enable
   ##
@@ -36,7 +47,7 @@ mysql:
 
   ## Create a database
   ##
-  mysqlDatabase: "default"
+  mysqlDatabase: *DB_NAME
 
   ## Specify an imagePullPolicy (Required)
   ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -65,7 +76,7 @@ mysql:
 apache:
   replicaCount: 1
   env:
-    APACHE_SERVER_NAME:                       localhost
+    APACHE_SERVER_NAME:                       *DNS_HOSTNAME
 
     APACHE_WORKER_START_SERVERS:              2
     APACHE_WORKER_MIN_SPARE_THREADS:          2
@@ -91,10 +102,10 @@ apache:
     PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
     PHP_FPM_MAX_REQUESTS:         500
 
-    DB_USER: "app"
-    DB_PASS: ""
-    DB_NAME: "default"
-    DB_HOST: "default-mysql"
+    DB_USER: *DB_USER
+    DB_PASS: *DB_PASS
+    DB_NAME: *DB_NAME
+    DB_HOST: *DB_HOST
 
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
@@ -104,7 +115,7 @@ apache:
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       volume: 
         persistentVolumeClaim:
-          claimName: release
+          claimName: *RELEASE_NAME
 
   image:
     repository: cloudposse/apache-php-fpm
@@ -139,11 +150,11 @@ vps:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
     data: 
       # Path inside container
-      path: /data 
+      path: /var/www/html
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
       volume: 
         persistentVolumeClaim:
-          claimName: release
+          claimName: *RELEASE_NAME
   image:
     repository: cloudposse/ubuntu-vps
     tag: latest
