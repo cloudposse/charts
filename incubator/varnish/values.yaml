@@ -11,7 +11,7 @@ define:
 
 replicaCount: 1
 dns:
-  enalbed: *DNS_ENABLED
+  enabled: *DNS_ENABLED
   hostname: *DNS_HOSTNAME
   ttl: "300"
   type: "CNAME"

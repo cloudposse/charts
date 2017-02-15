@@ -7,7 +7,6 @@ metadata:
     heritage: {{.Release.Service | quote }}
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
-    component: "{{.Release.Name}}-{{.Values.Master.Component}}"
     dns: route53
   annotations:
     "helm.sh/created": {{.Release.Time.Seconds | quote }}
