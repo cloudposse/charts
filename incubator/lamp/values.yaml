@@ -5,13 +5,13 @@
 #
 
 define:
-  - &RELEASE_NAME "release"
-  - &DNS_HOSTNAME "localhost"
-  - &DB_USER "app"
-  - &DB_PASS "secret"
-  - &DB_NAME "app"
-  - &DB_HOST "mysql"
-  - &STORAGE_CLASS "local-nfs"
+  - &RELEASE_NAME "release"         # Helm Release Name
+  - &DNS_HOSTNAME "localhost"       # Ingress Hostname
+  - &DB_USER "app"                  # DB Username
+  - &DB_PASS "secret"               # DB Password
+  - &DB_NAME "app"                  # DB Schema Name
+  - &DB_HOST "mysql"                # DB Hostname (inside kubernetes cluster)
+  - &STORAGE_CLASS "local-nfs"      # Type of storage
 
 
 DNS:
