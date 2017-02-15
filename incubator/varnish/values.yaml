@@ -1,7 +1,22 @@
 # Default values for varnish.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+#
+#
+define:
+  - &DNS_ENABLED     ""          # DNS / Ingress Enabled
+  - &DNS_HOSTNAME    ""          # DNS Hostname to Associate with the Ingress
+  - &VARNISH_BACKEND_HOST ""
+  - &VARNISH_BACKEND_PORT "80"
+
 replicaCount: 1
+dns:
+  enalbed: *DNS_ENABLED
+  hostname: *DNS_HOSTNAME
+  ttl: "300"
+  type: "CNAME"
+
+ 
 varnish:
   debug: false
   canonical_host:
