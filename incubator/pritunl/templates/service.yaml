@@ -7,21 +7,17 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: {{ .Values.service.externalPort }}
-    targetPort: {{ .Values.service.internalPort }}
+  - port: {{ .Values.service.web.externalPort }}
+    targetPort: {{ .Values.service.web.internalPort }}
     protocol: TCP
-    name: {{ .Values.service.name }}
-  - port: 1194
-    targetPort: 1194
-    protocol: TCP
-    name: vpn2
-  - port: 443
-    targetPort: 443
-    protocol: TCP
-    name: https
-  - port: 80
-    targetPort: 80
+    name: web
+  - port: {{ .Values.service.http.externalPort }}
+    targetPort: {{ .Values.service.http.internalPort }}
     protocol: TCP
     name: http
+  - port: {{ .Values.service.vpn.externalPort }}
+    targetPort: {{ .Values.service.vpn.internalPort }}
+    protocol: TCP
+    name: vpn
   selector:
     app: {{ template "fullname" . }}

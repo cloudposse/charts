@@ -38,5 +38,5 @@ Mongo db host
 Mongo db uri
 */}}
 {{- define "mongodb_uri" -}}
-mongodb://{{ template "mongodb_host" . }}:27017
+mongodb://{{ template "mongodb_host" . }}:27017/pritunl
 {{- end -}}

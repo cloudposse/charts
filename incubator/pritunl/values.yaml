@@ -5,7 +5,6 @@
 pritunl:
   app.reverse_proxy: true
   app.server_ssl: false
-  app.server_port: 9700
 #  app.secondary_mongodb_uri: ""
 #  app.redis_uri: ""
 #  app.redis_timeout: 6
@@ -224,8 +223,17 @@ image:
 service:
   name: vpn
   type: ClusterIP
-  externalPort: 9700
-  internalPort: 9700
+  vpn:
+    externalPort: 1194
+    internalPort: 1194
+  web:
+    externalPort: 443
+    internalPort: 443
+  http:
+    externalPort: 80
+    internalPort: 80
+
+
 resources:
   limits:
     cpu: 100m

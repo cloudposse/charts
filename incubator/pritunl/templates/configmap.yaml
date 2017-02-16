@@ -5,7 +5,21 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 data:
+  pritunl.conf: |-
+    {
+        "mongodb_uri": "{{ template "mongodb_uri" . }}",
+        "log_path": "/var/log/pritunl.log",
+        "static_cache": true,
+        "temp_path": "/tmp/pritunl_%r",
+        "bind_addr": "0.0.0.0",
+        "debug": false,
+        "www_path": "/usr/share/pritunl/www",
+        "local_address_interface": "auto",
+        "port": {{ .Values.service.web.internalPort }}
+    }
   custom.conf: |-
+      app.server_port {{ .Values.service.web.internalPort }}
     {{- range $name, $value := .Values.pritunl }}
       {{ $name }} {{ $value }}
     {{- end }}
+
