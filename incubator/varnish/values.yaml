@@ -10,20 +10,20 @@ define:
 
 replicaCount: 1
 
-ingress:
- - name: default
-   tls: true
-   labels:
-     dns: route53
-   annotations:
-     kubernetes.io/tls-acme: 'true'
-     domainName: foobar.com
-     dnsRecordType: CNAME
-     dnsRecordTTL: 300
-   hosts:
-     - varnish.example.com
-     - example.com
-
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "varnish.example.com"
+#     - "example.com"
+#
 
 varnish:
   debug: false
