@@ -1,0 +1,113 @@
+global:
+  ## Hyperkube image to use when getting & deleting ThirdPartyResources
+  ##
+  hyperkube:
+    repository: quay.io/coreos/hyperkube
+    tag: v1.5.2_coreos.1
+    pullPolicy: IfNotPresent
+
+## AlertManagers to which alerts will be sent
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#alertmanagerendpoints
+##
+alertingEndpoints: []
+#   - name: ""
+#     namespace: ""
+#     port: 9093
+#     scheme: http
+
+config: {}
+
+## External URL at which Prometheus will be reachable
+##
+externalUrl: ""
+
+## Prometheus container image
+##
+image:
+  repository: quay.io/prometheus/prometheus
+  tag: v1.5.2
+
+ingress:
+    ## If true, Prometheus Ingress will be created
+    ##
+    enabled: false
+
+    ## Annotations for Prometheus Ingress
+    ##
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: 'true'
+
+    fqdn: ""
+
+    ## TLS configuration for Prometheus Ingress
+    ## Secret must be manually created in the namespace
+    ##
+    tls: []
+      # - secretName: prometheus-k8s-tls
+      #   hosts:
+      #     - prometheus.example.com
+
+## Node labels for Prometheus pod assignment
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+
+## If true, the Operator won't process any Prometheus configuration changes
+##
+paused: false
+
+## Number of Prometheus replicas desired
+##
+replicaCount: 1
+
+## How long to retain metrics
+##
+retention: 24h
+
+## Resource limits & requests
+## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 400Mi
+
+## Prefix used to register routes, overriding externalUrl route.
+## Useful for proxies that rewrite URLs.
+##
+routePrefix: "/"
+
+rules: {}
+
+service:
+  ## Annotations to be added to the Service
+  ##
+  annotations: {}
+
+  clusterIP: ""
+  externalIPs: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+
+  ## Port to expose on each node
+  ## Only used if service.type is 'NodePort'
+  ##
+  nodePort: 30900
+
+  ## Service type
+  ##
+  type: NodePort
+
+## The ServiceMonitor TPRs to be covered by the Prometheus instances.
+##
+serviceMonitorSelector: {}
+
+## Prometheus StorageSpec for persistent data
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#storagespec
+##
+storageSpec: {}
+#   class: default
+#   selector: {}
+#   resources:
+#     requests:
+#       storage: 16Gi
