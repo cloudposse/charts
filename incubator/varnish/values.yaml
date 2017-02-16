@@ -1,19 +1,42 @@
 # Default values for varnish.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+#
+#
+define:
+  - &VARNISH_BACKEND_HOST ""            # Upstream Backend Host
+  - &VARNISH_BACKEND_PORT "80"          # Upstream Backend Port
+  - &VARNISH_CONFIG_CHOOSE "default"    # Vanish Configuration Profile (e.g. default or wordpress)
+
 replicaCount: 1
+
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "varnish.example.com"
+#     - "example.com"
+#
+
 varnish:
   debug: false
   canonical_host:
   config:
     map: default
-    choose: default
+    choose: *VARNISH_CONFIG_CHOOSE
   secret:
     name: default
     default:
   backend:
-    host: localhost
-    port: 80
+    host: *VARNISH_BACKEND_HOST
+    port: *VARNISH_BACKEND_PORT
     timeout:
       first_byte: 600s
       connect: 5s

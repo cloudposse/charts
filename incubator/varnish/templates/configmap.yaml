@@ -192,9 +192,6 @@ data:
       # This is a basic VCL configuration file for varnish.  See the vcl(7)
       # man page for details on VCL syntax and semantics.
 
-      # default health check
-      probe healthcheck
-
       #
       # Default backend definition.  Set this to point to your content
       # server.
