@@ -5,35 +5,3 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 data:
-  # modify this to specify your address
-  lego.email: {{ .Values.lego.email | quote }}
-  lego.url: "{{ template "lego_url" . }}"
-  redis
-  - name: REDIS_QUEUE_SERVER_HOST
-    value:
-  - name: REDIS_QUEUE_SERVER_PORT
-    value:
-  - name: REDIS_QUEUE_SERVER_PASSWORD
-    value:
-  - name: REDIS_QUEUE_SERVER_DB
-    value:
-  - name: REDIS_STORAGE_SERVER_PORT
-    value:
-  - name: REDIS_STORAGE_SERVER_PASSWORD
-    value:
-  - name: REDIS_STORAGE_SERVER_HOST
-    value:
-  - name: REDIS_STORAGE_SERVER_DB
-    value:
-  - name: MIXED_STORAGE_DETECTOR_STORAGE
-    value:
-  - name: STORAGE
-    value:
-  - name: DETECTORS
-    value:
-  - name: SECURITY_KEY
-    value:
-  - name: AUTO_WEBP
-    value:
-  - name: USE_GIFSICLE_ENGINE
-    value:
