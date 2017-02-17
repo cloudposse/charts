@@ -106,6 +106,29 @@ apache:
     DB_NAME: *DB_NAME
     DB_HOST: *DB_HOST
 
+  ## Ingress for load balancer
+  #ingress:
+  # - name: "default"
+  #   tls: "true"
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+  #   hosts:
+  #     - "varnish.example.com"
+  #     - "example.com"
+
+  ## HTTP Health Check
+  healthcheck:
+    path: /           # Path to check via HTTP GET
+    rise: 1           # Number of successful requests before service is considered healthy
+    fall: 3           # Number of unsuccessful requests before service is considered unhealthy
+    interval: 10      # How often to check the service (seconds)
+    timeout: 1        # Acceptable amount of time for a request to complete (seconds)
+
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
     data:
