@@ -1,36 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# Default values for lamp.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-storage:
-  name: wordpress-test
-  size: 1Gi
-  class: local-nfs
-
-app:
-  init:
-    image:
-      repository: cloudposse/init-wordpress
-      tag: init
-      pullPolicy: Always
-
-    destination: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      persistentVolumeClaim:
-        claimName: wordpress-test
-    env:
-      GIT_REPO: ""
-      GIT_BRANCH: "master"
-      SOURCE: blog
-      DB: "https://s3-us-west-1.amazonaws.com/cloudposse-blog/mysqldump.sql-20170207_081003.gz"
-      DB_USER: root
-      DB_NAME: wp
-      DB_HOST: release-mysql
-=======
-=======
->>>>>>> master
-# Default values for lamp chart. This is a YAML-formatted file. 
+# Default values for lamp chart. This is a YAML-formatted file.
 #
 # Declare variables to be passed into your templates.
 #
@@ -56,10 +24,6 @@ storage:
   size: "3Gi"
   class: *STORAGE_CLASS
 
-<<<<<<< HEAD
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
->>>>>>> master
 mysql:
   ## mysql image version
   ## ref: https://hub.docker.com/r/library/mysql/tags/
@@ -73,18 +37,8 @@ mysql:
 
   ## Create a database user
   ##
-<<<<<<< HEAD
-<<<<<<< HEAD
-  mysqlUser: wp
-  mysqlPassword: wp-password
-=======
   mysqlUser: *DB_USER
   mysqlPassword: *DB_PASS
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-  mysqlUser: *DB_USER
-  mysqlPassword: *DB_PASS
->>>>>>> master
 
   ## Allow unauthenticated access, uncomment to enable
   ##
@@ -92,15 +46,7 @@ mysql:
 
   ## Create a database
   ##
-<<<<<<< HEAD
-<<<<<<< HEAD
-  mysqlDatabase: wp
-=======
   mysqlDatabase: *DB_NAME
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-  mysqlDatabase: *DB_NAME
->>>>>>> master
 
   ## Specify an imagePullPolicy (Required)
   ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -129,15 +75,7 @@ mysql:
 apache:
   replicaCount: 1
   env:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    APACHE_SERVER_NAME:                       localhost
-=======
     APACHE_SERVER_NAME:                       *DNS_HOSTNAME
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-    APACHE_SERVER_NAME:                       *DNS_HOSTNAME
->>>>>>> master
 
     APACHE_WORKER_START_SERVERS:              2
     APACHE_WORKER_MIN_SPARE_THREADS:          2
@@ -163,22 +101,6 @@ apache:
     PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
     PHP_FPM_MAX_REQUESTS:         500
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    DB_USER: wp
-    DB_PASS: wp-password
-    DB_NAME: wp
-    DB_HOST: release-mysql
-
-  mounts:
-    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-      path: /var/www/html # Path
-      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-        persistentVolumeClaim:
-          claimName: wordpress-test
-=======
-=======
->>>>>>> master
     DB_USER: *DB_USER
     DB_PASS: *DB_PASS
     DB_NAME: *DB_NAME
@@ -186,43 +108,25 @@ apache:
 
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-    data: 
+    data:
       # Path inside container
-      path: /var/www/html 
+      path: /var/www/html
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      volume: 
+      volume:
         persistentVolumeClaim:
           claimName: *RELEASE_NAME
-<<<<<<< HEAD
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
->>>>>>> master
 
   image:
     repository: cloudposse/apache-php-fpm
     tag: latest
     pullPolicy: Always
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-
->>>>>>> master
   service:
     name: apache
     type: ClusterIP
     externalPort: 80
     internalPort: 80
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-
->>>>>>> master
   resources:
     limits:
       cpu: 100m
@@ -231,78 +135,36 @@ apache:
       cpu: 100m
       memory: 128Mi
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-vps:
-  vps:
-=======
 vps:
   shell:
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-vps:
-  shell:
->>>>>>> master
     user: admin
     password:
     group: admin
     enableSudo: true
     githubUsers:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    envvars:
-  mounts:
-  ## Mounts
-    data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-      path: /data # Path
-      volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-        persistentVolumeClaim:
-          claimName: wordpress-test
-=======
-=======
->>>>>>> master
     env:
 
   ## Mounts
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-    data: 
+    data:
       # Path inside container
       path: /var/www/html
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      volume: 
+      volume:
         persistentVolumeClaim:
           claimName: *RELEASE_NAME
-<<<<<<< HEAD
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
->>>>>>> master
   image:
     repository: cloudposse/ubuntu-vps
     tag: latest
     pullPolicy: Always
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-
->>>>>>> master
   service:
     name: ssh
     type: ClusterIP
     externalPort: 22
     internalPort: 22
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
-=======
-
->>>>>>> master
   resources:
     limits:
       cpu: 100m
