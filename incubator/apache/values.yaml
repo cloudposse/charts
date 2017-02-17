@@ -2,6 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+
+## Environment for Apache
 env:
   APACHE_SERVER_NAME:                       localhost
   
@@ -29,6 +31,7 @@ env:
   PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
   PHP_FPM_MAX_REQUESTS:         500
 
+## Ingress for load balancer
 #ingress:
 # - name: "default"
 #   tls: "true"
@@ -43,22 +46,35 @@ env:
 #     - "varnish.example.com"
 #     - "example.com"
 #
+#
+#
 
-mounts:
+## HTTP Health Check
+healthcheck:
+  path: /           # Path to check via HTTP GET
+  rise: 1           # Number of successful requests before service is considered healthy
+  fall: 3           # Number of unsuccessful requests before service is considered unhealthy
+  interval: 10      # How often to check the service (seconds)
+  timeout: 1        # Acceptable amount of time for a request to complete (seconds)
+
 ## Mounts
+mounts:
 #  html-data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
 #    path: /var/www/html # Path
 #    volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
 #      emptyDir: {}
+
 image:
   repository: cloudposse/apache
   tag: latest
   pullPolicy: Always
+
 service:
   name: apache
   type: ClusterIP
   externalPort: 80
   internalPort: 80
+
 resources:
   limits:
     cpu: 100m
