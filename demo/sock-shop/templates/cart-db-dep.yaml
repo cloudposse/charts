@@ -1,0 +1,40 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cart-db
+  labels:
+    name: cart-db
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: cart-db
+    spec:
+      containers:
+      - name: cart-db
+        image: "{{ .Values.cart.db.image.repository }}:{{ .Values.cart.db.image.tag }}"
+        imagePullPolicy: {{ .Values.cart.db.image.pullPolicy }}
+        ports:
+        - name: mongo
+          containerPort: 27017
+        securityContext:
+          capabilities:
+            drop:
+              - all
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+          readOnlyRootFilesystem: true
+        resources:
+{{ toYaml .Values.cart.db.resources | indent 12 }}
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory

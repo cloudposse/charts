@@ -1,0 +1,29 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: catalogue-db
+  labels:
+    name: catalogue-db
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: catalogue-db
+    spec:
+      containers:
+      - name: catalogue-db
+        image: "{{ .Values.catalogue.db.image.repository }}:{{ .Values.catalogue.db.image.tag }}"
+        imagePullPolicy: {{ .Values.catalogue.db.image.pullPolicy }}
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: fake_password
+          - name: MYSQL_DATABASE
+            value: socksdb
+        ports:
+        - name: mysql
+          containerPort: 3306
+        resources:
+{{ toYaml .Values.catalogue.db.resources | indent 12 }}

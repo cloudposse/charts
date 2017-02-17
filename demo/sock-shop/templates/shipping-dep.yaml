@@ -1,0 +1,52 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: shipping
+  labels:
+    name: shipping
+
+spec:
+  replicas: {{ .Values.shipping.app.replicaCount }}
+  template:
+    metadata:
+      labels:
+        name: shipping
+    spec:
+      containers:
+      - name: shipping
+        image: "{{ .Values.shipping.app.image.repository }}:{{ .Values.shipping.app.image.tag }}"
+        imagePullPolicy: {{ .Values.shipping.app.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+            add:
+              - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 180
+          periodSeconds: 3
+        resources:
+{{ toYaml .Values.shipping.app.resources | indent 12 }}
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+

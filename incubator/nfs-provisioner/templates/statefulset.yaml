@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  serviceName: "nfs-provisioner"
+  serviceName: {{ template "fullname" . }}
   replicas: 1
   template:
     metadata:
@@ -50,8 +50,13 @@ spec:
                   fieldPath: metadata.namespace
           imagePullPolicy: "IfNotPresent"
           volumeMounts:
-            - name: export-volume
+            - name: data
               mountPath: /export
       volumes:
-        - name: export-volume
-{{ toYaml .Values.mount | indent 10 }}
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}

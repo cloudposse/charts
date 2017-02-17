@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Default values for lamp.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -25,6 +26,34 @@ app:
       DB_USER: root
       DB_NAME: wp
       DB_HOST: release-mysql
+=======
+# Default values for lamp chart. This is a YAML-formatted file. 
+#
+# Declare variables to be passed into your templates.
+#
+
+define:
+  - &RELEASE_NAME "release"         # Helm Release Name
+  - &DNS_HOSTNAME "localhost"       # Ingress Hostname
+  - &DB_USER "app"                  # DB Username
+  - &DB_PASS "secret"               # DB Password
+  - &DB_NAME "app"                  # DB Schema Name
+  - &DB_HOST "mysql"                # DB Hostname (inside kubernetes cluster)
+  - &STORAGE_CLASS "local-nfs"      # Type of storage
+
+
+DNS:
+  Enabled: false
+  Hostname: *DNS_HOSTNAME
+  TTL: "300"
+  Type: "CNAME"
+
+storage:
+  name: *RELEASE_NAME
+  size: "3Gi"
+  class: *STORAGE_CLASS
+
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
 mysql:
   ## mysql image version
   ## ref: https://hub.docker.com/r/library/mysql/tags/
@@ -38,8 +67,13 @@ mysql:
 
   ## Create a database user
   ##
+<<<<<<< HEAD
   mysqlUser: wp
   mysqlPassword: wp-password
+=======
+  mysqlUser: *DB_USER
+  mysqlPassword: *DB_PASS
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
 
   ## Allow unauthenticated access, uncomment to enable
   ##
@@ -47,7 +81,11 @@ mysql:
 
   ## Create a database
   ##
+<<<<<<< HEAD
   mysqlDatabase: wp
+=======
+  mysqlDatabase: *DB_NAME
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
 
   ## Specify an imagePullPolicy (Required)
   ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -76,7 +114,11 @@ mysql:
 apache:
   replicaCount: 1
   env:
+<<<<<<< HEAD
     APACHE_SERVER_NAME:                       localhost
+=======
+    APACHE_SERVER_NAME:                       *DNS_HOSTNAME
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
 
     APACHE_WORKER_START_SERVERS:              2
     APACHE_WORKER_MIN_SPARE_THREADS:          2
@@ -102,6 +144,7 @@ apache:
     PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
     PHP_FPM_MAX_REQUESTS:         500
 
+<<<<<<< HEAD
     DB_USER: wp
     DB_PASS: wp-password
     DB_NAME: wp
@@ -113,16 +156,40 @@ apache:
       volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
         persistentVolumeClaim:
           claimName: wordpress-test
+=======
+    DB_USER: *DB_USER
+    DB_PASS: *DB_PASS
+    DB_NAME: *DB_NAME
+    DB_HOST: *DB_HOST
+
+  mounts:
+    # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+    data: 
+      # Path inside container
+      path: /var/www/html 
+      # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      volume: 
+        persistentVolumeClaim:
+          claimName: *RELEASE_NAME
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
 
   image:
     repository: cloudposse/apache-php-fpm
     tag: latest
     pullPolicy: Always
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
   service:
     name: apache
     type: ClusterIP
     externalPort: 80
     internalPort: 80
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
   resources:
     limits:
       cpu: 100m
@@ -131,14 +198,20 @@ apache:
       cpu: 100m
       memory: 128Mi
 
+<<<<<<< HEAD
 
 vps:
   vps:
+=======
+vps:
+  shell:
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
     user: admin
     password:
     group: admin
     enableSudo: true
     githubUsers:
+<<<<<<< HEAD
     envvars:
   mounts:
   ## Mounts
@@ -147,15 +220,37 @@ vps:
       volume: # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
         persistentVolumeClaim:
           claimName: wordpress-test
+=======
+    env:
+
+  ## Mounts
+  mounts:
+    # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
+    data: 
+      # Path inside container
+      path: /var/www/html
+      # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
+      volume: 
+        persistentVolumeClaim:
+          claimName: *RELEASE_NAME
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
   image:
     repository: cloudposse/ubuntu-vps
     tag: latest
     pullPolicy: Always
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
   service:
     name: ssh
     type: ClusterIP
     externalPort: 22
     internalPort: 22
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
   resources:
     limits:
       cpu: 100m
