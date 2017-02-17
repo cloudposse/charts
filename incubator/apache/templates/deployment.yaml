@@ -34,7 +34,7 @@ spec:
           periodSeconds: {{ .Values.healthcheck.interval }}
           timeoutSeconds: {{ .Values.healthcheck.timeout }}
         livenessProbe:
-          successThreshold: {{ .Values.healthcheck.rise }}
+          successThreshold: 1 # must be 1 for liveness (k8s requirement)
           failureThreshold: {{ .Values.healthcheck.fall }}
           httpGet:
             path: {{ .Values.healthcheck.path }}
