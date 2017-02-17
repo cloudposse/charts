@@ -24,10 +24,16 @@ data:
   - name: REDIS_STORAGE_SERVER_HOST
     value:
   - name: REDIS_STORAGE_SERVER_DB
+    value:
   - name: MIXED_STORAGE_DETECTOR_STORAGE
+    value:
   - name: STORAGE
+    value:
   - name: DETECTORS
+    value:
   - name: SECURITY_KEY
+    value:
   - name: AUTO_WEBP
+    value:
   - name: USE_GIFSICLE_ENGINE
-
+    value:
