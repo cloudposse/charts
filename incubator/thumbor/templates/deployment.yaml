@@ -10,15 +10,15 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-     spec:
+    spec:
       volumes:
         name: storage
-        {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim: 
+        {{ if .Values.persistence.enabled }}
+        persistentVolumeClaim:
           claimName: {{ template "fullname" . }}
-        {{- else }}
+        {{ else }}
         emptyDir: {}
-        {{- end -}}
+        {{ end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -41,12 +41,19 @@ spec:
         - name: REDIS_STORAGE_SERVER_HOST
           value:
         - name: REDIS_STORAGE_SERVER_DB
+          value:
         - name: MIXED_STORAGE_DETECTOR_STORAGE
+          value:
         - name: STORAGE
+          value:
         - name: DETECTORS
+          value:
         - name: SECURITY_KEY
+          value:
         - name: AUTO_WEBP
+          value:
         - name: USE_GIFSICLE_ENGINE
+          value:
         volumeMounts:
         - name: storage
           mountPath: /app
@@ -59,5 +66,5 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.service.internalPort }}
-       resources:
+        resources:
 {{ toYaml .Values.resources | indent 12 }}
