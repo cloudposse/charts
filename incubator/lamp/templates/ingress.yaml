@@ -1,0 +1,30 @@
+{{- if .Values.DNS.Enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{template "fullname" . }}
+  labels:
+    heritage: {{.Release.Service | quote }}
+    release: {{.Release.Name | quote }}
+    chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    dns: route53
+  annotations:
+    "helm.sh/created": {{.Release.Time.Seconds | quote }}
+    kubernetes.io/tls-acme: "true"
+    domainName: {{.Values.DNS.Hostname | quote}}
+    dnsRecordType: {{.Values.DNS.Type | quote}}
+    dnsRecordTTL: {{.Values.DNS.TTL | quote}}
+spec:
+  tls:
+  - hosts:
+    - {{.Values.DNS.Hostname | quote}}
+    secretName: {{template "fullname" . }}-ssl
+  rules:
+  - host: {{.Values.DNS.Hostname | quote}}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{template "fullname" . }}
+          servicePort: {{.Values.apache.service.externalPort}}
+{{- end }}
