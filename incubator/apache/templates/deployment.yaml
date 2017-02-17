@@ -32,6 +32,7 @@ spec:
             port: {{ .Values.service.internalPort }}
             scheme: HTTP
 {{- if .Values.healthcheck.headers }}
+            httpHeaders:
 {{ toYaml .Values.healthcheck.headers | indent 12 }}
 {{- end }}
           periodSeconds: {{ .Values.healthcheck.interval }}
@@ -44,6 +45,7 @@ spec:
             port: {{ .Values.service.internalPort }}
             scheme: HTTP
 {{- if .Values.healthcheck.headers }}
+            httpHeaders:
 {{ toYaml .Values.healthcheck.headers | indent 12 }}
 {{- end }}
           periodSeconds: {{ .Values.healthcheck.interval }}
