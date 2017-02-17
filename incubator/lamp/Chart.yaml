@@ -1,8 +1,12 @@
 apiVersion: v1
 <<<<<<< HEAD
+<<<<<<< HEAD
 description: A Helm chart for Kubernetes
 =======
 description: A Helm chart for Linux, Apache, MySQL, PHP (aka LAMP)
 >>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
+=======
+description: A Helm chart for Linux, Apache, MySQL, PHP (aka LAMP)
+>>>>>>> master
 name: lamp
 version: 0.1.0

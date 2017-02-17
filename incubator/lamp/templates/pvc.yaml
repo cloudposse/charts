@@ -12,7 +12,11 @@ spec:
   resources:
     requests:
 <<<<<<< HEAD
+<<<<<<< HEAD
       storage: {{ .Values.storage.size| quote }}
 =======
       storage: {{ .Values.storage.size | quote }}
 >>>>>>> b6b6002441550d52265fc9449668bb4ba09a2c27
+=======
+      storage: {{ .Values.storage.size | quote }}
+>>>>>>> master
