@@ -2,4 +2,4 @@
 dependencies:
 - name: "remotecv"
   version: "0.1.0"
-  repository: "https://charts.dev.cloudposse.com/remotecv/incubator"
+  repository: "https://charts.dev.cloudposse.com/master/incubator"
