@@ -28,6 +28,22 @@ env:
   PHP_FPM_MAX_SPARE_SERVERS:    10
   PHP_FPM_PROCESS_IDLE_TIMEOUT: 25s
   PHP_FPM_MAX_REQUESTS:         500
+
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "varnish.example.com"
+#     - "example.com"
+#
+
 mounts:
 ## Mounts
 #  html-data: # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
