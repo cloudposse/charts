@@ -1,7 +1,7 @@
 # requirements.yaml
 dependencies:
 - name: "apache"
-  version: "0.1.2"
+  version: "0.1.3"
   repository: "https://charts.cloudposse.com/incubator"
 - name: "vps"
   version: "0.1.0"
