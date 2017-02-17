@@ -1,4 +1,4 @@
-# Default values for lamp chart. This is a YAML-formatted file. 
+# Default values for lamp chart. This is a YAML-formatted file.
 #
 # Declare variables to be passed into your templates.
 #
@@ -108,11 +108,11 @@ apache:
 
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-    data: 
+    data:
       # Path inside container
-      path: /var/www/html 
+      path: /var/www/html
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      volume: 
+      volume:
         persistentVolumeClaim:
           claimName: *RELEASE_NAME
 
@@ -147,11 +147,11 @@ vps:
   ## Mounts
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
-    data: 
+    data:
       # Path inside container
       path: /var/www/html
       # k8s specific configs https://kubernetes.io/docs/user-guide/volumes/
-      volume: 
+      volume:
         persistentVolumeClaim:
           claimName: *RELEASE_NAME
   image:
