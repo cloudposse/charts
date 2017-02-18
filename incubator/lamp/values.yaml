@@ -128,6 +128,9 @@ apache:
     fall: 3           # Number of unsuccessful requests before service is considered unhealthy
     interval: 10      # How often to check the service (seconds)
     timeout: 1        # Acceptable amount of time for a request to complete (seconds)
+    headers: 
+      - name: Host
+        value: localhost
 
   mounts:
     # Volume name must match the regex [a-z0-9]([-a-z0-9]*[a-z0-9])? (e.g. 'my-name' or '123-abc')
