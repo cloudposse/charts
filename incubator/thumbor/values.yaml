@@ -2,33 +2,46 @@
 
 replicaCount: 1
 
-app:
-  log_level: "debug"
-  mixed_storage_detector_storage: "tc_redis.storages.redis_storage"
-  storage: "thumbor.storages.mixed_storage"
-  detectors: "['thumbor.detectors.queued_detector.queued_complete_detector']"
-  security_key: 
-  auto_webp: "True"
-  use_gifsicle_engine: "False"
+env:
+  MIXED_STORAGE_DETECTOR_STORAGE: "tc_redis.storages.redis_storage"
+  STORAGE: "thumbor.storages.mixed_storage"
+  DETECTORS: "['thumbor.detectors.queued_detector.queued_complete_detector']"
+  SECURITY_KEY: ""
+  AUTO_WEBP: "False"
+  USE_GIFSICLE_ENGINE: "False"
+  LOG_LEVEL: "debug"
 
-dns:
-  hostname: ""
-  ttl: "300"
-  type: "CNAME"
+## Ingress for load balancer
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "thumbor.example.com"
+#     - "example.com"
+#
+#
+#
 
 image:
   repository: cloudposse/thumbor
-  tag: stable
-  pullPolicy: IfNotPresent
+  tag: latest
+  pullPolicy: Always
 
 service:
-  name: nginx
+  name: thumbor
   type: ClusterIP
   externalPort: 80
   internalPort: 80
 
 persistence:
-  enabled: true
+  enabled: false
   storageClass: generic
   accessMode: ReadWriteOnce
   size: 8Gi
@@ -48,7 +61,6 @@ remotecv:
     url: ""
   redis:
     host: "redis"
-    port: "6379"
     database: "0"
   remotecv:
     loader: "remotecv.http_loader"
