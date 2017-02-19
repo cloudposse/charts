@@ -5,7 +5,22 @@ replicaCount: 2
 image: 
   repository: cloudposse/geoip-api
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
+
+## Ingress for load balancer
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "api.geoip.example.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "api.geoip.example.com"
+
 service:
   name: geoip-api
   type: ClusterIP
