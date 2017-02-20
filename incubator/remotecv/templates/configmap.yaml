@@ -7,7 +7,7 @@ metadata:
 data:
   log.level: {{ .Values.log.level | quote }}
   redis.host: {{ template "redis_fullname" . }}
-  redis.port: {{ .Values.redis.port | quote }}
+  redis.port: "6379"
   redis.database: {{ .Values.redis.database | quote }}
   app.loader: {{ .Values.app.loader | quote }}
   app.store: {{ .Values.app.store | quote }}
