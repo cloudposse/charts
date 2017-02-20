@@ -10,6 +10,11 @@ env:
   AUTO_WEBP: "False"
   USE_GIFSICLE_ENGINE: "False"
   LOG_LEVEL: "debug"
+  RESULT_STORAGE: 'tc_aws.result_storages.s3_storage'
+  TC_AWS_REGION: 'us-west-2'
+  ## https://github.com/boto/boto3/issues/450
+  TC_AWS_RESULT_STORAGE_BUCKET: '' # bucket name should be consists of any letter or -
+  TC_AWS_RESULT_STORAGE_ROOT_PATH: 'result'
 
 ## Ingress for load balancer
 #ingress:
@@ -59,22 +64,32 @@ remotecv:
     level: "info"
   sentry:
     url: ""
-  redis:
-    host: "redis"
-    database: "0"
-  remotecv:
+  app:
     loader: "remotecv.http_loader"
     store: "remotecv.result_store.redis_store"
     timeout: "60"
-
-redis:
-  image: bitnami/redis:3.2.5-r0
-  imagePullPolicy: IfNotPresent
-# redisPassword:
-  persistence:
-    enabled: true
-    storageClass: generic
-    accessMode: ReadWriteOnce
-    size: 8Gi
+  redis:
+    database: "0"
+    persistence:
+      enabled: true
+      # storageClass:
+      accessMode: ReadWriteOnce
+      size: 8Gi
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+  replicaCount: 1
+  image:
+    repository: "cloudposse/remotecv"
+    tag: "latest"
+    pullPolicy: "Always"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
 
