@@ -16,6 +16,10 @@ env:
   TC_AWS_RESULT_STORAGE_BUCKET: '' # bucket name should be consists of any letter or -
   TC_AWS_RESULT_STORAGE_ROOT_PATH: 'result'
 
+## You can use kube2iam for provide perms to s3 https://github.com/jtblin/kube2iam
+annotations:
+#   iam.amazonaws.com/role: role-name
+
 ## Ingress for load balancer
 #ingress:
 # - name: "default"

@@ -10,6 +10,8 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+      annotations:
+{{ toYaml .Values.annotations | indent 8 }}
     spec:
       volumes:
       - name: storage
