@@ -1,6 +1,6 @@
 # Default values for thumbor.
 
-replicaCount: 1
+replicaCount: 1 ## Use s3 result storage if replica count > 1
 
 env:
   MIXED_STORAGE_DETECTOR_STORAGE: "tc_redis.storages.redis_storage"
