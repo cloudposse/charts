@@ -1,0 +1,165 @@
+# Default values for oauth2-proxy.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+env:
+# Upstream host
+  OAUTH2_PROXY_UPSTREAM: ""
+
+# Enabled provider
+  OAUTH2_PROXY_PROVIDER: "github"
+
+# Common oauth configs
+  OAUTH2_PROXY_CLIENT_ID: ""
+  OAUTH2_PROXY_CLIENT_SECRET: ""
+  OAUTH2_PROXY_SCOPE: ""
+  OAUTH2_PROXY_REDIRECT_URL: ""
+
+# Github specific configs
+  OAUTH2_PROXY_GITHUB_ORG: ""
+  OAUTH2_PROXY_GITHUB_TEAM: ""
+
+# Github or Gitlab specific configs
+  OAUTH2_PROXY_LOGIN_URL: ""
+  OAUTH2_PROXY_REDEEEM_URL: ""
+  OAUTH2_PROXY_VALIDATE_URL: ""
+
+# MS Azure specific configs
+  OAUTH2_PROXY_AZURE_TENANT: "common"
+  OAUTH2_PROXY_RESOURCE: ""
+
+# Google specific configs
+  OAUTH2_PROXY_GOOGLE_ADMIN_EMAIL: ""
+  OAUTH2_PROXY_GOOGLE_GROUP: ""
+  OAUTH2_PROXY_GOOGLE_SERVICE_ACCOUNT_JSON: ""
+
+# HTTP auth configs
+  OAUTH2_PROXY_BASIC_AUTH_PASSWORD: ""
+  OAUTH2_PROXY_DISPLAY_HTPASSWD_FORM: false
+  OAUTH2_PROXY_HTPASSWD_FILE: ""
+
+# oAuth2 proxy configs
+  OAUTH2_PROXY_APPROVAL_PROMT: force
+  OAUTH2_PROXY_REQUEST_LOGGING: false
+  OAUTH2_PROXY_PASS_ACCESS_TOKEN: false
+  OAUTH2_PROXY_PASS_BASIC_AUTH: true
+  OAUTH2_PROXY_PASS_HOST_HEADER: true
+  OAUTH2_PROXY_CUSTOM_TEMPLATES_DIR: ""
+  OAUTH2_PROXY_PROXY_PREFIX: "/oauth2"
+  OAUTH2_PROXY_SKIP_AUTH_REGEX: ""
+  OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: false
+  OAUTH2_PROXY_PROFILE_URL: ""
+  OAUTH2_PROXY_SIGNATURE_KEY: ""
+
+# oAuth2 proxy session cookie config
+  OAUTH2_PROXY_COOKIE_DOMAIN: ""
+  OAUTH2_PROXY_COOKIE_EXPIRE: 168h0m0s
+  OAUTH2_PROXY_COOKIE_HTTPONLY: true
+  OAUTH2_PROXY_COOKIE_NAME: "_oauth2_proxy"
+  OAUTH2_PROXY_COOKIE_REFRESH: 0
+  OAUTH2_PROXY_COOKIE_SECRET: ""
+  OAUTH2_PROXY_COOKIE_SECURE: true
+
+app:
+	upstreams:
+
+	proxy-prefix:
+	http_address:
+	https_address:
+	redirect_url:
+	client_id:
+	client_secret:
+	tls_cert_file:
+	tls_key_file:
+
+	authenticated_emails_file:
+	azure_tenant:
+	email_domains:
+	github_org:
+	github_team:
+	google_group:
+	google_admin_email:
+	google_service_account_json:
+	htpasswd_file:
+	display_htpasswd_form:
+	custom_templates_dir:
+	footer:
+
+	cookie_name:
+	cookie_secret:
+	cookie_domain:
+	cookie_expire:
+	cookie_refresh:
+	cookie_secure:
+	cookie_httponly:
+
+	skip_auth_regex:
+	pass_basic_auth:
+	basic_auth_password:
+	pass_access_token:
+	pass_host_header:
+	skip_provider_button:
+
+	provider:
+	login_url:
+	redeem_url:
+	profile_url:
+	resource:
+	validate_url:
+	scope:
+	approval_prompt:
+
+	request_logging:
+
+	signature_key:
+
+  useSSL: false
+  emailDomain: "*"
+  emails:
+#    - igor@cloudposse.com
+
+
+
+## Ingress for load balancer
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "thumbor.example.com"
+#     - "example.com"
+
+replicaCount: 1
+image:
+  repository: cloudposse/oauth2-proxy
+  tag: latest
+  pullPolicy: Always
+service:
+  name: oauth
+  type: ClusterIP
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+  http:
+    externalPort: 80
+    internalPort: 80
+  https:
+    externalPort: 443
+    internalPort: 443
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

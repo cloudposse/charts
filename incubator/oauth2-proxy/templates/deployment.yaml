@@ -1,0 +1,58 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+{{- $context := . -}}
+{{- range $name, $value := .Values.env }}
+{{- if not (empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" $context }}
+              key: {{ $name }}
+{{- end }}
+{{- end }}
+        - name: OAUTH2_PROXY_HTTP_ADDRESS
+          value: ":{{ .Values.service.http.internalPort }}"
+        - name: OAUTH2_PROXY_HTTPS_ADDRESS
+          value: ":{{ .Values.service.https.internalPort }}"
+        - name: OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE
+          value: "/usr/share/oauth2_proxy/emails"
+        - name: OAUTH2_PROXY_EMAIL_DOMAIN
+          value: {{ .Values.app.emailDomain | quote }}
+        - name: OAUTH2_PROXY_CONFIG
+          value: ""
+{{- if .Values.app.useSSL }}
+        - name: OAUTH2_PROXY_TLS_CERT:
+          value: ""
+        - name: OAUTH2_PROXY_TLS_KEY:
+          value: ""
+{{- end }}
+        ports:
+        - containerPort: {{ .Values.service.http.internalPort }}
+        - containerPort: {{ .Values.service.https.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.http.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.http.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
