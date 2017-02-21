@@ -1,0 +1,99 @@
+# Default values for thumbor.
+
+replicaCount: 1 ## Use s3 result storage if replica count > 1
+
+env:
+  MIXED_STORAGE_DETECTOR_STORAGE: "tc_redis.storages.redis_storage"
+  STORAGE: "thumbor.storages.mixed_storage"
+  DETECTORS: "['thumbor.detectors.queued_detector.queued_complete_detector']"
+  SECURITY_KEY: ""
+  AUTO_WEBP: "False"
+  USE_GIFSICLE_ENGINE: "False"
+  LOG_LEVEL: "debug"
+  RESULT_STORAGE: 'tc_aws.result_storages.s3_storage'
+  TC_AWS_REGION: 'us-west-2'
+  ## https://github.com/boto/boto3/issues/450
+  TC_AWS_RESULT_STORAGE_BUCKET: '' # bucket name should be consists of any letter or -
+  TC_AWS_RESULT_STORAGE_ROOT_PATH: 'result'
+
+## You can use kube2iam for provide perms to s3 https://github.com/jtblin/kube2iam
+annotations:
+#   iam.amazonaws.com/role: role-name
+
+## Ingress for load balancer
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "thumbor.example.com"
+#     - "example.com"
+#
+#
+#
+
+image:
+  repository: cloudposse/thumbor
+  tag: latest
+  pullPolicy: Always
+
+service:
+  name: thumbor
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+
+persistence:
+  enabled: false
+  storageClass: generic
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+remotecv:
+  log:
+    level: "info"
+  sentry:
+    url: ""
+  app:
+    loader: "remotecv.http_loader"
+    store: "remotecv.result_store.redis_store"
+    timeout: "60"
+  redis:
+    database: "0"
+    persistence:
+      enabled: true
+      # storageClass:
+      accessMode: ReadWriteOnce
+      size: 8Gi
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+  replicaCount: 1
+  image:
+    repository: "cloudposse/remotecv"
+    tag: "latest"
+    pullPolicy: "Always"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+

@@ -1,0 +1,5 @@
+# requirements.yaml
+dependencies:
+- name: "remotecv"
+  version: "0.1.0"
+  repository: "https://charts.cloudposse.com/incubator"
