@@ -11,48 +11,68 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Chart.Name "/templates/secret.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+          - "-config"
+          - "/usr/share/oauth2_proxy/config"
         env:
-{{- $context := . -}}
-{{- range $name, $value := .Values.env }}
-{{- if not (empty $value) }}
-        - name: {{ $name }}
+        - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" $context }}
-              key: {{ $name }}
-{{- end }}
-{{- end }}
-        - name: OAUTH2_PROXY_HTTP_ADDRESS
-          value: ":{{ .Values.service.http.internalPort }}"
-        - name: OAUTH2_PROXY_HTTPS_ADDRESS
-          value: ":{{ .Values.service.https.internalPort }}"
-        - name: OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE
-          value: "/usr/share/oauth2_proxy/emails"
-        - name: OAUTH2_PROXY_EMAIL_DOMAIN
-          value: {{ .Values.app.emailDomain | quote }}
-        - name: OAUTH2_PROXY_CONFIG
-          value: ""
-{{- if .Values.app.useSSL }}
-        - name: OAUTH2_PROXY_TLS_CERT:
-          value: ""
-        - name: OAUTH2_PROXY_TLS_KEY:
-          value: ""
-{{- end }}
+              name: {{ template "fullname" . }}
+              key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_name
+        - name: OAUTH2_PROXY_COOKIE_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_domain
+        - name: OAUTH2_PROXY_COOKIE_EXPIRE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_expire
+        - name: OAUTH2_PROXY_COOKIE_REFRESH
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_refresh
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_secret
         ports:
         - containerPort: {{ .Values.service.http.internalPort }}
         - containerPort: {{ .Values.service.https.internalPort }}
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/oauth2_proxy
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: {{ .Values.service.http.internalPort }}
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: {{ .Values.service.http.internalPort }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}
