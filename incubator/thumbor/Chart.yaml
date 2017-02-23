@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for Thumbor+RemoteCV thumbnailing service
+name: thumbor
+version: 0.1.0

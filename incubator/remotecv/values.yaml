@@ -11,7 +11,15 @@ app:
   timeout: "60"
 redis:
   database: "0"
-  port: 6379
+  persistence:
+    enabled: true
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
 replicaCount: 1
 image:
   repository: "cloudposse/remotecv"

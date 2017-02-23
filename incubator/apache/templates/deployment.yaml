@@ -24,14 +24,32 @@ spec:
 {{- end }}
         ports:
         - containerPort: {{ .Values.service.internalPort }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.service.internalPort }}
         readinessProbe:
+          successThreshold: {{ .Values.healthcheck.rise }}
+          failureThreshold: {{ .Values.healthcheck.fall }}
           httpGet:
-            path: /
+            path: {{ .Values.healthcheck.path }}
             port: {{ .Values.service.internalPort }}
+            scheme: HTTP
+{{- if .Values.healthcheck.headers }}
+            httpHeaders:
+{{ toYaml .Values.healthcheck.headers | indent 12 }}
+{{- end }}
+          periodSeconds: {{ .Values.healthcheck.interval }}
+          timeoutSeconds: {{ .Values.healthcheck.timeout }}
+        livenessProbe:
+          successThreshold: 1 # must be 1 for liveness (k8s requirement)
+          failureThreshold: {{ .Values.healthcheck.fall }}
+          httpGet:
+            path: {{ .Values.healthcheck.path }}
+            port: {{ .Values.service.internalPort }}
+            scheme: HTTP
+{{- if .Values.healthcheck.headers }}
+            httpHeaders:
+{{ toYaml .Values.healthcheck.headers | indent 12 }}
+{{- end }}
+          periodSeconds: {{ .Values.healthcheck.interval }}
+          timeoutSeconds: {{ .Values.healthcheck.timeout }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
         volumeMounts:

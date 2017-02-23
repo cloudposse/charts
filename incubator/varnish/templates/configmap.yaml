@@ -98,10 +98,15 @@ data:
       sub vcl_hash {
         hash_data(req.url);
         if (req.http.host) {
-            hash_data(req.http.host);
+          hash_data(req.http.host);
         } else {
-            hash_data(server.ip);
+          hash_data(server.ip);
         }
+
+        if (req.http.X-Forwarded-Proto && req.url !~ "(?i)\.(png|gif|jpeg|jpg|ico|gz|tgz|bz2|tbz|mp3|ogg|zip|rar|otf|ttf|eot|woff|svg|pdf)$") {
+          hash_data(req.http.X-Forwarded-Proto);
+        }
+
         return (lookup);
       }
 
@@ -191,9 +196,6 @@ data:
 
       # This is a basic VCL configuration file for varnish.  See the vcl(7)
       # man page for details on VCL syntax and semantics.
-
-      # default health check
-      probe healthcheck
 
       #
       # Default backend definition.  Set this to point to your content
@@ -401,11 +403,17 @@ data:
 
       sub vcl_hash {
         hash_data(req.url);
+
         if (req.http.host) {
-            hash_data(req.http.host);
+          hash_data(req.http.host);
         } else {
-            hash_data(server.ip);
+          hash_data(server.ip);
         }
+
+        if (req.http.X-Forwarded-Proto && req.url !~ "(?i)\.(png|gif|jpeg|jpg|ico|gz|tgz|bz2|tbz|mp3|ogg|zip|rar|otf|ttf|eot|woff|svg|pdf)$") {
+          hash_data(req.http.X-Forwarded-Proto);
+        }
+
         return (lookup);
       }
 
