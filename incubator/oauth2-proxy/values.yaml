@@ -45,7 +45,7 @@ app:
   emails:
 #      - igor@cloudposse.com
 
-# oAuth2 proxy configs
+# OAuth2 proxy configs
   approvalPrompt:
   requestLogging: false
   passAccessToken: false
@@ -59,7 +59,7 @@ app:
   profileUrl:
   signatureKey:
 
-# oAuth2 proxy session cookie config
+# OAuth2 proxy session cookie config
   cookieName:
   cookieSecret:
   cookieDomain:
@@ -80,7 +80,7 @@ app:
 #     dnsRecordType: "CNAME"
 #     dnsRecordTTL: "300"
 #   hosts:
-#     - "thumbor.example.com"
+#     - "oauth2.example.com"
 #     - "example.com"
 
 replicaCount: 1
