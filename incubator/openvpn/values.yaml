@@ -4,9 +4,9 @@
 
 #################################### REQUIRED CONFIGURATION ############################################################
 ## Host that would be vpn gateway
-host:
+host: auth.goruha.cloudposse.org
 # Github team in format {organization name}/{team name}
-github_team:
+github_team: cloudposse/ssh
 ## Secret to store openvpn certificates
 secret: openvpn-secret
 ## Chart support UI with pre-generated client config and instructions
