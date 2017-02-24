@@ -72,8 +72,6 @@ data:
         access_log /dev/stdout;
         error_log /dev/stderr;
 
-        include /etc/nginx/snippets/pam.conf;
-
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
@@ -83,5 +81,4 @@ data:
           alias /usr/share/nginx/private/;
         }
     }
-
 {{ end }}

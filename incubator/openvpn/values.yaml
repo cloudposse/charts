@@ -113,8 +113,8 @@ dashboard:
   service:
     name: nginx
     type: ClusterIP
-    externalPort: 80
-    internalPort: 80
+    externalPort: 81
+    internalPort: 81
   resources:
     limits:
       cpu: 100m
@@ -122,3 +122,89 @@ dashboard:
     requests:
       cpu: 100m
       memory: 128Mi
+
+oauth:
+  app:
+    useSSL: false
+
+    upstreams:
+      - "http://vpn-dashboard"
+
+    provider: "github"
+
+    # Common oauth configs
+    clientID: "***"
+    clientSecret: "***"
+    scope:
+    redirectUrl:
+
+    # Github specific configs
+    githubOrg: intervals-mining-lab
+    githubTeam: libiada-developers
+
+    # Github or Gitlab specific configs
+    loginUrl:
+    redeemUrl:
+    validateUrl:
+
+    # HTTP auth configs
+    basicAuthPassword:
+    displayHtpasswdForm:
+    htpasswdFile:
+
+    # Email filters
+    emailDomains:
+      - "*"
+    emails:
+    #      - igor@cloudposse.com
+
+    # oAuth2 proxy configs
+    approvalPrompt:
+    requestLogging: false
+    passAccessToken: false
+    passBasicAuth: true
+    passHostHeader: true
+    customTemplatesDir:
+    proxyPrefix:
+    skipAuthRegex:
+    #	  - ".*"
+    skipProviderButton:
+    profileUrl:
+    signatureKey:
+
+    # oAuth2 proxy session cookie config
+    cookieName:
+    cookieSecret: "Test"
+    cookieDomain: "auth.goruha.cloudposse.org"
+    cookieExpire:
+    cookieRefresh:
+    cookieSecure: true
+    cookieHttponly: false
+
+  replicaCount: 1
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: init
+    pullPolicy: Always
+  service:
+    name: oauth
+    type: ClusterIP
+    http:
+      externalPort: 8080
+      internalPort: 8080
+    https:
+      externalPort: 8443
+      internalPort: 8443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+Persistence:
+  Enabled: true
+  StorageClass: local-nfs
+  AccessMode: ReadWriteMany
+  Size: 1Gi

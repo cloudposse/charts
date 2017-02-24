@@ -89,9 +89,9 @@ else empty.
 {{- define "openvpn_share_port" -}}
 {{- if .Values.ui.enabled -}}
 {{- if .Values.ui.ssl.enabled -}}
--e "port-share {{ template "fullname_terminator" . }}.{{ .Release.Namespace }} {{ .Values.ssl_terminator.service.https.externalPort }}"
+-e "port-share {{ template "fullname_terminator" . }} {{ .Values.ssl_terminator.service.https.externalPort }}"
 {{- else -}}
--e "port-share {{ template "fullname_dashboard" . }}.{{ .Release.Namespace }} {{ .Values.dashboard.service.externalPort }}"
+-e "port-share localhost {{ .Values.oauth.service.http.externalPort }}"
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -143,7 +143,10 @@ https://acme-staging.api.letsencrypt.org/directory
 {{- end -}}
 
 
-
-
-
-
+{{/*
+Create a default fully qualified oauth2 proxy name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "fullname_oauth2_proxy" -}}
+{{- printf "%s-%s" .Release.Name "oauth2-proxy" | trunc 24 | trimSuffix "-" -}}
+{{- end -}}

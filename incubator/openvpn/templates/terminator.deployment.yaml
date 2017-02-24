@@ -24,7 +24,7 @@ spec:
           - name: SERVER_NAME
             value: {{ template "letsencrypt_host" . }}
           - name: TARGET_SERVICE
-            value: {{ template "dashboard_endpoint" . }}
+            value: {{ template "fullname_oauth2_proxy" . }}
         ports:
         - containerPort: 80
         - containerPort: 443
