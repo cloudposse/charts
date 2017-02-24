@@ -1,0 +1,92 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.openvpn.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: "vpn"
+        image: "{{ .Values.openvpn.image.repository }}:{{ .Values.openvpn.image.tag }}"
+        imagePullPolicy: {{ .Values.openvpn.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+         - |-
+            ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ template "exposed_port" .}} \
+              -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
+              -p "dhcp-option DOMAIN-SEARCH cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              {{ template "openvpn_share_port" . }} \
+            && /init.sh
+        env:
+          - name: DEBUG
+            value: {{ .Values.debug | quote }}
+          - name: GITHUB_PAM_TEAM
+            value: {{ .Values.github_team | quote}}
+          - name: OVPN_OTP_AUTH
+            value: '1'
+          - name: EASYRSA_REQ_CN
+            value: {{ .Values.host | quote}}
+        ports:
+          - name: tcp
+            containerPort: 1194
+            protocol: TCP
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+        volumeMounts:
+          - name: keys
+            mountPath: /etc/openvpn/pki
+        resources:
+{{ toYaml .Values.openvpn.resources | indent 12 }}
+{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+      - name: "proxy"
+        image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+        imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: config
+            mountPath: /etc/nginx/conf.d
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+        resources:
+{{ toYaml .Values.proxy.resources | indent 12 }}
+{{ end }}
+      volumes:
+        - name: keys
+          secret:
+            secretName: {{ .Values.secret | quote }}
+            items:
+              - key: "ca"
+                path: "ca.crt"
+              - key: "key"
+                path: "private/{{ .Values.host }}.key"
+              - key: "cert"
+                path: "issued/{{ .Values.host }}.crt"
+              - key: "dh"
+                path: "dh.pem"
+              - key: "tls_auth"
+                path: "ta.key"
+              - key: "client_key"
+                path: "private/admin.key"
+{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+        - name: config
+          configMap:
+            name: {{ template "fullname_proxy" . }}
+{{ end }}

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.web.externalPort }}
+    targetPort: {{ .Values.service.web.internalPort }}
+    protocol: TCP
+    name: web
+  - port: {{ .Values.service.http.externalPort }}
+    targetPort: {{ .Values.service.http.internalPort }}
+    protocol: TCP
+    name: http
+  - port: {{ .Values.service.vpn.externalPort }}
+    targetPort: {{ .Values.service.vpn.internalPort }}
+    protocol: TCP
+    name: vpn
+  selector:
+    app: {{ template "fullname" . }}

@@ -1,0 +1,66 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        checksum/configmap: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: MONGODB_URI
+            value: "{{ template "mongodb_uri" . }}"
+          - name: PRITUNL_CONFIG
+            value: "/etc/pritunl.d/custom.conf"
+          - name: PRITUNL_MAIN_CONFIG
+            value: "/etc/pritunl.d/pritunl.conf"
+        ports:
+        - name: vpn
+          containerPort: {{ .Values.service.vpn.internalPort }}
+          protocol: TCP
+        - name: web
+          containerPort: {{ .Values.service.web.internalPort }}
+          protocol: TCP
+        - name: http
+          containerPort: {{ .Values.service.http.internalPort }}
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.service.web.internalPort }}
+          initialDelaySeconds: 60
+          periodSeconds: 1
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 10
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.web.internalPort }}
+          initialDelaySeconds: 60
+          periodSeconds: 1
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 10
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        volumeMounts:
+          - mountPath: "/etc/pritunl.d"
+            name: config
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}

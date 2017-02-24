@@ -1,0 +1,288 @@
+# Default values for pritunl.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+pritunl:
+  app.reverse_proxy: true
+  app.server_ssl: false
+#  app.secondary_mongodb_uri: ""
+#  app.redis_uri: ""
+#  app.redis_timeout: 6
+#  app.server_internal_port: 9756
+#  app.reverse_proxy_header: 'X-Forwarded-For'
+#  app.redirect_server: True
+#  app.check_requests: True
+#  app.demo_mode: False
+#  app.allow_insecure_session: False
+#  app.auditing: ""
+#  app.monitoring: ""
+#  app.plugin_directory: '/var/lib/pritunl/plugins'
+#  app.plugin_queue_size: 512
+#  app.plugin_queue_threads: 10
+#  app.influxdb_uri: ""
+#  app.influxdb_prefix: 'pritunl_'
+#  app.influxdb_interval: 3
+#  app.prometheus_port: 9780
+#  app.datadog_api_key: ""
+#  app.settings_check_interval: 600
+#  app.key_link_timeout: 86400
+#  app.password_len_limit: 128
+#  app.public_ip_server: 'https://app.pritunl.com/ip'
+#  app.public_ip6_server: 'https://app6.pritunl.com/ip'
+#  app.notification_server: 'https://app.pritunl.com/notification'
+#  app.update_check_rate: 3600
+#  app.session_limit: 16
+#  app.session_timeout: 86400
+#  app.peer_limit: 500
+#  app.peer_limit_timeout: 10
+#  app.log_limit: 10000
+#  app.log_entry_limit: 50
+#  app.log_db_delay: 1
+#  app.log_web_errors: False
+#  app.rate_limit_sleep: 0.5
+#  app.short_url_length: 8
+#  app.license: ""
+#  app.license_plan: ""
+#  app.http_request_timeout: 15
+#  app.request_queue_size: 10
+#  app.request_thread_count: 50
+#  app.static_cache_time: 43200
+#  app.auth_time_window: 300
+#  app.auth_limiter_ttl: 60
+#  app.auth_limiter_count_max: 30
+#  app.org_pool_size: 1
+#  app.user_pool_size: 6
+#  app.server_pool_size: 4
+#  app.server_user_pool_size: 2
+#  app.dh_param_bits_pool: [1536]
+#  app.cookie_secret: ""
+#  app.cookie_secret2: ""
+#  app.email_server: ""
+#  app.email_username: ""
+#  app.email_password: ""
+#  app.email_from: ""
+#  app.id: ""
+#  app.sso: False
+#  app.sso_cache: True
+#  app.sso_cache_timeout: 28800
+#  app.sso_match: ""
+#  app.sso_host: "" # Deprecated
+#  app.sso_token: "" # Deprecated
+#  app.sso_secret: "" # Deprecated
+#  app.sso_timeout: 60
+#  app.sso_org: ""
+#  app.sso_saml_url: ""
+#  app.sso_saml_issuer_url: ""
+#  app.sso_saml_cert: ""
+#  app.sso_saml_duo_skip_unavailable: False
+#  app.sso_okta_token: ""
+#  app.sso_okta_poll_rate: 0.25
+#  app.sso_okta_skip_unavailable: True
+#  app.sso_onelogin_key: ""
+#  app.sso_onelogin_id: ""
+#  app.sso_onelogin_secret: ""
+#  app.sso_onelogin_region: 'us'
+#  app.sso_radius_prefix: ""
+#  app.sso_radius_host: ""
+#  app.sso_radius_secret: ""
+#  app.sso_duo_host: ""
+#  app.sso_duo_token: ""
+#  app.sso_duo_secret: ""
+#  app.ssu_duo_backup_delay: 15
+#  app.queue_low_thread_limit: 4
+#  app.queue_med_thread_limit: 2
+#  app.queue_high_thread_limit: 1
+#  app.host_ping: 10
+#  app.host_ping_ttl: 30
+#  app.theme: 'dark'
+#  app.org_page_count: 5
+#  app.server_page_count: 3
+#  app.host_page_count: 10
+#  app.acme_api_url: 'https://acme-v01.api.letsencrypt.org'
+#  app.acme_agreement_url: 'https://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf'
+#  app.acme_timestamp: ""
+#  app.acme_key: ""
+#  app.acme_domain: ""
+#  app.acme_renew: 2592000
+#  app.server_cert: ""
+#  app.server_key: ""
+#  app.server_dh_size: 1024
+#  app.cloud_provider: ""
+#  app.route53_region: ""
+#  app.route53_zone: ""
+#  app.us_east_1_access_key: ""
+#  app.us_east_1_secret_key: ""
+#  app.us_west_1_access_key: ""
+#  app.us_west_1_secret_key: ""
+#  app.us_west_2_access_key: ""
+#  app.us_west_2_secret_key: ""
+#  app.eu_west_1_access_key: ""
+#  app.eu_west_1_secret_key: ""
+#  app.eu_central_1_access_key: ""
+#  app.eu_central_1_secret_key: ""
+#  app.ap_northeast_1_access_key: ""
+#  app.ap_northeast_1_secret_key: ""
+#  app.ap_northeast_2_access_key: ""
+#  app.ap_northeast_2_secret_key: ""
+#  app.ap_southeast_1_access_key: ""
+#  app.ap_southeast_1_secret_key: ""
+#  app.ap_southeast_2_access_key: ""
+#  app.ap_southeast_2_secret_key: ""
+#  app.ap_south_1_access_key: ""
+#  app.ap_south_1_secret_key: ""
+#  app.sa_east_1_access_key: ""
+#  app.sa_east_1_secret_key: ""
+#  local.quiet: False
+#  local.public_ip: ""
+#  local.public_ip6: ""
+#  local.host_ping_timestamp: ""
+#  local.logger_runner: False
+#  local.ntp_time: ""
+#  local.sub_active: False
+#  local.sub_status: ""
+#  local.sub_plan: ""
+#  local.sub_amount: ""
+#  local.sub_period_end: ""
+#  local.sub_trial_end: ""
+#  local.sub_cancel_at_period_end: ""
+#  local.sub_url_key: False
+#  local.sub_styles: {}
+#  mongo.tran_max_attempts: 6
+#  mongo.tran_ttl: 10
+#  mongo.queue_max_attempts: 3
+#  mongo.queue_ttl: 15
+#  mongo.task_max_attempts: 3
+#  mongo.task_ttl: 30
+#  conf.host_id: ""
+#  conf.debug: False
+#  conf.ssl: True
+#  conf.static_cache: True
+#  conf.port: 9700
+#  conf.internal_port: 9755
+#  conf.pooler: True
+#  conf.temp_path: /tmp/pritunl
+#  conf.log_path: /var/log/pritunl.log
+#  conf.www_path: /usr/share/pritunl/www
+#  conf.var_run_path: /var/run
+#  conf.uuid_path: /var/lib/pritunl/pritunl.uuid
+#  conf.setup_key_path: /var/lib/pritunl/setup_key
+#  conf.bind_addr: 0.0.0.0
+#  conf.mongodb_uri: mongodb://localhost:27017/pritunl
+#  conf.mongodb_collection_prefix: ""
+#  conf.mongodb_read_preference: ""
+#  conf.local_address_interface: auto
+#  user.audit_limit: 2500
+#  user.gravatar: True
+#  user.otp_secret_len: 16
+#  user.pin_mode: PIN_OPTIONAL
+#  user.pin_min_length: 6
+#  user.cert_key_bits: 4096
+#  user.cert_message_digest: sha256
+#  user.otp_cache_ttl: 43200
+#  user.page_count: 10
+#  user.skip_remote_sso_check: False
+#  vpn.ipv6: True
+#  vpn.ipv6_route_all: True
+#  vpn.call_queue_threads: 32
+#  vpn.client_ttl: 300
+#  vpn.peer_limit: 300
+#  vpn.peer_limit_timeout: 10
+#  vpn.default_dh_param_bits: 1536
+#  vpn.cache_otp_codes: True
+#  vpn.log_lines: 5000
+#  vpn.server_ping: 10
+#  vpn.server_ping_ttl: 30
+#  vpn.route_ping: 10
+#  vpn.route_ping_ttl: 30
+#  vpn.status_update_rate: 3
+#  vpn.http_request_timeout: 10
+#  vpn.op_timeout: 10
+#  vpn.iptables_update: True
+#  vpn.iptables_update_rate: 900
+#  vpn.bandwidth_update_rate: 15
+#  vpn.nat_routes: True
+#  vpn.ipv6_prefix: fd00
+#  vpn.stress_test: False
+#  vpn.vxlan_id_start: 9700
+#  vpn.vxlan_net_prefix: 100.97.
+#  vpn.vxlan_iface_prefix: pxlan
+#  vpn.safe_priv_subnets:
+#     - 10.0.0.0/8
+#     - 100.64.0.0/10
+#     - 172.16.0.0/12
+#     - 192.0.0.0/24
+#     - 192.168.0.0/16
+#     - 198.18.0.0/15
+#     - 50.203.0.0/16
+
+replicaCount: 1
+image:
+  repository: cloudposse/pritunl
+  tag: init
+  pullPolicy: Always
+service:
+  name: vpn
+  type: ClusterIP
+  vpn:
+    externalPort: 1194
+    internalPort: 1194
+  web:
+    externalPort: 443
+    internalPort: 443
+  http:
+    externalPort: 80
+    internalPort: 80
+
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+
+mongodb:
+  ## Bitnami MongoDB image version
+  ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
+  ##
+  image: bitnami/mongodb:3.4.1-r2
+
+  ## Specify a imagePullPolicy
+  ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  # imagePullPolicy:
+
+  ## MongoDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  # mongodbRootPassword:
+
+  ## MongoDB custom user and database
+  ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
+  ##
+  # mongodbUsername:
+  # mongodbPassword:
+  # mongodbDatabase:
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
