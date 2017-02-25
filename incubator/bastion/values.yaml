@@ -20,6 +20,8 @@ env:
   #ENFORCER_ENABLED: "true"
   #ENFORCER_ACLS_ENABLED: "true"
   #ENFORCER_ACLS_PERMIT_SCP: "true"
+  SSH_AUTHORIZED_KEYS_COMMAND: "/usr/bin/github-authorized-keys"
+  SSH_AUTHORIZED_KEYS_COMMAND_USER: "root"
   #SSH_AUDIT_ENABLED: "true"
   #SSH_AUDIT_DIR: "/var/log/ssh"
   # Enable Rate Limiting
@@ -36,6 +38,10 @@ service:
   type: ClusterIP
   externalPort: 22
   internalPort: 22
+  #labels:
+  #  dns: "route53"
+  #annotations:
+  #  domainName: "bastion.example.com"
 
 persistence:
   enabled: true

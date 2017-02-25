@@ -15,7 +15,7 @@ spec:
           "name": "init",
 	  "image": "{{ .Values.image.repository }}:{{ .Values.image.tag }}",
           "imagePullPolicy": {{ .Values.image.pullPolicy | quote }},
-          "command": ["/bin/sh", "-c", "(cp -a /etc/ /mnt/etc/) && (mkdir -p /mnt/home /mnt/root /mnt/var/log) && (echo \"AuthorizedKeysCommand \\\"/usr/bin/curl http://localhost:301/user/%u/authorized_keys\\\"\" >> /mnt/etc/ssh/sshd_config) && (echo \"AuthorizedKeysCommandUser nobody\" >> /mnt/etc/ssh/sshd_config)"],
+          "command": ["/bin/sh", "-c", "(cp -a /etc/ /mnt/etc/) && (mkdir -p /mnt/home /mnt/root /mnt/var/log)"],
           "volumeMounts": [{
             "mountPath": "/mnt",
             "name": "{{ template "fullname" . }}"
