@@ -1,0 +1,125 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[{
+          "name": "init",
+          "image": "{{ .Values.image.repository }}:{{ .Values.image.tag }}",
+          "imagePullPolicy": {{ .Values.image.pullPolicy | quote }},
+          "command": ["/bin/sh", "-c", "(cp -a /etc/ /mnt/etc/) && (mkdir -p /mnt/home /mnt/root /mnt/var/log)"],
+          "volumeMounts": [{
+            "mountPath": "/mnt",
+            "name": "{{ template "fullname" . }}"
+          }]
+        }]'
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+        - mountPath: /etc
+          subPath: etc/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /home
+          subPath: home/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /root
+          subPath: root/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /var/log
+          subPath: var/log/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        env:
+{{- range $name, $value := .Values.env }}
+{{- if not (empty $value) }}
+        - name: {{ $name | quote }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 10
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      - name: "github-authorized-keys"
+        image: "{{ .Values.githubAuthorizedKeys.image.repository }}:{{ .Values.githubAuthorizedKeys.image.tag }}"
+        imagePullPolicy: {{ default "" .Values.githubAuthorizedKeys.image.pullPolicy | quote }}
+        volumeMounts:
+        - mountPath: /etc
+          subPath: etc/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /home
+          subPath: home/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /root
+          subPath: root/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        - mountPath: /var/log
+          subPath: var/log/
+          name: {{ template "fullname" . }}
+          readOnly: false
+        env:
+{{- range $name, $value := .Values.githubAuthorizedKeys.env }}
+{{- if not (empty $value) }}
+        - name: {{ $name | quote }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+        - name: GITHUB_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: github_api_token
+        - name: GITHUB_ORGANIZATION
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: github_organization
+{{if .Values.githubAuthorizedKeys.githubTeam}}
+        - name: GITHUB_TEAM
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: github_team
+{{end}}
+
+{{if .Values.githubAuthorizedKeys.githubTeamID}}
+        - name: GITHUB_TEAM_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: github_team_id
+{{end}}
+      volumes:
+      - name: {{ template "fullname" . }}
+{{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}
+{{- else }}
+        emptyDir: {}
+{{- end -}}
+

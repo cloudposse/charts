@@ -1,0 +1,98 @@
+# Default values for bastion.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: cloudposse/bastion
+  tag: latest
+  pullPolicy: Always
+
+env:
+  #UMASK: "0022"
+  #MFA_PROVIDER: "duo"
+  #DUO_IKEY: ""
+  #DUO_SKEY: ""
+  #DUO_HOST: ""
+  #DUO_FAILMODE: "secure"
+  #DUO_AUTOPUSH: "yes"
+  #DUO_PROMPTS: "1"
+  #ENFORCER_ENABLED: "true"
+  #ENFORCER_ACLS_ENABLED: "true"
+  #ENFORCER_ACLS_PERMIT_SCP: "true"
+  #SSH_AUTHORIZED_KEYS_COMMAND: "/usr/bin/github-authorized-keys"
+  #SSH_AUTHORIZED_KEYS_COMMAND_USER: "root"
+  #SSH_AUDIT_ENABLED: "true"
+  #SSH_AUDIT_DIR: "/var/log/ssh"
+  # Enable Rate Limiting
+  #RATE_LIMIT_ENABLED: "true"
+  # Tolerate 5 consecutive fairues
+  #RATE_LIMIT_MAX_FAILURES: "5"
+  # Lock accounts out for 300 seconds (5 minutes) after repeated failures
+  #RATE_LIMIT_LOCKOUT_TIME: "300"
+  # Sleep N microseconds between failed attempts
+  #RATE_LIMIT_FAIL_DELAY: "3000000"
+
+service:
+  name: ssh
+  type: ClusterIP
+  externalPort: 22
+  internalPort: 22
+  #labels:
+  #  dns: "route53"
+  #annotations:
+  #  domainName: "bastion.example.com"
+
+persistence:
+  enabled: true
+  storageClass: generic
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+githubAuthorizedKeys:
+  image:
+    # Specify Image repository
+    repository: cloudposse/github-authorized-keys
+
+    # Specify Image tag
+    tag: latest
+
+    # Specify a imagePullPolicy
+    pullPolicy: Always
+
+  # Specify Github API Token
+  #   ref: https://github.com/blog/1509-personal-api-tokens
+  githubAPIToken: ""
+
+  # Specify Github Organization
+  githubOrganization: ""
+
+  # Specify Github Team
+  githubTeam: ""
+
+  ## Specify Github Team ID (optional; use this or githubTeam)
+  githubTeamID: ""
+
+  env:
+    #SYNC_USERS_GID: "users"
+    SYNC_USERS_SHELL: "/bin/bash"
+    SYNC_USERS_INTERVAL: "300"
+    SYNC_USERS_ROOT: "/"
+    INTEGRATE_SSH: "false"
+    LINUX_USER_ADD_TPL: "adduser -D -s {shell} {username}"
+    LINUX_USER_ADD_WITH_GID_TPL: "adduser -D -s {shell} -G {group} {username}"
+
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 100m
+
+
