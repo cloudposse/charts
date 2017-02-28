@@ -1,8 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
 name: nginx-ingress
-<<<<<<< HEAD:incubator/library/nginx-ingress/Chart.yaml
-version: 0.1.0
-=======
 version: 0.1.2
->>>>>>> master:incubator/nginx-ingress/Chart.yaml
