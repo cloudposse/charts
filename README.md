@@ -4,21 +4,7 @@ This is the Geodesic microservices distribution of Helm charts for Kubernetes.
 
 Geodesic is the fastest way to get up and running with a rock solid, production grade cloud platform. Use [standalone our shell](https://github.com/cloudposse/geodesic/) to get started quickly and avoid dependency hell. It ships with support for [Kubernetes](https://github.com/kubernetes/kubernetes/), [Kops](https://github.com/kubernetes/kops/), [Helm](https://github.com/kubernetes/helm/) and [Terraform](https://github.com/hashicorp/terraform/). 
 
-Most of these services have been developed from the ground up to integrate well with each other and third party services like Github and Duo. 
-
-## Our Best Practices:
-
-* Use OAuth2 everywhere possible (default to [Github](https://developer.github.com/v3/oauth/))
-* Use MFA (two factor) everywhere possible (default to [Duo](https://guide.duo.com (https://guide.duo.com/)))
-* Use Annotations everywhere possible
-    * IAM Roles
-    * Route53 DNS
-    * TLS
-* Use Ingress resources 
-* Decompose Charts into Subcharts as much as possible
-* Re-use *official* charts where it makes the most sense
-* Bump Chart versions any time there is a material change
-* Use sane-defaults everywhere possible
+Many of these Charts have been developed from the ground up to integrate with third party services like Github for authentication (OAuth2) and Duo for MFA. 
 
 ## How do I enable these repositories?
 
@@ -42,7 +28,7 @@ $ helm repo add cloudposse-incubator https://charts.cloudposse.com/stable/
 
 You can then run `helm search cloudposse-stable` to see the charts.
 
-How do I install these charts?
+## How do I install these charts?
 
 After enabling our repositories, just run `helm install cloudposse-incubator/$chart`. 
 
@@ -70,8 +56,6 @@ We'll keep charts in the `incubator/` repo until we feel confident they are stab
 * To get a quick introduction to Charts see this chart document (https://github.com/kubernetes/helm/blob/master/docs/charts.md).
 * For more information on using Helm, refer to the Helm's documentation (https://github.com/kubernetes/helm#docs).
 
-
-## Developers
 
 ## Status of the Project
 
@@ -118,6 +102,21 @@ Here's how to get started...
 2. `make init`
 3. `make helm:repo:add-remote`
 4. Just run `make` to generate all packages and corresponding repository indexes.
+
+## Our Best Practices:
+
+* Use OAuth2 everywhere possible (default to [Github](https://developer.github.com/v3/oauth/))
+* Use MFA (two factor) everywhere possible (default to [Duo](https://guide.duo.com (https://guide.duo.com/)))
+* Use Annotations everywhere possible
+    * IAM Roles
+    * Route53 DNS
+    * TLS
+* Use Ingress resources 
+* Decompose Charts into Subcharts as much as possible
+* Re-use *official* charts where it makes the most sense
+* Bump Chart versions any time there is a material change
+* Use sane-defaults everywhere possible
+
 
 ## License
 
