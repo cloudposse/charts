@@ -20,7 +20,7 @@ data:
       request_logging = {{ .Values.oauth.app.requestLogging }}
 
       ## pass HTTP Basic Auth, X-Forwarded-User and X-Forwarded-Email information to upstream
-      pass_basic_auth = {{ .Values.oauth.app.passBasicAuth }}
+      pass_basic_auth = true
       ## pass the request Host Header to upstream
       ## when disabled the upstream Host is used as the Host Header
       pass_host_header = {{ .Values.oauth.app.passHostHeader }}
@@ -36,6 +36,11 @@ data:
     {{- end }}
       ]
 
+    {{- if .Values.ui.ssl.enabled }}
+      redirect_url = "https://{{ .Values.host }}/oauth2/callback"
+    {{- else }}
+      redirect_url = "http://{{ .Values.host }}/oauth2/callback"
+    {{- end }}
       ## Pass OAuth Access token to upstream via "X-Forwarded-Access-Token"
       pass_access_token = {{ .Values.oauth.app.passAccessToken }}
 
@@ -54,7 +59,7 @@ data:
       ## Cookie Settings
       ## Secure   - secure cookies are only sent by the browser of a HTTPS connection (recommended)
       ## HttpOnly - httponly cookies are not readable by javascript (recommended)
-      cookie_secure = {{ .Values.oauth.app.cookieSecure }}
+      cookie_secure = false
       cookie_httponly = {{ .Values.oauth.app.cookieHttponly }}
 
     {{- if .Values.oauth.app.proxyPrefix }}
@@ -69,9 +74,7 @@ data:
       github_team = {{ .Values.oauth.app.githubTeam | quote }}
     {{- end }}
 
-    {{- if .Values.oauth.app.displayHtpasswdForm }}
-      display_htpasswd_form = {{ .Values.oauth.app.displayHtpasswdForm | quote }}
-    {{- end }}
+      display_htpasswd_form = false
 
     {{- if .Values.oauth.app.basicAuthPassword }}
       basic_auth_password = {{ .Values.oauth.app.basicAuthPassword | quote }}

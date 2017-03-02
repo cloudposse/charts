@@ -64,6 +64,10 @@ metadata:
     heritage: "{{ .Release.Service }}"
 data:
   default.conf: |-
+    upstream backend {
+      server localhost:8085;
+    }
+
     server {
         listen       {{ .Values.dashboard.service.internalPort }};
         server_name  localhost;
@@ -75,6 +79,14 @@ data:
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
+        }
+
+        location /configs/client.opvn {
+          proxy_pass       http://backend/user/$http_x_forwarded_user;
+          proxy_set_header Host      $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          add_header Content-Disposition 'attachment; filename="client.ovpn"';
+          add_header Content-Type application/octet-stream;
         }
 
         location /configs/ {
