@@ -48,7 +48,7 @@ spec:
               -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
               -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
               {{ template "openvpn_share_port" . }} \
-            && /init.sh
+            && /init
         env:
           - name: DEBUG
             value: {{ .Values.debug | quote }}
@@ -61,6 +61,9 @@ spec:
         ports:
           - name: tcp
             containerPort: 1194
+            protocol: TCP
+          - name: api
+            containerPort: 8085
             protocol: TCP
         securityContext:
           privileged: true
