@@ -1,4 +1,4 @@
-# Geodesic Microservices Distribution
+# Geodesic Microservices Distribution [![Build Status](https://travis-ci.org/cloudposse/charts.svg?branch=master)](https://travis-ci.org/cloudposse/charts)
 
 This is the Geodesic microservices distribution of Helm charts for Kubernetes. 
 
