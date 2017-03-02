@@ -40,24 +40,24 @@ This GitHub repository contains all the source for the versioned charts released
 
 The Charts in this repository are organized into two folders:
 
-* `stable/` - charts that meet the criteria in the technical requirements (https://github.com/kubernetes/charts/blob/master/CONTRIBUTING.md#technical-requirements).
+* `stable/` - charts that meet the criteria in the [technical requirements](https://github.com/kubernetes/charts/blob/master/CONTRIBUTING.md#technical-requirements).
 * `incubator/`  charts are those that do not meet these criteria.
 
 The `stable/` directory in the `master` branch of this repository corresponds to the version of charts packaged and published in the Chart Repository. We also make all previous versions available through the Repository. Every time a Pull Request is merged into `master`, it goes through our CI/CD process hosted by [TravisCI](https://travis-ci.org/cloudposse/charts). 
 
-We'll keep charts in the `incubator/` repo until we feel confident they are stable and will not radically change. Please take this into consideration when deploying services. It's always best to pin your charts to a specific version, to keep things stable. We also maintain a separate repository for branches and Pull Requests. These are located at https://charts.dev.cloudposse.com/$branch/incubator/$chart`.. 
+Charts remain in the `incubator/` repo until we feel confident they are functionally stable and their interface will not radically change. Please take this into consideration when deploying services from this directory. We suggest to always pin your charts to a specific version for stability. We also maintain a separate Chart repository for branches and Pull Requests. These are located at `https://charts.dev.cloudposse.com/$branch/incubator/$chart`.
 
 
 ## Other Resources
 
-* For the official Kubernetes Charts go [here](https://github.com/kubernetes/charts/). 
-* To get a quick introduction to Charts see this chart document (https://github.com/kubernetes/helm/blob/master/docs/charts.md).
-* For more information on using Helm, refer to the Helm's documentation (https://github.com/kubernetes/helm#docs).
+* For the official Kubernetes Charts, go [here](https://github.com/kubernetes/charts/). 
+* To get a quick introduction to Charts, see [this chart document](https://github.com/kubernetes/helm/blob/master/docs/charts.md).
+* For more information on using Helm, refer to the Helm's [documentation](https://github.com/kubernetes/helm#docs).
 
 
 ## Status of the Project
 
-This project is under active development. We try our best to keep all of our repositories stable (even our incubator charts), but you might run into issues (https://github.com/cloudposse/charts/issues). Please let us know if you run into any issue, or better yet, contribute a fix or feature.
+This project is under active development. We try our best to keep all of our repositories stable (even our incubator charts), but you might run into [issues](https://github.com/cloudposse/charts/issues). Please let us know if you run into any issue, or better yet, contribute a fix or feature.
 
 
 ## About
