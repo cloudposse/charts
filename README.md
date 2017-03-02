@@ -8,9 +8,10 @@ What makes this distribution special is we've developed these charts to integrat
 
 ## How do I enable these repositories?
 
-To add the Incubator charts for your local client, run helm repo add:
 
 ### Incubator Repository
+
+To add the `incubator` chart repository to your local `helm` client, run `helm repo add`:
 
 ```shell
 $ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
@@ -20,6 +21,8 @@ $ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
 You can then run `helm search cloudposse-incubator` to see the charts.
 
 ### Stable Repository
+
+To add the `stable` chart repository to your local `helm` client, run `helm repo add`:
 
 ```shell
 $ helm repo add cloudposse-incubator https://charts.cloudposse.com/stable/
