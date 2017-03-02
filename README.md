@@ -40,12 +40,12 @@ This GitHub repository contains all the source for the versioned charts released
 
 The Charts in this repository are organized into two folders:
 
-* `stable/` - charts that meet the criteria in the [technical requirements](https://github.com/kubernetes/charts/blob/master/CONTRIBUTING.md#technical-requirements).
-* `incubator/`  charts are those that do not meet these criteria.
+* `stable/`     charts that meet the criteria in the [technical requirements](https://github.com/kubernetes/charts/blob/master/CONTRIBUTING.md#technical-requirements);
+* `incubator/`  charts are those that do not meet these criteria
 
-The `stable/` directory in the `master` branch of this repository corresponds to the version of charts packaged and published in the Chart Repository. We also make all previous versions available through the Repository. Every time a Pull Request is merged into `master`, it goes through our CI/CD process hosted by [TravisCI](https://travis-ci.org/cloudposse/charts). 
+The `stable/` directory in the `master` branch of this repository corresponds to the version of charts packaged and published in the Chart Repository. We also make all previous versions available through the Repository. Every time a *Pull Request* is merged into `master`, it goes through our CI/CD process hosted by [TravisCI](https://travis-ci.org/cloudposse/charts). 
 
-Charts remain in the `incubator/` repo until we feel confident they are functionally stable and their interface will not radically change. Please take this into consideration when deploying services from this directory. We suggest to always pin your charts to a specific version for stability. We also maintain a separate Chart repository for branches and Pull Requests. These are located at `https://charts.dev.cloudposse.com/$branch/incubator/$chart`.
+Charts remain in the `incubator/` directory until we feel confident they are functionally stable and their interface will not radically change. Please take this into consideration when deploying services from this directory. We suggest to always pin your charts to a specific version for stability. We also maintain a separate Chart repository for branches and *Pull Requests* that are useful for Chart development. These are located at `https://charts.dev.cloudposse.com/$branch/incubator/$chart`.
 
 
 ## Other Resources
@@ -96,9 +96,9 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 Here's how to get started...
 
-1. `git clone https://github.com/cloudposse/charts.git`
-2. `make init`
-3. `make helm:repo:add-remote`
+1. `git clone https://github.com/cloudposse/charts.git` to pull down the repository 
+2. `make init` to initialize the [`build-harness`](https://github.com/cloudposse/build-harness/)
+3. `make helm:repo:add-remote` to add the repositories to your local helm repository (*optional*)
 4. Just run `make` to generate all packages and corresponding repository indexes.
 
 ## Our Best Practices:
