@@ -4,7 +4,7 @@ This is the Geodesic microservices distribution of Helm charts for Kubernetes.
 
 Geodesic is the fastest way to get up and running with a rock solid, production grade cloud platform. Use [standalone our shell](https://github.com/cloudposse/geodesic/) to get started quickly and avoid dependency hell. It ships with support for [Kubernetes](https://github.com/kubernetes/kubernetes/), [Kops](https://github.com/kubernetes/kops/), [Helm](https://github.com/kubernetes/helm/) and [Terraform](https://github.com/hashicorp/terraform/). 
 
-Many of these Charts have been developed from the ground up to integrate with third party services like Github for authentication (OAuth2) and Duo for MFA. 
+What makes this distribution special is we've developed these charts to integrate with third party services like Github for authentication (OAuth2) and Duo for MFA. 
 
 ## How do I enable these repositories?
 
@@ -30,14 +30,13 @@ You can then run `helm search cloudposse-stable` to see the charts.
 
 ## How do I install these charts?
 
-After enabling our repositories, just run `helm install cloudposse-incubator/$chart`. 
+After enabling the repositories mentioned above, just run `helm install cloudposse-incubator/$chart`. 
 
-Currently, most of our charts are in the incubator repository until they reach greater maturity.
+Currently, most of the charts are located in the `incubator/` directory until they reach greater maturity.
 
 ## Repository Structure
 
 This GitHub repository contains all the source for the versioned charts released at https://charts.cloudposse.com/ (the Chart Repository). The repository is hosted by AWS CloudFront and backed by S3 for maximum reliability. We also maintain a [standalone Docker container](https://hub.docker.com/r/cloudposse/charts/) that contains all of these charts together with `helm serve` for distributing them inside your cluster. You can self-host this container in kubernetes using our chart for [helm-serve](https://github.com/cloudposse/charts/incubator/helm-serve/).
-
 
 The Charts in this repository are organized into two folders:
 
@@ -45,7 +44,6 @@ The Charts in this repository are organized into two folders:
 * `incubator/`  charts are those that do not meet these criteria.
 
 The `stable/` directory in the `master` branch of this repository corresponds to the version of charts packaged and published in the Chart Repository. We also make all previous versions available through the Repository. Every time a Pull Request is merged into `master`, it goes through our CI/CD process hosted by [TravisCI](https://travis-ci.org/cloudposse/charts). 
-
 
 We'll keep charts in the `incubator/` repo until we feel confident they are stable and will not radically change. Please take this into consideration when deploying services. It's always best to pin your charts to a specific version, to keep things stable. We also maintain a separate repository for branches and Pull Requests. These are located at https://charts.dev.cloudposse.com/$branch/incubator/$chart`.. 
 
@@ -66,14 +64,14 @@ This project is under active development. We try our best to keep all of our rep
 
 Most of these are original charts developed by [Cloud Posse, LLC](https://cloudposse.com/). We provide solutions to automate your cloud for 24/7 uptime and maximum efficiency.
 
-Charts are curated application definitions for Kubernetes Helm. For more information about installing and using Helm, see its README.md (https://github.com/kubernetes/helm/tree/master/README.md). 
+The charts are application architectures documented-as-code for Kubernetes Helm. For more information about installing and using Helm, see its [README.md](https://github.com/kubernetes/helm/tree/master/README.md). 
 
 
 ## Help
 
 **Got a question?** 
 
-Review the [docs](docs/), file a GitHub [issue](https://github.com/cloudposse/geodesic/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
+File a GitHub [issue](https://github.com/cloudposse/geodesic/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
 
 
 ## Contributing
