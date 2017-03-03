@@ -28,7 +28,7 @@ ingress:
     ##
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: 'true'
+      # kubernetes.io/tls-acme: "true"
 
     fqdn: ""
 
@@ -99,7 +99,7 @@ serviceMonitorSelector: {}
 ##
 storageSpec: {}
 #   class: default
-#   selector: {}
 #   resources:
 #     requests:
 #       storage: 16Gi
+#   selector: {}

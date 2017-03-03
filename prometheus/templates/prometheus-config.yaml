@@ -1,4 +1,4 @@
-{{- if not .Values.serviceMonitorSelector }}
+{{- if and ( .Values.config ) ( not .Values.serviceMonitorSelector ) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
