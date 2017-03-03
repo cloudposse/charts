@@ -1,11 +1,3 @@
-global:
-  ## Hyperkube image to use when getting & deleting ThirdPartyResources
-  ##
-  hyperkube:
-    repository: quay.io/coreos/hyperkube
-    tag: v1.5.2_coreos.1
-    pullPolicy: IfNotPresent
-
 ## AlertManagers to which alerts will be sent
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#alertmanagerendpoints
 ##
@@ -68,9 +60,9 @@ retention: 24h
 ## Resource limits & requests
 ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
 ##
-resources:
-  requests:
-    memory: 400Mi
+resources: {}
+  # requests:
+  #   memory: 400Mi
 
 ## Prefix used to register routes, overriding externalUrl route.
 ## Useful for proxies that rewrite URLs.
@@ -96,9 +88,9 @@ service:
 
   ## Service type
   ##
-  type: NodePort
+  type: ClusterIP
 
-## The ServiceMonitor TPRs to be covered by the Prometheus instances.
+## The ServiceMonitor TPRs to be covered by the Prometheus instance.
 ##
 serviceMonitorSelector: {}
 
