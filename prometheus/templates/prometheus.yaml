@@ -30,9 +30,11 @@ spec:
 {{- if .Values.routePrefix }}
   routePrefix: "{{ .Values.routePrefix }}"
 {{- end }}
-{{- if .Values.serviceMonitorSelector }}
+{{- if .Values.serviceMonitors }}
   serviceMonitorSelector:
-{{ toYaml .Values.serviceMonitorSelector | indent 4 }}
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
 {{- end }}
 {{- if .Values.storageSpec }}
   storage:
