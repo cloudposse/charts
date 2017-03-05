@@ -1,286 +1,263 @@
-global:
-  ## hyperkube image to use when getting & deleting ThirdPartyResources
-  ## created by prometheus-operator. Also used when alertmanager.cleanup or
-  ## prometheus.cleanup is true.
-  ##
-  hyperkube:
-    repository: quay.io/coreos/hyperkube
-    tag: v1.5.2_coreos.1
-    pullPolicy: IfNotPresent
-
 alertmanager:
-  ## if true, delete Alertmanager StatefulSet & Service when release is deleted
+  config: {}
+
+  ## External URL at which Alertmanager will be reachable
   ##
-  cleanup: true
+  externalUrl: ""
 
-  ## number of replicas to create in Alertmanager StatefulSet
+  ## Alertmanager container image
   ##
-  replicaCount: 3
+  image:
+    repository: quay.io/prometheus/alertmanager
+    tag: v0.5.1
 
-  ## version of Alertmanager to install
-  ##
-  version: v0.5.1
-
-  # ingress:
-    ## name to use when creating Alertmanager Ingress
-    ## Ex: 'main' will create Ingress named '<release>-kube-prometheus-alertmanager-main'
-    ##
-    # - name: main
-
-      ## annotations for Alertmanager Ingress
+  ingress:
+      ## If true, Alertmanager Ingress will be created
       ##
-      # annotations:
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
+      enabled: false
 
-      ## fully-qualified domain names of Alertmanager Ingress to create
+      ## Annotations for Alertmanager Ingress
       ##
-      # hosts:
-      #   - alertmanager.example.com
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+
+      fqdn: ""
 
       ## TLS configuration for Alertmanager Ingress
-      ## secret must be manually created in the namespace
+      ## Secret must be manually created in the namespace
       ##
-      # tls:
-      #   - secretName: alertmanager-main-tls
-      #     hosts:
-      #       - alertmanager.example.com
+      tls: []
+        # - secretName: alertmanager-general-tls
+        #   hosts:
+        #     - alertmanager.example.com
+
+  ## Node labels for Alertmanager pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## If true, the Operator won't process any Alertmanager configuration changes
+  ##
+  paused: false
+
+  ## Number of Alertmanager replicas desired
+  ##
+  replicaCount: 1
+
+  ## Resource limits & requests
+  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # requests:
+    #   memory: 400Mi
 
   service:
-    ## annotations for Alertmanager Service
+    ## Annotations to be added to the Service
     ##
-    # annotations:
+    annotations: {}
 
-    ## Alertmanager Service port to expose on each node
-    ## only used if alertmanager.service.type is 'NodePort'
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+
+    ## Port to expose on each node
+    ## Only used if service.type is 'NodePort'
     ##
     nodePort: 30903
 
-    ## Alertmanager Service type
+    ## Service type
     ##
-    type: NodePort
+    type: ClusterIP
 
   ## Alertmanager StorageSpec for persistent data
   ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#storagespec
   ##
-  # storageSpec:
+  storageSpec: {}
   #   class: default
-  #   selector: ""
   #   resources:
   #     requests:
-  #       storage: 4Gi
-
-grafana:
-  ## Grafana image
-  ##
-  image:
-    repository: grafana/grafana
-    tag: 4.1.1
-    pullPolicy: IfNotPresent
-
-  # ingress:
-    ## name to use when creating Grafana Ingress
-    ## Ex: 'grafana' will create Ingress named '<release>-kube-prometheus-grafana'
-    ##
-    # - name: grafana
-
-      ## annotations for Grafana Ingress
-      ##
-      # annotations:
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
-
-      ## fully-qualified domain names of Grafana Ingress to create
-      ##
-      # hosts:
-      #   - grafana.example.com
-
-      ## TLS configuration for Grafana Ingress
-      ## secret must be manually created in the namespace
-      ##
-      # tls:
-      #   - secretName: grafana-tls
-      #     hosts:
-      #       - grafana.example.com
-
-  ## Grafana resource limits & requests
-  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    limits:
-      cpu: 300m
-      memory: 300Mi
-    requests:
-      cpu: 100m
-      memory: 100Mi
-
-  service:
-    ## annotations for Grafana Service
-    ##
-    # annotations:
-
-    ## Grafana Service port to expose on each node
-    ## only used if grafana.service.type is 'NodePort'
-    ##
-    nodePort: 30902
-
-    ## Grafana Service type
-    ##
-    type: NodePort
-
-grafanaWatcher:
-  ## grafana-watcher enables the loading of Grafana dashboards from a ConfigMap
-  ## Ref: https://github.com/coreos/kube-prometheus#dashboarding
-  ##
-  image:
-    repository: quay.io/coreos/grafana-watcher
-    tag: latest
-    pullPolicy: Always
-
-  ## grafana-watcher resource limits & requests
-  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    limits:
-      cpu: 100m
-      memory: 32Mi
-    requests:
-      cpu: 50m
-      memory: 16Mi
-
-kubeStateMetrics:
-  ## kube-state-metrics generates & exposes cluster-level Prometheus metrics
-  ## Ref: https://github.com/kubernetes/kube-state-metrics
-  ##
-  image:
-    repository: gcr.io/google_containers/kube-state-metrics
-    tag: v0.3.0
-    pullPolicy: IfNotPresent
-
-  ## kube-state-metrics resource limits & requests
-  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    limits:
-      cpu: 200m
-      memory: 50Mi
-    requests:
-      cpu: 100m
-      memory: 30Mi
-
-nodeExporter:
-  ## Prometheus Node Exporter image
-  ##
-  image:
-    repository: quay.io/prometheus/node-exporter
-    tag: v0.13.0
-    pullPolicy: IfNotPresent
-
-  ## Prometheus Node Exporter resource limits & requests
-  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    limits:
-      cpu: 200m
-      memory: 50Mi
-    requests:
-      cpu: 100m
-      memory: 30Mi
-
-  service:
-    ## Prometheus Node Exporter Service port to expose on each node
-    ##
-    nodePort: 9100
+  #       storage: 2Gi
+  #   selector: {}
 
 prometheus:
-  ## if true, delete Prometheus StatefulSet & Service when release is deleted
+  ## Alertmanagers to which alerts will be sent
+  ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#alertmanagerendpoints
   ##
-  cleanup: true
+  alertingEndpoints: []
+  #   - name: ""
+  #     namespace: ""
+  #     port: 9093
+  #     scheme: http
 
-  ## how long to retain metrics
+  config: {}
+
+  ## External URL at which Prometheus will be reachable
+  ##
+  externalUrl: ""
+
+  ## Prometheus container image
+  ##
+  image:
+    repository: quay.io/prometheus/prometheus
+    tag: v1.5.2
+
+  ingress:
+      ## If true, Prometheus Ingress will be created
+      ##
+      enabled: false
+
+      ## Annotations for Prometheus Ingress
+      ##
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+
+      fqdn: ""
+
+      ## TLS configuration for Prometheus Ingress
+      ## Secret must be manually created in the namespace
+      ##
+      tls: []
+        # - secretName: prometheus-k8s-tls
+        #   hosts:
+        #     - prometheus.example.com
+
+  ## Node labels for Prometheus pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## If true, the Operator won't process any Prometheus configuration changes
+  ##
+  paused: false
+
+  ## Number of Prometheus replicas desired
+  ##
+  replicaCount: 1
+
+  ## How long to retain metrics
   ##
   retention: 24h
 
-  ## version of Prometheus to install
-  ##
-  version: v1.5.0
-
-  ## Prometheus resource limits & requests
+  ## Resource limits & requests
   ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources:
-    requests:
-      memory: 400Mi
+  resources: {}
+    # requests:
+    #   memory: 400Mi
 
-  # ingress:
-    ## name to use when creating Prometheus Ingress
-    ## Ex: 'k8s' will create Ingress named '<release>-kube-prometheus-prometheus-k8s'
-    ##
-    # - name: k8s
+  ## Prefix used to register routes, overriding externalUrl route.
+  ## Useful for proxies that rewrite URLs.
+  ##
+  routePrefix: "/"
 
-      ## annotations for Prometheus Ingress
-      ##
-      # annotations:
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
-
-      ## fully-qualified domain names of Prometheus Ingress to create
-      ##
-      # hosts:
-      #   - prometheus.example.com
-
-      ## TLS configuration for Prometheus Ingress
-      ## secret must be manually created in the namespace
-      ##
-      # tls:
-      #   - secretName: prometheus-k8s-tls
-      #     hosts:
-      #       - prometheus.example.com
+  rules: {}
 
   service:
-    ## annotations for Prometheus Service
+    ## Annotations to be added to the Service
     ##
-    # annotations:
+    annotations: {}
 
-    ## Prometheus Service port to expose on each node
-    ## only used if prometheus.service.type is 'NodePort'
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+
+    ## Port to expose on each node
+    ## Only used if service.type is 'NodePort'
     ##
     nodePort: 30900
 
-    ## Prometheus Service type
+    ## Service type
     ##
-    type: NodePort
+    type: ClusterIP
+
+  ## ServiceMonitor TPRs to create & be scraped by the Prometheus instance.
+  ##
+  serviceMonitors: []
+    ## Name of the ServiceMonitor to create
+    ##
+    # - name: ""
+
+      ## Service label for use in assembling a job name of the form <label value>-<port>
+      ## If no label is specified, the service name is used.
+      ##
+      # jobLabel: ""
+
+      ## Label selector for services to which this ServiceMonitor applies
+      ##
+      # selector: {}
+
+      ## Namespaces from which services are selected
+      ##
+      # namespaceSelector:
+        ## Match any namespace
+        ##
+        # any: false
+
+        ## Explicit list of namespace names to select
+        ##
+        # matchNames: []
+
+      ## Endpoints of the selected service to be monitored
+      ##
+      # endpoints: []
+        ## Name of the endpoint's service port
+        ## Mutually exclusive with targetPort
+        # - port: ""
+
+        ## Name or number of the endpoint's target port
+        ## Mutually exclusive with port
+        # - targetPort: ""
+
+        ## File containing bearer token to be used when scraping targets
+        ##
+        #   bearerTokenFile: ""
+
+        ## Interval at which metrics should be scraped
+        ##
+        #   interval: 30s
+
+        ## HTTP path to scrape for metrics
+        ##
+        #   path: /metrics
+
+        ## HTTP scheme to use for scraping
+        ##
+        #   scheme: http
+
+        ## TLS configuration to use when scraping the endpoint
+        ##
+        #   tlsConfig:
+
+            ## Path to the CA file
+            ##
+            # caFile: ""
+
+            ## Path to client certificate file
+            ##
+            # certFile: ""
+
+            ## Skip certificate verification
+            ##
+            # insecureSkipVerify: false
+
+            ## Path to client key file
+            ##
+            # keyFile: ""
+
+            ## Server name used to verify host name
+            ##
+            # serverName: ""
 
   ## Prometheus StorageSpec for persistent data
   ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#storagespec
   ##
-  # storageSpec:
+  storageSpec: {}
   #   class: default
-  #   selector: ""
   #   resources:
   #     requests:
   #       storage: 16Gi
-
-prometheus-operator:
-  ## prometheus-operator image
-  ##
-  image:
-    repository: quay.io/coreos/prometheus-operator
-    tag: v0.2.3
-    pullPolicy: IfNotPresent
-
-  ## collect & send anonymous usage statistics
-  ## Ref: https://github.com/coreos/prometheus-operator#installation
-  ##
-  sendAnalytics: true
-
-  ## prometheus-operator resource limits & requests
-  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    limits:
-      cpu: 200m
-      memory: 300Mi
-    requests:
-      cpu: 100m
-      memory: 50Mi
+  #   selector: {}

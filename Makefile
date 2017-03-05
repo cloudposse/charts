@@ -1,30 +1,28 @@
-all: alertmanager-%.tgz prometheus-%.%.%.tgz prometheus-operator-%.tgz
+all: alertmanager-%.tgz kube-prometheus-%.tgz prometheus-%.%.%.tgz prometheus-operator-%.tgz
 
 CHART_REPO_BUCKET = "charts.opsgoodness.com"
 
 alertmanager-%.tgz:
-	helm dep update alertmanager
 	helm lint alertmanager
+	helm dep update alertmanager
 	helm package alertmanager
 
-# kube-prometheus: kube-prometheus-*.tgz
-#
-# kube-prometheus-*.tgz:
-#   helm dep update kube-prometheus
-#   helm lint kube-prometheus
-#   helm package kube-prometheus
+kube-prometheus-%.tgz:
+	helm lint kube-prometheus
+	helm dep update kube-prometheus
+	helm package kube-prometheus
 
 prometheus-%.%.%.tgz:
-	helm dep update prometheus
 	helm lint prometheus
+	helm dep update prometheus
 	helm package prometheus
 
 prometheus-operator-%.tgz:
-	helm dep update prometheus-operator
 	helm lint prometheus-operator
+	helm dep update prometheus-operator
 	helm package prometheus-operator
 
-ship: alertmanager-%.tgz prometheus-%.%.%.tgz prometheus-operator-%.tgz
+ship: alertmanager-%.tgz kube-prometheus-%.tgz prometheus-%.%.%.tgz prometheus-operator-%.tgz
 	gsutil cp "gs://$(CHART_REPO_BUCKET)/index.yaml" .
 	helm repo index . --url "http://$(CHART_REPO_BUCKET)" --merge index.yaml
 	gsutil -h Cache-Control:private cp -a public-read \
