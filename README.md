@@ -14,12 +14,22 @@ This repository contains four interrelated charts:
 ## Installation
 1. Add & update `opsgoodness` chart repository:
   ```console
-  helm repo add opsgoodness http://charts.opsgoodness.com`
+  helm repo add opsgoodness http://charts.opsgoodness.com
   helm repo update
   ```
+
 2. (Optionally) create custom `prometheus-operator` values file
-3. Install `prometheus-operator`: `helm install opsgoodness/prometheus-operator [--namespace <namespace>] [-f prometheus-operator.yaml]`
+
+3. Install `prometheus-operator`:
+  ```console
+  helm install opsgoodness/prometheus-operator [--namespace <namespace>] [-f prometheus-operator.yaml]
+  ```
+
 4. (Optionally) create custom `kube-prometheus` values
-5. Install `kube-prometheus`: `helm install opsgoodness/kube-prometheus [--namespace <namespace>] [-f kube-prometheus.yaml]`
+
+5. Install `kube-prometheus`:
+  ```console
+  helm install opsgoodness/kube-prometheus [--namespace <namespace>] [-f kube-prometheus.yaml]
+  ```
 
 The `prometheus` and `alertmanager` charts may also be used independently, providing the Prometheus Operator has already been installed to the cluster.
