@@ -1,4 +1,4 @@
-## AlertManagers to which alerts will be sent
+## Alertmanagers to which alerts will be sent
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/prometheus.md#alertmanagerendpoints
 ##
 alertingEndpoints: []

@@ -12,24 +12,14 @@ This repository contains four interrelated charts:
 - `alertmanager`: installs an Alertmanager instance using the Prometheus Operator
 
 ## Installation
-1. Package `prometheus-operator`, (optionally) create custom values file, and install to cluster:
+1. Add & update `opsgoodness` chart repository:
   ```console
-  helm package prometheus-operator
-
-  cp prometheus-operator/values.yaml prometheus-operator.yaml
-  vim prometheus-operator.yaml
-
-  helm install prometheus-operator-<version>.tgz [--namespace <namespace>] [-f prometheus-operator.yaml]
+  helm repo add opsgoodness http://charts.opsgoodness.com`
+  helm repo update
   ```
-
-2. Package `kube-prometheus`, (optionally) create custom values file, and install to cluster:
-  ```console
-  helm package kube-prometheus
-
-  cp kube-prometheus/values.yaml kube-prometheus.yaml
-  vim kube-prometheus.yaml
-
-  helm install kube-prometheus-<version>.tgz [--namespace <namespace>] [-f kube-prometheus.yaml]
-  ```
+2. (Optionally) create custom `prometheus-operator` values file
+3. Install `prometheus-operator`: `helm install opsgoodness/prometheus-operator [--namespace <namespace>] [-f prometheus-operator.yaml]`
+4. (Optionally) create custom `kube-prometheus` values
+5. Install `kube-prometheus`: `helm install opsgoodness/kube-prometheus [--namespace <namespace>] [-f kube-prometheus.yaml]`
 
 The `prometheus` and `alertmanager` charts may also be used independently, providing the Prometheus Operator has already been installed to the cluster.
