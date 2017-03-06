@@ -20,25 +20,25 @@ image:
   tag: v1.5.2
 
 ingress:
-    ## If true, Prometheus Ingress will be created
-    ##
-    enabled: false
+  ## If true, Prometheus Ingress will be created
+  ##
+  enabled: false
 
-    ## Annotations for Prometheus Ingress
-    ##
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+  ## Annotations for Prometheus Ingress
+  ##
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
 
-    fqdn: ""
+  fqdn: ""
 
-    ## TLS configuration for Prometheus Ingress
-    ## Secret must be manually created in the namespace
-    ##
-    tls: []
-      # - secretName: prometheus-k8s-tls
-      #   hosts:
-      #     - prometheus.example.com
+  ## TLS configuration for Prometheus Ingress
+  ## Secret must be manually created in the namespace
+  ##
+  tls: []
+    # - secretName: prometheus-k8s-tls
+    #   hosts:
+    #     - prometheus.example.com
 
 ## Node labels for Prometheus pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -53,16 +53,16 @@ paused: false
 ##
 replicaCount: 1
 
-## How long to retain metrics
-##
-retention: 24h
-
 ## Resource limits & requests
 ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources: {}
   # requests:
   #   memory: 400Mi
+
+## How long to retain metrics
+##
+retention: 24h
 
 ## Prefix used to register routes, overriding externalUrl route.
 ## Useful for proxies that rewrite URLs.

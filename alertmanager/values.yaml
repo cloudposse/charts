@@ -11,25 +11,25 @@ image:
   tag: v0.5.1
 
 ingress:
-    ## If true, Alertmanager Ingress will be created
-    ##
-    enabled: false
+  ## If true, Alertmanager Ingress will be created
+  ##
+  enabled: false
 
-    ## Annotations for Alertmanager Ingress
-    ##
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+  ## Annotations for Alertmanager Ingress
+  ##
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
 
-    fqdn: ""
+  fqdn: ""
 
-    ## TLS configuration for Alertmanager Ingress
-    ## Secret must be manually created in the namespace
-    ##
-    tls: []
-      # - secretName: alertmanager-general-tls
-      #   hosts:
-      #     - alertmanager.example.com
+  ## TLS configuration for Alertmanager Ingress
+  ## Secret must be manually created in the namespace
+  ##
+  tls: []
+    # - secretName: alertmanager-general-tls
+    #   hosts:
+    #     - alertmanager.example.com
 
 ## Node labels for Alertmanager pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
