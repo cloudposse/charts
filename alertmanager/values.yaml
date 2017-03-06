@@ -1,3 +1,6 @@
+## Alertmanager configuration directives
+## Ref: https://prometheus.io/docs/alerting/configuration/
+##
 config: {}
 
 ## External URL at which Alertmanager will be reachable
@@ -56,9 +59,22 @@ service:
   ##
   annotations: {}
 
+  ## Cluster-internal IP address for Alertmanager Service
+  ##
   clusterIP: ""
+
+  ## List of external IP addresses at which the Alertmanager Service will be available
+  ##
   externalIPs: []
+
+  ## External IP address to assign to Alertmanager Service
+  ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+  ##
   loadBalancerIP: ""
+
+  ## List of client IPs allowed to access Alertmanager Service
+  ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+  ##
   loadBalancerSourceRanges: []
 
   ## Port to expose on each node

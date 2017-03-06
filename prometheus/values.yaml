@@ -7,6 +7,10 @@ alertingEndpoints: []
 #     port: 9093
 #     scheme: http
 
+## Prometheus configuration directives
+## Ignored if serviceMonitors are defined
+## Ref: https://prometheus.io/docs/operating/configuration/
+##
 config: {}
 
 ## External URL at which Prometheus will be reachable
@@ -67,8 +71,12 @@ retention: 24h
 ## Prefix used to register routes, overriding externalUrl route.
 ## Useful for proxies that rewrite URLs.
 ##
-routePrefix: "/"
+routePrefix: /
 
+## Prometheus alerting & recording rules
+## Ref: https://prometheus.io/docs/querying/rules/
+## Ref: https://prometheus.io/docs/alerting/rules/
+##
 rules: {}
 
 service:
@@ -76,9 +84,22 @@ service:
   ##
   annotations: {}
 
+  ## Cluster-internal IP address for Prometheus Service
+  ##
   clusterIP: ""
+
+  ## List of external IP addresses at which the Prometheus Service will be available
+  ##
   externalIPs: []
+
+  ## External IP address to assign to Prometheus Service
+  ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+  ##
   loadBalancerIP: ""
+
+  ## List of client IPs allowed to access Prometheus Service
+  ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+  ##
   loadBalancerSourceRanges: []
 
   ## Port to expose on each node
@@ -91,6 +112,7 @@ service:
   type: ClusterIP
 
 ## ServiceMonitor TPRs to create & be scraped by the Prometheus instance.
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
 ##
 serviceMonitors: []
   ## Name of the ServiceMonitor to create
