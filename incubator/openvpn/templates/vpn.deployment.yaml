@@ -16,14 +16,12 @@ spec:
                   "name": "create-pki",
                   "image": "{{ .Values.openvpn.image.repository }}:{{ .Values.openvpn.image.tag }}",
                   "imagePullPolicy": "{{ .Values.openvpn.image.pullPolicy }}",
-                  "command": ["sh", "-c"],
-                  "args":[
-                    "ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ template "exposed_port" .}} && ovpn_initpki nopass && mkdir /etc/openvpn/clients"
-                  ],
+                  "command": ["create_pki"],
                   "env": [
                     { "name": "OVPN_OTP_AUTH", "value": "1" },
                     { "name": "EASYRSA_BATCH", "value": "1" },
-                    { "name": "EASYRSA_REQ_CN", "value": {{ .Values.host | quote }} }
+                    { "name": "EASYRSA_REQ_CN", "value": {{ .Values.host | quote }} },
+                    { "name": "UPSTREAM", "value": "tcp://{{ .Values.host }}:{{ template "exposed_port" .}}" }
                   ],
                   "volumeMounts": [
                       {
@@ -33,7 +31,11 @@ spec:
                   ]
               }
           ]'
-        checksum/config: {{ include (print $.Chart.Name "/templates/dashboard.configmap.yaml") . | sha256sum }}
+        checksum/ui-config:    {{ include (print $.Chart.Name "/templates/dashboard.configmap.yaml") . | sha256sum }}
+        checksum/vpn-config:   {{ include (print $.Chart.Name "/templates/vpn.configmap.yaml") . | sha256sum }}
+        checksum/vpn-secret:   {{ include (print $.Chart.Name "/templates/vpn.secret.yaml") . | sha256sum }}
+        checksum/oauth-config: {{ include (print $.Chart.Name "/templates/oauth.configmap.yaml") . | sha256sum }}
+        checksum/oauth-secret: {{ include (print $.Chart.Name "/templates/oauth.secret.yaml") . | sha256sum }}
     spec:
       containers:
       - name: vpn
@@ -52,12 +54,27 @@ spec:
         env:
           - name: DEBUG
             value: {{ .Values.debug | quote }}
-          - name: GITHUB_PAM_TEAM
-            value: {{ .Values.github_team | quote}}
           - name: OVPN_OTP_AUTH
             value: '1'
+          - name: MFA_PROVIDER
+            value: 'duo'
           - name: EASYRSA_REQ_CN
             value: {{ .Values.host | quote}}
+          - name: DUO_IKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_ikey
+          - name: DUO_SKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_skey
+          - name: DUO_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_host
         ports:
           - name: tcp
             containerPort: 1194
@@ -75,27 +92,23 @@ spec:
             mountPath: /etc/openvpn
         resources:
 {{ toYaml .Values.openvpn.resources | indent 12 }}
+    {{ if .Values.ui.enabled }}
       - name: dashboard
         image: "{{ .Values.dashboard.image.repository }}:{{ .Values.dashboard.image.tag }}"
         imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
         ports:
-          - name: http
-            containerPort: {{ .Values.dashboard.service.internalPort }}
-            protocol: TCP
+          - containerPort: 81
         volumeMounts:
-          - name: config
-            mountPath: /etc/nginx/sites-enabled
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d
           - name: source
             mountPath: /usr/share/nginx/html
-          - name: ca
-            mountPath: /usr/share/nginx/private
-            subPath: clients
         livenessProbe:
           tcpSocket:
-            port: {{ .Values.dashboard.service.internalPort }}
+            port: 81
         readinessProbe:
           tcpSocket:
-            port: {{ .Values.dashboard.service.internalPort }}
+            port: 81
         resources:
 {{ toYaml .Values.dashboard.resources | indent 12 }}
       - name: oauth
@@ -108,53 +121,53 @@ spec:
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: client_id
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: client_secret
         - name: OAUTH2_PROXY_COOKIE_NAME
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: cookie_name
         - name: OAUTH2_PROXY_COOKIE_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: cookie_domain
         - name: OAUTH2_PROXY_COOKIE_EXPIRE
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: cookie_expire
         - name: OAUTH2_PROXY_COOKIE_REFRESH
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: cookie_refresh
         - name: OAUTH2_PROXY_COOKIE_SECRET
           valueFrom:
             secretKeyRef:
-              name: "{{ template "fullname" . }}-oauth"
+              name: {{ template "fullname_oauth" . }}
               key: cookie_secret
         ports:
-        - containerPort: {{ .Values.oauth.service.http.internalPort }}
-        - containerPort: {{ .Values.oauth.service.https.internalPort }}
+        - containerPort: 8080
         volumeMounts:
           - name: oauth-config
             mountPath: /usr/share/oauth2_proxy
         livenessProbe:
           tcpSocket:
-            port: {{ .Values.oauth.service.http.internalPort }}
+            port: 8080
         readinessProbe:
           tcpSocket:
-            port: {{ .Values.oauth.service.http.internalPort }}
+            port: 8080
         resources:
 {{ toYaml .Values.oauth.resources | indent 12 }}
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+    {{ end }}
+    {{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
       - name: "proxy"
         image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
         imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
@@ -163,7 +176,7 @@ spec:
             containerPort: 80
             protocol: TCP
         volumeMounts:
-          - name: config
+          - name: proxy-config
             mountPath: /etc/nginx/conf.d
         livenessProbe:
           tcpSocket:
@@ -173,22 +186,26 @@ spec:
             port: 80
         resources:
 {{ toYaml .Values.proxy.resources | indent 12 }}
-{{ end }}
+    {{ end }}
       volumes:
         - name: ca
+      {{ if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ template "fullname" . }}
+      {{ else }}
+          emptyDir: {}
+      {{ end }}
         - name: source
           configMap:
-            name: "{{ template "fullname_dashboard" . }}"
-        - name: config
+            name: {{ template "dashboard_html_secret" . }}
+        - name: nginx-config
           configMap:
-            name: "{{ template "fullname_dashboard" . }}-config"
+            name: {{ template "fullname_dashboard" . }}
         - name: oauth-config
           configMap:
-            name: "{{ template "fullname" . }}-oauth"
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
-        - name: config
+            name: {{ template "fullname_oauth" . }}
+      {{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+        - name: proxy-config
           configMap:
             name: {{ template "fullname_proxy" . }}
-{{ end }}
+      {{ end }}

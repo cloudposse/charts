@@ -22,7 +22,7 @@ spec:
             - name: DOMAINS
               value: {{ template "letsencrypt_host" . }}
             - name: DEPLOYMENTS
-              value: {{ template "letsencrypt_deployments" . }}
+              value: {{ template "fullname_terminator" . }}
             - name: NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: SECRET_NAME

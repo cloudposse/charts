@@ -16,11 +16,27 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
+Create a default fully qualified dashboard name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "fullname_dashboard" -}}
+{{- printf "%s-dashboard" .Release.Name| trunc 24 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified oauth name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "fullname_oauth" -}}
+{{- printf "%s-oauth" .Release.Name| trunc 24 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified proxy name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_proxy" -}}
-{{- printf "%s-%s" .Release.Name "proxy" | trunc 24 | trimSuffix "-" -}}
+{{- printf "%s-proxy" .Release.Name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -28,24 +44,46 @@ Create a default fully qualified ssl terminator name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_terminator" -}}
-{{- printf "%s-%s" .Release.Name "terminator" | trunc 24 | trimSuffix "-" -}}
+{{- printf "%s-terminator" .Release.Name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
-
 
 {{/*
 Create a default fully qualified let's encrypt name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_letsencrypt" -}}
-{{- printf "%s-%s" .Release.Name "letsencrypt" | trunc 24 | trimSuffix "-" -}}
+{{- printf "%s-letsencrypt" .Release.Name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Create a default fully qualified dashboard name.
+Create a default fully qualified internal name.
 We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "fullname_dashboard" -}}
-{{- printf "%s-%s" .Release.Name "dashboard" | trunc 24 | trimSuffix "-" -}}
+{{- define "fullname_internal" -}}
+{{- printf "%s-internal" .Release.Name | trunc 24 | trimSuffix "-" -}}
+{{- end -}}
+
+
+{{/*
+Define let's encrypt serivce endpoint.
+*/}}
+{{- define "letsencrypt_endpoint" -}}
+{{- template "fullname_letsencrypt" . -}}:{{ .Values.letsencrypt.service.externalPort }}
+{{- end -}}
+
+{{/*
+Define terminator serivce endpoint.
+*/}}
+{{- define "terminator_endpoint" -}}
+{{- template "fullname_terminator" . }}:{{ .Values.ssl_terminator.service.http.externalPort -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified oauth2 proxy name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "fullname_ui_endpoint" -}}
+{{ template "fullname_internal" . }}:8080
 {{- end -}}
 
 
@@ -69,18 +107,6 @@ else openvpn service external port.
 {{- end -}}
 
 {{/*
-Define openvpn upstream for proxy.
-
-If UI and ssl enabled point to ssl terminator service
-else to dashboard service.
-*/}}
-{{- define "openvpn_proxy_upstream" -}}
-{{- if (and .Values.ui.enabled .Values.ui.ssl.enabled) -}}
-{{- template "fullname_terminator" . }}.{{ .Release.Namespace }}:{{ .Values.ssl_terminator.service.http.externalPort -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Define openvpn port share command option.
 If UI and ssl enabled point to ssl terminator service
 else if ui only enabled to dashboard service
@@ -91,17 +117,11 @@ else empty.
 {{- if .Values.ui.ssl.enabled -}}
 -e "port-share {{ template "fullname_terminator" . }} {{ .Values.ssl_terminator.service.https.externalPort }}"
 {{- else -}}
--e "port-share localhost {{ .Values.oauth.service.http.externalPort }}"
+-e "port-share localhost 8080"
 {{- end -}}
 {{- end -}}
 {{- end -}}
 
-{{/*
-Define let's encrypt serivce endpoint.
-*/}}
-{{- define "letsencrypt_endpoint" -}}
-{{- template "fullname_letsencrypt" . -}}.{{- .Release.Namespace -}}:{{ .Values.letsencrypt.service.externalPort }}
-{{- end -}}
 
 {{/*
 Define host let's encrypt get certificate for.
@@ -110,25 +130,12 @@ Define host let's encrypt get certificate for.
 {{- .Values.host -}}
 {{- end -}}
 
-{{/*
-Define dashboard serivce endpoint.
-*/}}
-{{- define "dashboard_endpoint" -}}
-{{- template "fullname_dashboard" . }}.{{ .Release.Namespace -}}:{{ .Values.dashboard.service.externalPort }}
-{{- end -}}
 
 {{/*
 Define secret to store let's encrypt certificates.
 */}}
 {{- define "letsencrypt_secret" -}}
 {{- .Values.ui.ssl.secret }}
-{{- end -}}
-
-{{/*
-Define deployments that should be restarted after let's encrypt get new certificate.
-*/}}
-{{- define "letsencrypt_deployments" -}}
-{{- template "fullname_terminator" . -}}
 {{- end -}}
 
 {{/*
@@ -142,11 +149,13 @@ https://acme-staging.api.letsencrypt.org/directory
 {{- end -}}
 {{- end -}}
 
-
 {{/*
-Create a default fully qualified oauth2 proxy name.
-We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+Define dashboard html secret.
 */}}
-{{- define "fullname_oauth2_proxy" -}}
-{{- printf "%s-%s" .Release.Name "oauth2-proxy" | trunc 24 | trimSuffix "-" -}}
+{{- define "dashboard_html_secret" -}}
+{{- if  eq .Values.ui.htmlConfigmap "default" -}}
+{{ template "fullname_dashboard" . }}-ui
+{{- else -}}
+{{ .Values.ui.htmlConfigmap }}
+{{- end -}}
 {{- end -}}

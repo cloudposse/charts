@@ -3,33 +3,49 @@
 # Declare variables to be passed into your templates.
 
 #################################### REQUIRED CONFIGURATION ############################################################
-## Host that would be vpn gateway
-host: auth.goruha.cloudposse.org
-# Github team in format {organization name}/{team name}
-github_team: cloudposse/ssh
-## Secret to store openvpn certificates
-secret: openvpn-secret
-## Chart support UI with pre-generated client config and instructions
-ui:
-  ## Enable UI
-  enabled: true
-  ## Chart support https protocol for UI access.
-  ## SSL certificates generates automatically with let's encrypt service https://letsencrypt.org/
-  ssl:
-    ## Enable HTTPS
-    enabled: false
-    ## Name of secret to store ssl certificates
-    secret: openvpn-letsencrypt-secret
-    ## If true let's encrypt will generate a production ready signed certificate.
-    ##    WARNING: There are limits to request production ready certificates (https://letsencrypt.org/docs/rate-limits/)
-    ## else let's encrypt will generate untrusted certificates.
-    ##    Use this mode during debug, because of no limits to such certs.
-    prod: false
-    ## Email that would be used to restore certificates and get notifications about expiration (https://letsencrypt.org/docs/expiration-emails/)
-    email:
+
+define:
+  - &HOSTNAME ""               # Host that would be vpn gateway
+  - &COOKIE_SECRET ""          # OAuth proxy cookie session secret
+  - &GITHUB_OAUTH_ID ""        # Github OAuth ID
+  - &GITHUB_OAUTH_SECRET ""    # Github OAuth Secret
+  - &GITHUB_ORG ""             # Github organization
+  - &GITHUB_TEAM ""            # Github team
+  - &DUO_IKEY ""               # DUO MFA IKey
+  - &DUO_SKEY ""               # DUO MFA SKey
+  - &DUO_HOST ""               # DUO MFA Host
+  - &SSL_EMAIL ""              # Email that would be used to restore certificates and get notifications about expiration (https://letsencrypt.org/docs/expiration-emails/)
+  - &SSL_ENABLED "false"       # Enable HTTPS
+  - &SSL_PROD "false"          ## If true let's encrypt will generate a production ready signed certificate.
+                               ##    WARNING: There are limits to request production ready certificates (https://letsencrypt.org/docs/rate-limits/)
+                               ## else let's encrypt will generate untrusted certificates.
+                               ##    Use this mode during debug, because of no limits to such certs.
 
 
 ####################################### Developer configs ##############################################################
+
+host: *HOSTNAME
+
+ui:
+  enabled: true
+  ssl:
+    enabled: *SSL_ENABLED
+    secret: openvpn-letsencrypt-secret
+    prod: *SSL_PROD
+    email: *SSL_EMAIL
+  htmlConfigmap: default
+  branding: "CloudPosse OpenVPN"
+
+duo:
+  iKey: *DUO_IKEY
+  sKey: *DUO_SKEY
+  host: *DUO_HOST
+
+persistence:
+  enabled: true
+  storageClass: generic
+  accessMode: ReadWriteMany
+  size: 1Gi
 
 debug: 0
 
@@ -105,16 +121,10 @@ letsencrypt:
       memory: 128Mi
 
 dashboard:
-  replicaCount: 1
   image:
-    repository: cloudposse/nginx-github-authorization
-    tag: initial
+    repository: nginx
+    tag: alpine
     pullPolicy: Always
-  service:
-    name: nginx
-    type: ClusterIP
-    externalPort: 81
-    internalPort: 81
   resources:
     limits:
       cpu: 100m
@@ -125,76 +135,38 @@ dashboard:
 
 oauth:
   app:
-    useSSL: false
-
-    upstreams:
-      - "http://vpn-dashboard"
-
-    provider: "github"
-
     # Common oauth configs
-    clientID: "***"
-    clientSecret: "***"
-    scope:
-    redirectUrl:
+    clientID: *GITHUB_OAUTH_ID
+    clientSecret: *GITHUB_OAUTH_SECRET
 
     # Github specific configs
-    githubOrg: intervals-mining-lab
-    githubTeam: libiada-developers
-
-    # Github or Gitlab specific configs
-    loginUrl:
-    redeemUrl:
-    validateUrl:
-
-    # HTTP auth configs
-    basicAuthPassword:
-    displayHtpasswdForm:
-    htpasswdFile:
+    githubOrg: *GITHUB_ORG
+    githubTeam: *GITHUB_TEAM
 
     # Email filters
     emailDomains:
       - "*"
     emails:
-    #      - igor@cloudposse.com
+    #      - admin@example.com
+
+    skipAuthRegex:
+    #  - ""
 
     # oAuth2 proxy configs
-    approvalPrompt:
     requestLogging: false
-    passAccessToken: false
-    passBasicAuth: true
-    passHostHeader: true
-    customTemplatesDir:
-    proxyPrefix:
-    skipAuthRegex:
-    #	  - ".*"
-    skipProviderButton:
-    profileUrl:
-    signatureKey:
 
     # oAuth2 proxy session cookie config
     cookieName:
-    cookieSecret: "Test"
-    cookieDomain: "auth.goruha.cloudposse.org"
+    cookieSecret: *COOKIE_SECRET
+    cookieDomain: *HOSTNAME
     cookieExpire:
     cookieRefresh:
-    cookieSecure: true
     cookieHttponly: false
 
-  replicaCount: 1
   image:
     repository: cloudposse/oauth2-proxy
     tag: init
     pullPolicy: Always
-  service:
-    name: oauth
-    type: ClusterIP
-    http:
-      externalPort: 8080
-      internalPort: 8080
-    https:
-      externalPort: 8443
-      internalPort: 8443
   resources:
     limits:
       cpu: 100m
@@ -202,9 +174,3 @@ oauth:
     requests:
       cpu: 100m
       memory: 128Mi
-
-Persistence:
-  Enabled: true
-  StorageClass: local-nfs
-  AccessMode: ReadWriteMany
-  Size: 1Gi
