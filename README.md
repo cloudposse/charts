@@ -6,10 +6,10 @@
 
 ## Components
 This repository contains four interrelated charts:
-- `kube-prometheus`: installs end-to-end cluster monitoring
 - `prometheus-operator`: installs the Prometheus Operator
 - `prometheus`: installs a Prometheus instance using the Prometheus Operator
 - `alertmanager`: installs an Alertmanager instance using the Prometheus Operator
+- `kube-prometheus`: installs end-to-end cluster monitoring (**not ready for use**)
 
 ## Installation
 1. Add & update `opsgoodness` chart repository:
@@ -18,18 +18,23 @@ This repository contains four interrelated charts:
   helm repo update
   ```
 
-2. (Optionally) create custom `prometheus-operator` values file
+2. (Optionally) Create custom `prometheus-operator` values file
 
 3. Install `prometheus-operator`:
   ```console
   helm install opsgoodness/prometheus-operator [--namespace <namespace>] [-f prometheus-operator.yaml]
   ```
 
-4. (Optionally) create custom `kube-prometheus` values
+4. (Optionally) Create custom `alertmanager` values
 
-5. Install `kube-prometheus`:
+5. Install `alertmanager`:
   ```console
-  helm install opsgoodness/kube-prometheus [--namespace <namespace>] [-f kube-prometheus.yaml]
+  helm install opsgoodness/alertmanager [--namespace <namespace>] [-f alertmanager.yaml]
   ```
 
-The `prometheus` and `alertmanager` charts may also be used independently, providing the Prometheus Operator has already been installed to the cluster.
+6. (Optional) Create custom `prometheus` values
+
+7. Install `prometheus`:
+  ```console
+  helm install opsgoodness/prometheus [--namespace <namespace>] [-f prometheus.yaml]
+  ```
