@@ -15,7 +15,7 @@ spec:
     targetPort: 1194
     protocol: TCP
     name: "{{ .Values.openvpn.service.name }}-vpn"
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+{{ if .Values.ui.ssl.enabled }}
   - port: 80
     targetPort: 80
     protocol: TCP

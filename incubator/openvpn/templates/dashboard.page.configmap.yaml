@@ -1,4 +1,4 @@
-{{ if and .Values.ui.enabled  ( eq .Values.ui.htmlConfigmap "default" ) }}
+{{ if eq .Values.ui.htmlConfigmap "default" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

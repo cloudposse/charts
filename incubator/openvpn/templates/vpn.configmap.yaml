@@ -1,4 +1,29 @@
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "fullname" . }}"
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  vars: |-
+    # A little housekeeping: DON'T EDIT THIS SECTION
+    if [ -z "$EASYRSA_CALLER" ]; then
+            echo "You appear to be sourcing an Easy-RSA 'vars' file." >&2
+            echo "This is no longer necessary and is disallowed. See the section called" >&2
+            echo "'How to use this file' near the top comments for more details." >&2
+            return 1
+    fi
+{{- range $name, $value := .Values.easyrsa.vars }}
+{{- if not (empty $value) }}
+    set_var {{ $name }} {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{ if .Values.ui.ssl.enabled }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

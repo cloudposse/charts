@@ -6,6 +6,7 @@
 
 define:
   - &HOSTNAME ""               # Host that would be vpn gateway
+  - &RENEGOTIATE_CONNECTION_AFTER "0"                                  # Renegotiate connection after x seconds
   - &COOKIE_SECRET ""          # OAuth proxy cookie session secret
   - &GITHUB_OAUTH_ID ""        # Github OAuth ID
   - &GITHUB_OAUTH_SECRET ""    # Github OAuth Secret
@@ -15,19 +16,17 @@ define:
   - &DUO_SKEY ""               # DUO MFA SKey
   - &DUO_HOST ""               # DUO MFA Host
   - &SSL_EMAIL ""              # Email that would be used to restore certificates and get notifications about expiration (https://letsencrypt.org/docs/expiration-emails/)
-  - &SSL_ENABLED "false"       # Enable HTTPS
+  - &SSL_ENABLED false         # Enable HTTPS
   - &SSL_PROD "false"          ## If true let's encrypt will generate a production ready signed certificate.
                                ##    WARNING: There are limits to request production ready certificates (https://letsencrypt.org/docs/rate-limits/)
                                ## else let's encrypt will generate untrusted certificates.
                                ##    Use this mode during debug, because of no limits to such certs.
-
 
 ####################################### Developer configs ##############################################################
 
 host: *HOSTNAME
 
 ui:
-  enabled: true
   ssl:
     enabled: *SSL_ENABLED
     secret: openvpn-letsencrypt-secret
@@ -47,9 +46,22 @@ persistence:
   accessMode: ReadWriteMany
   size: 1Gi
 
+easyrsa:
+  vars:
+    EASYRSA_REQ_COUNTRY: "US"
+    EASYRSA_REQ_PROVINCE: "California"
+    EASYRSA_REQ_CITY: "San Francisco"
+    EASYRSA_REQ_ORG: "Copyleft Certificate Co"
+    EASYRSA_REQ_EMAIL: "me@example.net"
+    EASYRSA_REQ_OU: "My Organizational Unit"
+    EASYRSA_CA_EXPIRE: "3650"
+    EASYRSA_CERT_EXPIRE: "3650"
+    EASYRSA_CRL_DAYS: "180"
+
 debug: 0
 
 openvpn:
+  renegotiateConnectionAfter: *RENEGOTIATE_CONNECTION_AFTER
   replicaCount: 1
   image:
     repository: cloudposse/openvpn
@@ -58,7 +70,7 @@ openvpn:
   service:
     name: openvpn
     type: LoadBalancer
-    externalPort: 443
+    externalPort: 80
   resources:
     limits:
       cpu: 100m

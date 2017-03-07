@@ -1,4 +1,3 @@
-{{ if .Values.ui.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -39,4 +38,3 @@ data:
           alias /usr/share/nginx/private/;
         }
     }
-{{ end }}

@@ -1,4 +1,4 @@
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+{{ if .Values.ui.ssl.enabled }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:

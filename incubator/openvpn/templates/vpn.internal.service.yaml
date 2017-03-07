@@ -1,4 +1,4 @@
-{{ if ( and .Values.ui.enabled .Values.ui.ssl.enabled ) }}
+{{ if .Values.ui.ssl.enabled }}
 apiVersion: v1
 kind: Service
 metadata:

@@ -95,14 +95,10 @@ else if only UI enabled -> 80
 else openvpn service external port.
 */}}
 {{- define "exposed_port" -}}
-{{- if (and .Values.ui.enabled .Values.ui.ssl.enabled) -}}
+{{- if .Values.ui.ssl.enabled -}}
 443
 {{- else -}}
-{{- if .Values.ui.enabled -}}
-80
-{{- else -}}
-{{- .Values.openvpn.service.externalPort -}}
-{{- end -}}
+{{ .Values.openvpn.service.externalPort }}
 {{- end -}}
 {{- end -}}
 
@@ -113,12 +109,10 @@ else if ui only enabled to dashboard service
 else empty.
 */}}
 {{- define "openvpn_share_port" -}}
-{{- if .Values.ui.enabled -}}
 {{- if .Values.ui.ssl.enabled -}}
 -e "port-share {{ template "fullname_terminator" . }} {{ .Values.ssl_terminator.service.https.externalPort }}"
 {{- else -}}
 -e "port-share localhost 8080"
-{{- end -}}
 {{- end -}}
 {{- end -}}
 
