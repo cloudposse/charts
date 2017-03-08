@@ -17,7 +17,7 @@ define:
   - &DUO_HOST ""               # DUO MFA Host
   - &SSL_EMAIL ""              # Email that would be used to restore certificates and get notifications about expiration (https://letsencrypt.org/docs/expiration-emails/)
   - &SSL_ENABLED false         # Enable HTTPS
-  - &SSL_PROD "false"          ## If true let's encrypt will generate a production ready signed certificate.
+  - &SSL_PROD false            ## If true let's encrypt will generate a production ready signed certificate.
                                ##    WARNING: There are limits to request production ready certificates (https://letsencrypt.org/docs/rate-limits/)
                                ## else let's encrypt will generate untrusted certificates.
                                ##    Use this mode during debug, because of no limits to such certs.
@@ -42,7 +42,7 @@ duo:
 
 persistence:
   enabled: true
-  storageClass: generic
+  storageClass: default
   accessMode: ReadWriteMany
   size: 1Gi
 
