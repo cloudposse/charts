@@ -4,14 +4,6 @@
 
 replicaCount: 1
 
-# Error codes that we should intercept in order to display a pretty error page
-customHttpErrors:
-  - "404"
-  - "500"
-  - "502"
-  - "503"
-  - "504"
-
 image:
   repository: "gcr.io/google_containers/nginx-ingress-controller"
   tag: "0.8.3"
@@ -36,3 +28,43 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+# Error codes that we should intercept in order to display a pretty error page
+customHttpErrors:
+  client:
+    - "404"
+  server:
+    - "500"
+    - "502"
+    - "503"
+    - "504"
+
+nginx-default-backend:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  service:
+    name: nginx
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 8080
+  resources:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+    requests:
+      cpu: 10m
+      memory: 20Mi
+  errors:
+    configmap: default
+    default:
+      email: hello@cloudposse.com
+      site: http://cloudposse.com
+    client:
+      - "404"
+    server:
+      - "500"
+      - "502"
+      - "503"
+      - "504"

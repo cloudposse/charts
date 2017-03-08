@@ -15,6 +15,12 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 24 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Apache host
+*/}}
+{{- define "apache_fullname" -}}
+{{- printf "%s-%s" .Release.Name "apache" | trunc 24 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Mysql host
