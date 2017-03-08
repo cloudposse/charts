@@ -23,3 +23,10 @@ errors:
   default:
     email: hello@cloudposse.com
     site: http://cloudposse.com
+  client:
+    - "404"
+  server:
+    - "500"
+    - "502"
+    - "503"
+    - "504"

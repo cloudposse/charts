@@ -25,6 +25,6 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: {{template "fullname" . }}
+          serviceName: {{template "apache_fullname" . }}
           servicePort: {{.Values.apache.service.externalPort}}
 {{- end }}
