@@ -6,7 +6,6 @@
 
 define:
   - &HOSTNAME ""               # Host that would be vpn gateway
-  - &RENEGOTIATE_CONNECTION_AFTER "0"                                  # Renegotiate connection after x seconds
   - &COOKIE_SECRET ""          # OAuth proxy cookie session secret
   - &GITHUB_OAUTH_ID ""        # Github OAuth ID
   - &GITHUB_OAUTH_SECRET ""    # Github OAuth Secret
@@ -61,7 +60,8 @@ easyrsa:
 debug: 0
 
 openvpn:
-  renegotiateConnectionAfter: *RENEGOTIATE_CONNECTION_AFTER
+  env:
+    OVPN_RENEG_SEC: 0
   replicaCount: 1
   image:
     repository: cloudposse/openvpn

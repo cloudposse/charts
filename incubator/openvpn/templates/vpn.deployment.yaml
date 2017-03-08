@@ -57,6 +57,12 @@ spec:
               {{ template "openvpn_share_port" . }} \
             && /init
         env:
+{{- range $name, $value := .Values.openvpn.env }}
+{{- if not (empty $value) }}
+          - name: {{ $name | quote }}
+            value: {{ $value | quote }}
+{{- end }}
+{{- end }}
           - name: DEBUG
             value: {{ .Values.debug | quote }}
           - name: OVPN_OTP_AUTH
@@ -65,8 +71,6 @@ spec:
             value: 'duo'
           - name: EASYRSA_REQ_CN
             value: {{ .Values.host | quote}}
-          - name: OVPN_RENEG_SEC
-            value: {{ .Values.openvpn.renegotiateConnectionAfter | quote }}
           - name: EASYRSA_VARS_FILE
             value: "/etc/easyrsa.d/vars"
           - name: DUO_IKEY
