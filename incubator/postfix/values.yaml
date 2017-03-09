@@ -15,7 +15,7 @@ smtp:
     enabled: false
     host:
     port:
-    tls: false
+    tls: "false"
     user:
     password:
 service:
