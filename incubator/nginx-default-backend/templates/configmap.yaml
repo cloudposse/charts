@@ -18,38 +18,34 @@ data:
         }
 
         location / {
-          if ($http_x_code =  "500" ) {
-            return 500;
+          {{ range $index, $element := .Values.errors.server }}
+          if ($http_x_code =  {{ $element | quote }} ) {
+            return {{ $element }};
           }
+          {{ end }}
 
-          if ($http_x_code =  "502" ) {
-            return 502;
+          {{ range $index, $element := .Values.errors.client }}
+          if ($http_x_code =  {{ $element | quote }} ) {
+            return {{ $element }};
           }
+          {{ end }}
 
-          if ($http_x_code =  "503" ) {
-            return 503;
-          }
-
-          if ($http_x_code =  "504" ) {
-            return 504;
-          }
           return 404;
         }
 
-        error_page 404 /404.html;
+        error_page {{ range $index, $element := .Values.errors.client }} {{$element}} {{end}} /404.html;
         location = /404.html {
                 root /usr/share/nginx/html;
                 internal;
         }
 
-        error_page 500 502 503 504 /50x.html;
+        error_page  {{ range $index, $element := .Values.errors.server }} {{$element}} {{end}} /50x.html;
         location = /50x.html {
                 root /usr/share/nginx/html;
                 internal;
         }
     }
-
-{{- if eq .Values.errors.configmap "default" }}
+{{ if eq .Values.errors.configmap "default" }}
 ---
 apiVersion: v1
 kind: ConfigMap

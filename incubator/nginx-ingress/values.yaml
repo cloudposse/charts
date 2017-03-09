@@ -1,11 +1,14 @@
 # Default values for nginx-ingress.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
 replicaCount: 1
+
 image:
   repository: "gcr.io/google_containers/nginx-ingress-controller"
   tag: "0.8.3"
   pullPolicy: "IfNotPresent"
+
 service:
   name: nginx
   type: LoadBalancer
@@ -16,6 +19,7 @@ service:
   internalHealthzPort: 18080
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+
 resources:
   limits:
     cpu: 100m
@@ -24,3 +28,43 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+# Error codes that we should intercept in order to display a pretty error page
+customHttpErrors:
+  client:
+    - "404"
+  server:
+    - "500"
+    - "502"
+    - "503"
+    - "504"
+
+nginx-default-backend:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  service:
+    name: nginx
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 8080
+  resources:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+    requests:
+      cpu: 10m
+      memory: 20Mi
+  errors:
+    configmap: default
+    default:
+      email: hello@cloudposse.com
+      site: http://cloudposse.com
+    client:
+      - "404"
+    server:
+      - "500"
+      - "502"
+      - "503"
+      - "504"
