@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    dns: route53
+  annotations:
+    domainName: {{ .Values.host }}
+    dnsRecordType: "A"
+spec:
+  type: {{ .Values.openvpn.service.type }}
+  ports:
+  - port: {{ template "exposed_port" .}}
+    targetPort: 1194
+    protocol: TCP
+    name: "{{ .Values.openvpn.service.name }}-vpn"
+{{ if .Values.ui.ssl.enabled }}
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: "{{ .Values.openvpn.service.name }}-proxy"
+{{end}}
+  selector:
+    app: {{ template "fullname" . }}

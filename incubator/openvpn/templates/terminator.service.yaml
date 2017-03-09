@@ -1,0 +1,21 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname_terminator" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: {{ .Values.ssl_terminator.service.type }}
+  ports:
+  - port: {{ .Values.ssl_terminator.service.http.externalPort }}
+    targetPort: 80
+    protocol: TCP
+    name: {{ .Values.ssl_terminator.service.http.name }}
+  - port: {{ .Values.ssl_terminator.service.https.externalPort }}
+    targetPort: 443
+    protocol: TCP
+    name: {{ .Values.ssl_terminator.service.https.name }}
+  selector:
+    app: {{ template "fullname_terminator" . }}
+{{ end }}

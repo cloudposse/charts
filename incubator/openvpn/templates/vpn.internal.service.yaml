@@ -1,0 +1,21 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname_internal" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8085
+    targetPort: 8085
+    protocol: TCP
+    name: api
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: ui
+  selector:
+    app: {{ template "fullname" . }}
+{{end}}

@@ -1,0 +1,37 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "fullname_letsencrypt" . }}-{{ randAlphaNum 10 | lower }}"
+  labels:
+    app: {{ template "fullname_letsencrypt" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname_letsencrypt" . }}"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: letsencrypt
+        image: "{{ .Values.letsencrypt.image.repository }}:{{ .Values.letsencrypt.image.tag }}"
+        imagePullPolicy: {{ .Values.letsencrypt.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+          - |-
+              /letsencrypt/generate_selfsigned.sh &&
+              /letsencrypt/save_certs.sh
+        env:
+          - name: DOMAINS
+            value: {{ template "letsencrypt_host" . }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+          - name: SECRET_NAME
+            value: {{ template "letsencrypt_secret" . }}
+
+{{ end }}

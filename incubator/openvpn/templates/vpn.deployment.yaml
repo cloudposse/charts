@@ -1,0 +1,227 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.openvpn.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        pod.alpha.kubernetes.io/init-containers: '[
+              {
+                  "name": "create-pki",
+                  "image": "{{ .Values.openvpn.image.repository }}:{{ .Values.openvpn.image.tag }}",
+                  "imagePullPolicy": "{{ .Values.openvpn.image.pullPolicy }}",
+                  "command": ["create_pki"],
+                  "env": [
+                    { "name": "OVPN_OTP_AUTH", "value": "1" },
+                    { "name": "EASYRSA_BATCH", "value": "1" },
+                    { "name": "EASYRSA_VARS_FILE", "value": "/etc/easyrsa.d/vars" },
+                    { "name": "EASYRSA_REQ_CN", "value": {{ .Values.host | quote }} },
+                    { "name": "UPSTREAM", "value": "tcp://{{ .Values.host }}:{{ template "exposed_port" .}}" }
+                  ],
+                  "volumeMounts": [
+                      {
+                          "name": "ca",
+                          "mountPath": "/etc/openvpn"
+                      },
+                      {
+                          "name": "config",
+                          "mountPath": "/etc/easyrsa.d"
+                      }
+                  ]
+              }
+          ]'
+        checksum/ui-config:    {{ include (print $.Chart.Name "/templates/dashboard.configmap.yaml") . | sha256sum }}
+        checksum/vpn-config:   {{ include (print $.Chart.Name "/templates/vpn.configmap.yaml") . | sha256sum }}
+        checksum/vpn-secret:   {{ include (print $.Chart.Name "/templates/vpn.secret.yaml") . | sha256sum }}
+        checksum/oauth-config: {{ include (print $.Chart.Name "/templates/oauth.configmap.yaml") . | sha256sum }}
+        checksum/oauth-secret: {{ include (print $.Chart.Name "/templates/oauth.secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: vpn
+        image: "{{ .Values.openvpn.image.repository }}:{{ .Values.openvpn.image.tag }}"
+        imagePullPolicy: {{ .Values.openvpn.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+         - |-
+            ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ template "exposed_port" .}} \
+              -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
+              -p "dhcp-option DOMAIN-SEARCH cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
+              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              {{ template "openvpn_share_port" . }} \
+            && /init
+        env:
+{{- range $name, $value := .Values.openvpn.env }}
+{{- if not (empty $value) }}
+          - name: {{ $name | quote }}
+            value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+          - name: DEBUG
+            value: {{ .Values.debug | quote }}
+          - name: OVPN_OTP_AUTH
+            value: '1'
+          - name: MFA_PROVIDER
+            value: 'duo'
+          - name: EASYRSA_REQ_CN
+            value: {{ .Values.host | quote}}
+          - name: EASYRSA_VARS_FILE
+            value: "/etc/easyrsa.d/vars"
+          - name: DUO_IKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_ikey
+          - name: DUO_SKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_skey
+          - name: DUO_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: duo_host
+        ports:
+          - name: tcp
+            containerPort: 1194
+            protocol: TCP
+          - name: api
+            containerPort: 8085
+            protocol: TCP
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+        volumeMounts:
+          - name: ca
+            mountPath: /etc/openvpn
+          - name: config
+            mountPath: /etc/easyrsa.d
+        resources:
+{{ toYaml .Values.openvpn.resources | indent 12 }}
+      - name: dashboard
+        image: "{{ .Values.dashboard.image.repository }}:{{ .Values.dashboard.image.tag }}"
+        imagePullPolicy: {{ .Values.dashboard.image.pullPolicy }}
+        ports:
+          - containerPort: 81
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d
+          - name: source
+            mountPath: /usr/share/nginx/html
+        livenessProbe:
+          tcpSocket:
+            port: 81
+        readinessProbe:
+          tcpSocket:
+            port: 81
+        resources:
+{{ toYaml .Values.dashboard.resources | indent 12 }}
+      - name: oauth
+        image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
+        imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
+        args:
+          - "-config"
+          - "/usr/share/oauth2_proxy/config"
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_name
+        - name: OAUTH2_PROXY_COOKIE_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_domain
+        - name: OAUTH2_PROXY_COOKIE_EXPIRE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_expire
+        - name: OAUTH2_PROXY_COOKIE_REFRESH
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_refresh
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_secret
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: oauth-config
+            mountPath: /usr/share/oauth2_proxy
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+        resources:
+{{ toYaml .Values.oauth.resources | indent 12 }}
+    {{ if .Values.ui.ssl.enabled }}
+      - name: "proxy"
+        image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+        imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: proxy-config
+            mountPath: /etc/nginx/conf.d
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+        resources:
+{{ toYaml .Values.proxy.resources | indent 12 }}
+    {{ end }}
+      volumes:
+        - name: ca
+      {{ if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}
+      {{ else }}
+          emptyDir: {}
+      {{ end }}
+        - name: source
+          configMap:
+            name: {{ template "dashboard_html_secret" . }}
+        - name: nginx-config
+          configMap:
+            name: {{ template "fullname_dashboard" . }}
+        - name: oauth-config
+          configMap:
+            name: {{ template "fullname_oauth" . }}
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}
+      {{ if .Values.ui.ssl.enabled }}
+        - name: proxy-config
+          configMap:
+            name: {{ template "fullname_proxy" . }}
+      {{ end }}

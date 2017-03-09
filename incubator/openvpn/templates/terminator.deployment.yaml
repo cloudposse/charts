@@ -1,0 +1,46 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname_terminator" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.ssl_terminator.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname_terminator" . }}
+    spec:
+      containers:
+      - name: nginx
+        image: "{{ .Values.ssl_terminator.image.repository }}:{{ .Values.ssl_terminator.image.tag }}"
+        imagePullPolicy: {{ .Values.ssl_terminator.image.pullPolicy }}
+        env:
+          - name: ENABLE_SSL
+            value: "true"
+          - name: CERT_SERVICE
+            value: {{ template "letsencrypt_endpoint" . }}
+          - name: SERVER_NAME
+            value: {{ template "letsencrypt_host" . }}
+          - name: TARGET_SERVICE
+            value: {{ template "fullname_ui_endpoint" . }}
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          tcpSocket:
+            port: 443
+        volumeMounts:
+          - name: certs
+            mountPath: /etc/secrets
+        resources:
+{{ toYaml .Values.ssl_terminator.resources | indent 12 }}
+      volumes:
+      - name: certs
+        secret:
+          secretName: {{ template "letsencrypt_secret" . }}
+{{ end }}

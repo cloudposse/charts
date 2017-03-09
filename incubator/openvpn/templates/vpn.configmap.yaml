@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "fullname" . }}"
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  vars: |-
+    # A little housekeeping: DON'T EDIT THIS SECTION
+    if [ -z "$EASYRSA_CALLER" ]; then
+            echo "You appear to be sourcing an Easy-RSA 'vars' file." >&2
+            echo "This is no longer necessary and is disallowed. See the section called" >&2
+            echo "'How to use this file' near the top comments for more details." >&2
+            return 1
+    fi
+{{- range $name, $value := .Values.easyrsa.vars }}
+{{- if not (empty $value) }}
+    set_var {{ $name }} {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{ if .Values.ui.ssl.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "fullname_proxy" . }}"
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  default.conf: |-
+    server {
+        listen 80 default_server;
+        server_name  _;
+        location / {
+            proxy_pass          http://{{ template "terminator_endpoint" . }};
+            proxy_set_header    Host $host;
+            proxy_set_header    X-Real-IP $remote_addr;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header    X-Forwarded-Proto $scheme;
+            proxy_read_timeout  90;
+        }
+    }
+{{end}}

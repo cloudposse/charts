@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname_oauth" . }}
+data:
+  config: |-
+      ## OAuth2 Proxy Config File
+      ## https://github.com/bitly/oauth2_proxy
+
+      ## <addr>:<port> to listen on for HTTP/HTTPS clients
+      http_address = "http://0.0.0.0:8080"
+      https_address = ":443"
+
+      ## the http url(s) of the upstream endpoint. If multiple, routing is based on path
+      upstreams = [
+        "http://localhost:81"
+      ]
+
+      ## Log requests to stdout
+      request_logging = {{ .Values.oauth.app.requestLogging }}
+
+      ## pass HTTP Basic Auth, X-Forwarded-User and X-Forwarded-Email information to upstream
+      pass_basic_auth = true
+      ## pass the request Host Header to upstream
+      ## when disabled the upstream Host is used as the Host Header
+      pass_host_header = true
+
+      ## Email Domains to allow authentication for (this authorizes any email on this domain)
+      ## for more granular authorization use `authenticated_emails_file`
+      ## To authorize any email addresses use "*"
+      email_domains = [
+    {{- range $value := .Values.oauth.app.emailDomains }}
+    {{- if not (empty $value) }}
+    {{ $value | quote | indent 4 }},
+    {{- end }}
+    {{- end }}
+      ]
+
+    {{- if .Values.ui.ssl.enabled }}
+      redirect_url = "https://{{ .Values.host }}/oauth2/callback"
+    {{- else }}
+      redirect_url = "http://{{ .Values.host }}/oauth2/callback"
+    {{- end }}
+      ## Pass OAuth Access token to upstream via "X-Forwarded-Access-Token"
+      pass_access_token = false
+
+      ## Authenticated Email Addresses File (one email per line)
+      authenticated_emails_file = "/usr/share/oauth2_proxy/emails"
+
+      ## Htpasswd File (optional)
+      ## Additionally authenticate against a htpasswd file. Entries must be created with "htpasswd -s" for SHA encryption
+      ## enabling exposes a username/login signin form
+      htpasswd_file = "/usr/share/oauth2_proxy/htpasswd"
+
+      ## Templates
+      ## optional directory with custom sign_in.html and error.html
+      # custom_templates_dir = ""
+
+      ## Cookie Settings
+      ## Secure   - secure cookies are only sent by the browser of a HTTPS connection (recommended)
+      ## HttpOnly - httponly cookies are not readable by javascript (recommended)
+      cookie_secure = false
+      cookie_httponly = {{ .Values.oauth.app.cookieHttponly }}
+
+    {{- if .Values.oauth.app.githubOrg }}
+      github_org = {{ .Values.oauth.app.githubOrg | quote }}
+    {{- end }}
+
+    {{- if .Values.oauth.app.githubTeam }}
+      github_team = {{ .Values.oauth.app.githubTeam | quote }}
+    {{- end }}
+
+      display_htpasswd_form = false
+
+      provider = "github"
+
+      skip_auth_regex = [
+    {{- range $value := .Values.oauth.app.skipAuthRegex }}
+    {{- if not (empty $value) }}
+    {{ $value | quote | indent 4 }},
+    {{- end }}
+    {{- end }}
+      ]
+
+
+  emails: |-
+    {{- range $value := .Values.oauth.app.emails }}
+    {{- if not (empty $value) }}
+    {{ $value }}
+    {{- end }}
+    {{- end }}
+
+  htpasswd: |-

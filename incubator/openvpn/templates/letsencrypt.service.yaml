@@ -1,0 +1,17 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname_letsencrypt" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  type: {{ .Values.letsencrypt.service.type }}
+  ports:
+  - port: {{ .Values.letsencrypt.service.externalPort }}
+    targetPort: 80
+    protocol: TCP
+    name: {{ .Values.letsencrypt.service.name }}
+  selector:
+    app: {{ template "fullname_letsencrypt" . }}
+{{ end }}

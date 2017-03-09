@@ -1,0 +1,190 @@
+# Default values for openvpn.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#################################### REQUIRED CONFIGURATION ############################################################
+
+define:
+  - &HOSTNAME ""               # Host that would be vpn gateway
+  - &COOKIE_SECRET ""          # OAuth proxy cookie session secret
+  - &GITHUB_OAUTH_ID ""        # Github OAuth ID
+  - &GITHUB_OAUTH_SECRET ""    # Github OAuth Secret
+  - &GITHUB_ORG ""             # Github organization
+  - &GITHUB_TEAM ""            # Github team
+  - &DUO_IKEY ""               # DUO MFA IKey
+  - &DUO_SKEY ""               # DUO MFA SKey
+  - &DUO_HOST ""               # DUO MFA Host
+  - &SSL_EMAIL ""              # Email that would be used to restore certificates and get notifications about expiration (https://letsencrypt.org/docs/expiration-emails/)
+  - &SSL_ENABLED false         # Enable HTTPS
+  - &SSL_PROD false            # If true let's encrypt will generate a production ready signed certificate.
+           
+                               ## WARNING: There are limits to request production ready certificates 
+                               ##           (https://letsencrypt.org/docs/rate-limits/)
+                               ##    Set to `false` during debuging, so that let's encrypt will generate untrusted certificates.
+    
+
+####################################### Developer configs ##############################################################
+
+host: *HOSTNAME
+
+ui:
+  ssl:
+    enabled: *SSL_ENABLED
+    secret: openvpn-letsencrypt-secret
+    prod: *SSL_PROD
+    email: *SSL_EMAIL
+  htmlConfigmap: default
+  branding: "CloudPosse OpenVPN"
+
+duo:
+  iKey: *DUO_IKEY
+  sKey: *DUO_SKEY
+  host: *DUO_HOST
+
+persistence:
+  enabled: true
+  storageClass: default
+  accessMode: ReadWriteMany
+  size: 1Gi
+
+easyrsa:
+  vars:
+    EASYRSA_REQ_COUNTRY: "US"
+    EASYRSA_REQ_PROVINCE: "California"
+    EASYRSA_REQ_CITY: "San Francisco"
+    EASYRSA_REQ_ORG: "Copyleft Certificate Co"
+    EASYRSA_REQ_EMAIL: "me@example.net"
+    EASYRSA_REQ_OU: "My Organizational Unit"
+    EASYRSA_CA_EXPIRE: "3650"
+    EASYRSA_CERT_EXPIRE: "3650"
+    EASYRSA_CRL_DAYS: "180"
+
+debug: 0
+
+openvpn:
+  env:
+    OVPN_RENEG_SEC: 0
+  replicaCount: 1
+  image:
+    repository: cloudposse/openvpn
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: openvpn
+    type: LoadBalancer
+    externalPort: 80
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+proxy:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+ssl_terminator:
+  replicaCount: 1
+  image:
+    repository: ployst/nginx-ssl-proxy
+    tag: 0.0.7
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    http:
+      name: http
+      externalPort: 80
+    https:
+      name: https
+      externalPort: 443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+letsencrypt:
+  replicaCount: 1
+  image:
+    repository: cloudposse/letsencrypt
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: nginx
+    type: ClusterIP
+    externalPort: 80
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+dashboard:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+oauth:
+  app:
+    # Common oauth configs
+    clientID: *GITHUB_OAUTH_ID
+    clientSecret: *GITHUB_OAUTH_SECRET
+
+    # Github specific configs
+    githubOrg: *GITHUB_ORG
+    githubTeam: *GITHUB_TEAM
+
+    # Email filters
+    emailDomains:
+      - "*"
+    emails:
+    #      - admin@example.com
+
+    skipAuthRegex:
+    #  - ""
+
+    # oAuth2 proxy configs
+    requestLogging: false
+
+    # oAuth2 proxy session cookie config
+    cookieName:
+    cookieSecret: *COOKIE_SECRET
+    cookieDomain: *HOSTNAME
+    cookieExpire:
+    cookieRefresh:
+    cookieHttponly: false
+
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: latest
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

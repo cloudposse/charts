@@ -1,0 +1,44 @@
+{{ if .Values.ui.ssl.enabled }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname_letsencrypt" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.letsencrypt.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname_letsencrypt" . }}
+    spec:
+      containers:
+        - name: letsencrypt
+          image: "{{ .Values.letsencrypt.image.repository }}:{{ .Values.letsencrypt.image.tag }}"
+          imagePullPolicy: {{ .Values.letsencrypt.image.pullPolicy }}
+          env:
+            - name: EMAIL
+              value: {{ .Values.ui.ssl.email | quote }}
+            - name: DOMAINS
+              value: {{ template "letsencrypt_host" . }}
+            - name: DEPLOYMENTS
+              value: {{ template "fullname_terminator" . }}
+            - name: NAMESPACE
+              value: {{ .Release.Namespace | quote }}
+            - name: SECRET_NAME
+              value: {{ template "letsencrypt_secret" . }}
+            - name: LETSENCRYPT_ENDPOINT
+              value: {{ template "letsencrypt_ca" . }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 80
+          readinessProbe:
+            tcpSocket:
+              port: 80
+      restartPolicy: Always
+
+{{ end }}

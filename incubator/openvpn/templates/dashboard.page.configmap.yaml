@@ -1,0 +1,55 @@
+{{ if eq .Values.ui.htmlConfigmap "default" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "fullname_dashboard" . }}-ui"
+  labels:
+    app: {{ template "fullname_dashboard" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{ .Values.ui.branding }}</title>
+
+        <meta name="description" content="Connect to {{ .Values.ui.branding }}">
+        <meta name="author" content="CloudPosse">
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+      </head>
+      <body>
+
+        <div class="container">
+       	  <div class="row">
+       	    &nbsp;
+       	  </div>
+    	  <div class="row">
+    		<div class="col-md-7 col-md-offset-2">
+    		  <div class="jumbotron">
+    			<h2>
+    			  {{ .Values.ui.branding }}
+    			</h2>
+    			<p>
+    			  Download your OpenVPN client configuration file
+    			</p>
+    			<p>
+    			  <a class="btn btn-primary btn-large" href="configs/client.opvn">Download</a>
+    		    </p>
+    		  </div>
+    	    </div>
+    	  </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      </body>
+    </html>
+{{ end }}
