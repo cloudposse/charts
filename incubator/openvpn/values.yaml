@@ -67,7 +67,7 @@ openvpn:
   replicaCount: 1
   image:
     repository: cloudposse/openvpn
-    tag: initial
+    tag: latest
     pullPolicy: Always
   service:
     name: openvpn
@@ -179,7 +179,7 @@ oauth:
 
   image:
     repository: cloudposse/oauth2-proxy
-    tag: init
+    tag: latest
     pullPolicy: Always
   resources:
     limits:
