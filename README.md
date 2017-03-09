@@ -1,6 +1,6 @@
 # kube-prometheus-charts
 
-[Helm](http://helm.sh/) charts for installing end-to-end [Prometheus](https://prometheus.io/) monitoring of [Kubernetes](https://kubernetes.io/) clusters using the [kube-prometheus](https://github.com/coreos/kube-prometheus) & [prometheus-operator](https://github.com/coreos/prometheus-operator) projects from [CoreOS](https://coreos.com/).
+[Helm](http://helm.sh/) charts for installing end-to-end [Prometheus](https://prometheus.io/) monitoring of [Kubernetes](https://kubernetes.io/) clusters using the [prometheus-operator](https://github.com/coreos/prometheus-operator) project from [CoreOS](https://coreos.com/).
 
 **As the upstream projects are very much in an alpha state, so is this one. Everything is subject to change.**
 
