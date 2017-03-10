@@ -51,9 +51,10 @@ spec:
          - |-
             ovpn_genconfig -u tcp://$EASYRSA_REQ_CN:{{ template "exposed_port" .}} \
               -n $(cat /etc/resolv.conf | grep -i nameserver|head -n1|cut -d ' ' -f2) \
-              -p "dhcp-option DOMAIN-SEARCH cluster.local" \
-              -p "dhcp-option DOMAIN-SEARCH svc.cluster.local" \
-              -p "dhcp-option DOMAIN-SEARCH {{ .Release.Namespace }}.svc.cluster.local" \
+              -p "dhcp-option DOMAIN cluster.local" \
+              -p "dhcp-option DOMAIN svc.cluster.local" \
+              -p "dhcp-option DOMAIN {{ .Release.Namespace }}.svc.cluster.local" \
+              -p "dhcp-option DNSMODE split" \
               {{ template "openvpn_share_port" . }} \
             && /init
         env:
