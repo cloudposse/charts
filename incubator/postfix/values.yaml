@@ -12,7 +12,7 @@ smtp:
   domain: "cloudposse.local"
   password: "secret"
   relay:
-    enabled: false
+    enabled: "false"
     host:
     port:
     tls: "false"
