@@ -9,6 +9,7 @@ image:
   pullPolicy: Always
 
 env:
+  #HOSTNAME: "bastion"
   #UMASK: "0022"
   #MFA_PROVIDER: "duo"
   #DUO_IKEY: ""
@@ -18,12 +19,15 @@ env:
   #DUO_AUTOPUSH: "yes"
   #DUO_PROMPTS: "1"
   #ENFORCER_ENABLED: "true"
-  #ENFORCER_ACLS_ENABLED: "true"
-  #ENFORCER_ACLS_PERMIT_SCP: "true"
+  #ENFORCER_CLEAN_HOME_ENABLED: "true"
+  #SLACK_ENABLED: "false"
+  #SLACK_HOOK: "sshrc"
+  #SLACK_WEBHOOK: ""
+  #SLACK_TIMEOUT: 2
+  #SLACK_FATAL_ERRORS: true
   #SSH_AUTHORIZED_KEYS_COMMAND: "/usr/bin/github-authorized-keys"
   #SSH_AUTHORIZED_KEYS_COMMAND_USER: "root"
-  #SSH_AUDIT_ENABLED: "true"
-  #SSH_AUDIT_DIR: "/var/log/ssh"
+  SSH_AUDIT_ENABLED: "true"
   # Enable Rate Limiting
   #RATE_LIMIT_ENABLED: "true"
   # Tolerate 5 consecutive fairues
@@ -83,7 +87,7 @@ githubAuthorizedKeys:
 
   env:
     #SYNC_USERS_GID: "users"
-    SYNC_USERS_SHELL: "/bin/bash"
+    SYNC_USERS_SHELL: "/usr/bin/sudosh"
     SYNC_USERS_INTERVAL: "300"
     SYNC_USERS_ROOT: "/"
     INTEGRATE_SSH: "false"
