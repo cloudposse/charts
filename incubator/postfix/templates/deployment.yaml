@@ -11,7 +11,7 @@ spec:
       labels:
         app: {{ template "fullname" . }}
       annotations:
-        checksum/secret: {{ include (print $.Chart.Name "/templates/secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Chart.Name "/templates/secrets.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
