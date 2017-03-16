@@ -64,6 +64,8 @@ debug: 0
 openvpn:
   env:
     OVPN_RENEG_SEC: 0
+  #push:
+  #- "dhcp-option DOMAIN cloudposse.com"
   replicaCount: 1
   image:
     repository: cloudposse/openvpn
