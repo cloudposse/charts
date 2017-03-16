@@ -1,5 +1,0 @@
-# requirements.yaml
-dependencies:
-- name: "prometheus-operator"
-  version: "0.1.3"
-  repository: "https://charts.cloudposse.com/incubator"
