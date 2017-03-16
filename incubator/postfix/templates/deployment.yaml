@@ -41,6 +41,8 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: smtp_domain
+        - name: RELAY_AUTH_ENABLED
+          value: {{ .Values.smtp.relay.enabled | quote }} 
 {{- if .Values.smtp.relay.enabled }}
         - name: RELAY_AUTH_TLS
           valueFrom:
