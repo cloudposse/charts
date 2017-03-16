@@ -10,17 +10,22 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+      annotations:
+        checksum/secret: {{ include (print $.Chart.Name "/templates/secrets.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+{{- range $name, $value := .Values.env }}
+{{- if not (empty $value) }}
+        - name: {{ $name | quote }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
         - name: POSTMASTER_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: smtp_username
+          value: "postmaster"
         - name: POSTMASTER_PASS
           valueFrom:
             secretKeyRef:
@@ -31,6 +36,40 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: smtp_domain
+        - name: MAILNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_domain
+        - name: RELAY_AUTH_ENABLED
+          value: {{ .Values.smtp.relay.enabled | quote }} 
+{{- if .Values.smtp.relay.enabled }}
+        - name: RELAY_AUTH_TLS
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_relay_tls
+        - name: RELAYHOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_relay_host
+        - name: RELAY_AUTH_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_relay_domain
+        - name: RELAY_AUTH_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_relay_user
+        - name: RELAY_AUTH_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: smtp_relay_password
+{{- end }}
         ports:
         - containerPort: {{ .Values.service.internalPort }}
         livenessProbe:
@@ -43,3 +82,5 @@ spec:
           initialDelaySeconds: 10
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+
+

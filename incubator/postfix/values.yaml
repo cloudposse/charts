@@ -2,14 +2,22 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+env:
+#  SOME_VAR: SOME_VALUE
 image:
   repository: "cloudposse/postfix"
   tag: "latest"
   pullPolicy: Always
 smtp:
   domain: "cloudposse.local"
-  username: "postmaster"
   password: "secret"
+  relay:
+    enabled: "false"
+    host:
+    port:
+    tls: "false"
+    user:
+    password:
 service:
   name: smtp
   type: ClusterIP
