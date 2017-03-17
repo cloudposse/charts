@@ -11,5 +11,11 @@ dependencies:
   repository: http://charts.opsgoodness.com
   tags: null
   version: 0.1.0
-digest: sha256:6940fabd304f7e242a6d66fcfbb2847cdeae3e0505d99f6be960e61dbe25675e
-generated: 2017-03-05T14:38:36.141519292-06:00
+- condition: ""
+  enabled: false
+  name: grafana
+  repository: https://kubernetes-charts.storage.googleapis.com
+  tags: null
+  version: 0.2.5
+digest: sha256:ff41217d505583d52e315b0250c82d639c3d17348fe1275e43b6570588d19971
+generated: 2017-03-17T10:34:45.088183506Z
