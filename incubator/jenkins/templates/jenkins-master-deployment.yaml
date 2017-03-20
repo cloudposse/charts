@@ -42,6 +42,8 @@ spec:
                   ]
               }
           ]'
+        checksum/config: {{ include (print $.Chart.Name "/templates/config.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Chart.Name "/templates/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         runAsUser: 0
@@ -73,8 +75,7 @@ spec:
               cpu: "{{.Values.Master.Cpu}}"
               memory: "{{.Values.Master.Memory}}"
           readinessProbe:
-            httpGet:
-              path: /login
+            tcpSocket:
               port: {{.Values.Master.ContainerPort}}
             initialDelaySeconds: 60
             periodSeconds: 1
@@ -82,8 +83,7 @@ spec:
             successThreshold: 1
             failureThreshold: 10
           livenessProbe:
-            httpGet:
-              path: /login
+            tcpSocket:
               port: {{.Values.Master.ContainerPort}}
             initialDelaySeconds: 60
             periodSeconds: 1
