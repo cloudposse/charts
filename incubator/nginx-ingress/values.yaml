@@ -28,6 +28,8 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+proxy: true
+
 # Error codes that we should intercept in order to display a pretty error page
 customHttpErrors:
   client:
