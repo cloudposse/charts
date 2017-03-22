@@ -5,4 +5,11 @@ dependencies:
   - name: prometheus
     version: 0.1.0
     repository: http://charts.opsgoodness.com
+  - name: prometheus-node-exporter
+    version: 0.1.0
+    repository: https://charts.cloudposse.com/incubator
+  - name: grafana
+    version: 0.2.5
+    repository: https://charts.cloudposse.com/incubator
+
 

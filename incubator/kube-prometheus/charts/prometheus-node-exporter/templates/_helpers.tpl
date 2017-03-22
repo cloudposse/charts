@@ -5,9 +5,6 @@ Expand the name of the chart.
 {{- define "name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-{{ range $path := .Files.Glob "**.*" }}
-    {{ $path }}: {{ $path | quote }}
-{{ end }}
 
 {{/*
 Create a default fully qualified app name.
