@@ -91,7 +91,9 @@ prometheus:
   #     port: 9093
   #     scheme: http
 
-  config: {}
+  config:
+    specifiedInValues: false
+    value: {}
 
   ## External URL at which Prometheus will be reachable
   ##

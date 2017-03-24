@@ -1,0 +1,27 @@
+# Default values for prometheus-kube-state-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+## kube-state-metrics generates & exposes cluster-level Prometheus metrics
+## Ref: https://github.com/kubernetes/kube-state-metrics
+##
+image:
+  repository: gcr.io/google_containers/kube-state-metrics
+  tag: v0.3.0
+  pullPolicy: IfNotPresent
+
+## kube-state-metrics resource limits & requests
+## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
+##
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

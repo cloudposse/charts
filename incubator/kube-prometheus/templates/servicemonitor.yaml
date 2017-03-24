@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "{{ .Values.grafana.server.name }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+  name: "{{ template "fullname" . }}-node"
+spec:
+  jobLabel: provider
+  selector:
+    matchLabels:
+      component: apiserver
+      provider: kubernetes
+  namespaceSelector:
+    matchNames:
+    - default
+  endpoints:
+  - port: https
+    interval: 15s
+    scheme: https
+    tlsConfig:
+      caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      serverName: kubernetes
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token

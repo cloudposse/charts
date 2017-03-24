@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   labels:
-    app: {{ template "name" . }}
+    app: {{ template "fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     component: node-exporter
     heritage: {{ .Release.Service }}

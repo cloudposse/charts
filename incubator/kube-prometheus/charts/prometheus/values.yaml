@@ -11,7 +11,9 @@ alertingEndpoints: []
 ## Ignored if serviceMonitors are defined
 ## Ref: https://prometheus.io/docs/operating/configuration/
 ##
-config: {}
+config:
+  specifiedInValues: true
+  value: {}
 
 ## External URL at which Prometheus will be reachable
 ##
