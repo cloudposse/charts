@@ -13,7 +13,6 @@ metadata:
     release: {{ .Release.Name }}
   name: {{ template "fullname" . }}
 spec:
-  clusterIP: "{{ .Values.service.clusterIP }}"
 {{- if .Values.service.externalIPs }}
   externalIPs:
 {{ toYaml .Values.service.externalIPs | indent 4 }}
