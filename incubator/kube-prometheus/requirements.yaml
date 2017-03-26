@@ -1,18 +1,18 @@
 dependencies:
   - name: alertmanager
     version: 0.1.0
-    repository: https://charts.cloudposse.com/incubator
+    repository: https://charts.dev.cloudposse.com/feature-alertmanager/incubator
   - name: prometheus
     version: 0.1.0
-    repository: https://charts.cloudposse.com/incubator
+    repository: https://charts.dev.cloudposse.com/feature-prometheus/incubator
   - name: prometheus-node-exporter
     version: 0.1.0
-    repository: https://charts.cloudposse.com/incubator
+    repository: https://charts.dev.cloudposse.com/feature-prometheus-node-exporter/incubator
   - name: prometheus-kube-state-exporter
     version: 0.1.0
-    repository: https://charts.cloudposse.com/incubator
+    repository: https://charts.dev.cloudposse.com/feature-prometheus-kube-state-exporter/incubator
   - name: grafana
     version: 0.2.5
-    repository: https://charts.cloudposse.com/incubator
+    repository: https://charts.dev.cloudposse.com/feature-grafana/incubator
 
 
