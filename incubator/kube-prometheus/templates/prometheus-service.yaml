@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.prometheus.service.annotations }}
+  annotations:
+{{ toYaml .Values.prometheus.service.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: prometheus
+    heritage: {{ .Release.Service }}
+    prometheus: k8s
+    release: {{ .Release.Name }}
+  name: prometheus-k8s
+spec:
+  ports:
+    - name: http
+    {{- if eq .Values.prometheus.service.type "NodePort" }}
+      nodePort: {{ .Values.prometheus.service.nodePort }}
+    {{- end }}
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    prometheus: prometheus-k8s
+  type: "{{ .Values.prometheus.service.type }}"
