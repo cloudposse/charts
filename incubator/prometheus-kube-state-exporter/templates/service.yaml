@@ -1,21 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ .Chart.Name }}
   labels:
-    app: {{ template "fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    component: kube-state-metrics
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}
+    app: {{ .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    prometheus.io/scrape: 'true'
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: {{ .Chart.Name }}
 spec:
-  clusterIP: None
+  type: {{ .Values.service.type }}
   ports:
-    - name: metrics
-      port: 8080
-      targetPort: 8080
-      protocol: TCP
+  - port: {{ .Values.service.externalPort }}
+    targetPort: {{ .Values.service.internalPort }}
+    protocol: TCP
+    name: {{ .Values.service.name }}
   selector:
-    app: {{ template "fullname" . }}
-    component: kube-state-metrics
-    release: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
