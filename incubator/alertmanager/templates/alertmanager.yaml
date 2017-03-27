@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: Alertmanager
+metadata:
+  labels:
+    alertmanager: {{ .Release.Name }}
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ .Release.Name }}
+spec:
+  baseImage: "{{ .Values.image.repository }}"
+{{- if .Values.externalUrl }}
+  externalUrl: "{{ .Values.externalUrl }}"
+{{- end }}
+# {{- if .Values.nodeSelector }}
+#   nodeSelector:
+# {{ toYaml .Values.nodeSelector | indent 4 }}
+# {{- end }}
+  paused: {{ .Values.paused }}
+  replicas: {{ .Values.replicaCount }}
+#   resources:
+# {{ toYaml .Values.resources | indent 4 }}
+{{- if .Values.storageSpec }}
+  storage:
+{{ toYaml .Values.storageSpec | indent 4 }}
+{{- end }}
+  version: "{{ .Values.image.tag }}"
