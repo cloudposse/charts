@@ -11,7 +11,9 @@ alertingEndpoints: []
 ## Ignored if serviceMonitors are defined
 ## Ref: https://prometheus.io/docs/operating/configuration/
 ##
-config: {}
+config:
+  specifiedInValues: true
+  value: {}
 
 ## External URL at which Prometheus will be reachable
 ##
@@ -77,7 +79,9 @@ routePrefix: /
 ## Ref: https://prometheus.io/docs/querying/rules/
 ## Ref: https://prometheus.io/docs/alerting/rules/
 ##
-rules: {}
+rules:
+  specifiedInValues: true
+  value: {}
 
 service:
   ## Annotations to be added to the Service
