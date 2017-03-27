@@ -1,0 +1,8 @@
+dependencies:
+  - name: alertmanager
+    version: 0.1.0
+    repository: http://charts.opsgoodness.com
+  - name: prometheus
+    version: 0.1.0
+    repository: http://charts.opsgoodness.com
+
