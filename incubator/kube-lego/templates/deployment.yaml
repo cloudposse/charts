@@ -37,6 +37,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+{{- if .Values.debug }}
+        - name: LEGO_LOG_LEVEL
+          value: "debug"
+{{- end }}
         ports:
         - containerPort: {{ .Values.pod.internalPort }}
         livenessProbe:
