@@ -6,10 +6,10 @@ metadata:
 {{ toYaml .Values.service.annotations | indent 4 }}
 {{- end }}
   labels:
+    alertmanager: {{ .Release.Name }}
     app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
-    prometheus: {{ .Release.Name }}
     release: {{ .Release.Name }}
   name: {{ template "fullname" . }}
 spec:
@@ -30,10 +30,10 @@ spec:
     {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePort }}
     {{- end }}
-      port: 9090
-      targetPort: 9090
+      port: 9093
+      targetPort: 9093
       protocol: TCP
   selector:
+    alertmanager: {{ .Release.Name }}
     app: {{ template "name" . }}
-    prometheus: {{ .Release.Name }}
   type: "{{ .Values.service.type }}"
