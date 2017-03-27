@@ -6,6 +6,6 @@ icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_t
 sources:
   - https://github.com/grafana/grafana
 maintainers:
-  - name: Cloud Posse LLC
-    email: hello@cloudposse.com
+  - name: Ming Hsieh
+    email: zanhsieh@gmail.com
 engine: gotpl
