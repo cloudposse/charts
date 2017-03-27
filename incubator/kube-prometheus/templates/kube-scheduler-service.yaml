@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
-    app: {{ template "name" . }}
     k8s-app: kube-scheduler
     release: {{ .Release.Name }}
   name: kube-scheduler-prometheus-discovery
@@ -14,8 +14,8 @@ spec:
   ports:
     - name: http-metrics
       port: 10251
-      targetPort: 10251
       protocol: TCP
+      targetPort: 10251
   selector:
     k8s-app: kube-scheduler
   type: ClusterIP
