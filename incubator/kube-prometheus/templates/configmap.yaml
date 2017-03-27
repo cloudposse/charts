@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: {{ template "name" . }}
+    app: "prometheus"
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     prometheus: {{ .Release.Name }}
@@ -56,18 +56,16 @@ data:
         # include external IP address. Circumvent for now.
         insecure_skip_verify: true
 
-      # Scrape the endpoint lists for Prometheus, node-exporters, and
-      # kube-state-metrics.
-      - job_name: standard-endpoints
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-        kubernetes_sd_configs:
-          - role: endpoints
-        relabel_configs:
-          - action: keep
-            regex: prometheus-k8s|{{ template "fullname" . }}-node-exporter|{{ template "fullname" . }}-kube-state-metrics
-            source_labels: [__meta_kubernetes_service_name]
-          - action: replace
-            source_labels: [__meta_kubernetes_service_name]
-            target_label: job
-        tls_config:
-          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    - job_name: standard-endpoints
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+        - action: keep
+          regex: prometheus-k8s|{{ template "fullname" . }}-node-exporter|{{ template "fullname" . }}-kube-state-metrics
+          source_labels: [__meta_kubernetes_service_name]
+        - action: replace
+          source_labels: [__meta_kubernetes_service_name]
+          target_label: job
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt

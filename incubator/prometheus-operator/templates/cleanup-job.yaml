@@ -4,16 +4,16 @@ metadata:
   annotations:
     helm.sh/hook: post-delete
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-cleanup
+  name: {{ template "name" . }}-cleanup
 spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ template "name" . }}
         release: {{ .Release.Name }}
       name: {{ template "fullname" . }}-cleanup
     spec:
