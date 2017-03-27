@@ -1,4 +1,4 @@
-{{- if and ( .Values.config ) ( not .Values.serviceMonitorSelector ) }}
+{{- if and ( .Values.config.specifiedInValues ) ( not .Values.serviceMonitorSelector ) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,5 +11,5 @@ metadata:
   name: prometheus-{{ .Release.Name }}
 data:
   prometheus.yaml: |-
-{{ toYaml .Values.config | indent 4 }}
+{{ toYaml .Values.config.value | indent 4 }}
 {{- end }}
