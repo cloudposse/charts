@@ -11,7 +11,9 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-        k8s-addon: {{ template "fullname" . }}.addons.k8s.io
+        k8s-addon: "{{ template "fullname" . }}.addons.k8s.io"
+      annotations:
+        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
