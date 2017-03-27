@@ -9,3 +9,5 @@ persistence:
   storageClass: generic
   accessMode: ReadWriteOnce
   size: 8Gi
+volume:
+  emptyDir: {}
