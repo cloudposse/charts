@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for kube-Lego (Automatic Signed Certificates for Ingress Services)
 name: kube-lego
-version: 0.1.0
+version: 0.1.1
