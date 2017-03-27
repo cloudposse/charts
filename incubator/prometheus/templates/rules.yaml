@@ -1,13 +1,14 @@
+{{- if .Values.rules.specifiedInValues -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
     app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    component: prometheus
     heritage: {{ .Release.Service }}
-    prometheus: k8s
+    prometheus: {{ .Release.Name }}
     release: {{ .Release.Name }}
-  name: prometheus-k8s-rules
+  name: prometheus-{{ .Release.Name }}-rules
 data:
-{{ (.Files.Glob "rules/*.rules").AsConfig | indent 2 }}
+{{ toYaml .Values.rules.value | indent 2 }}
+{{- end -}}

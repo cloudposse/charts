@@ -8,18 +8,24 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-get-prometheus-tpr-{{ randAlphaNum 10 | lower }}
+  name: {{ template "fullname" . }}-get-tpr-{{ randAlphaNum 10 | lower }}
 spec:
   template:
     metadata:
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
-      name: {{ template "fullname" . }}-get-prometheus-tpr
+      name: {{ template "fullname" . }}-get-tprs
     spec:
       containers:
         - name: hyperkube
           image: "{{ .Values.global.hyperkube.repository }}:{{ .Values.global.hyperkube.tag }}"
           imagePullPolicy: "{{ .Values.global.hyperkube.pullPolicy }}"
-          command: ["./kubectl","-n","{{ .Release.Namespace }}","get","prometheus"]
+          command:
+            - ./kubectl
+            - get
+            - thirdpartyresource
+            - alertmanager.monitoring.coreos.com
+            - prometheus.monitoring.coreos.com
+            - service-monitor.monitoring.coreos.com
       restartPolicy: OnFailure
