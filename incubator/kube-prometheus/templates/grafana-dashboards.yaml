@@ -7,6 +7,6 @@ metadata:
     component: "{{ .Values.grafana.server.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: {{ template "server.fullname" . }}-dashs
+  name: {{ template "fullname" . }}-dashs
 data:
 {{ (.Files.Glob "dashboards/*.json").AsConfig | indent 2 }}
