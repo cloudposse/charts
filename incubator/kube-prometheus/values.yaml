@@ -288,9 +288,7 @@ grafana:
 
       ## Grafana Ingress annotations
       ##
-      # annotations:
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
+      # selector: {}
 
       ## Grafana Ingress hostnames
       ## Must be provided if Ingress is enabled
