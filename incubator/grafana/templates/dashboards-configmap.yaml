@@ -1,3 +1,4 @@
+{{- if .Values.serverDashboardFiles.specifiedInValues -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,4 +10,5 @@ metadata:
     release: "{{ .Release.Name }}"
   name: {{ template "server.fullname" . }}-dashs
 data:
-{{ toYaml .Values.serverDashboardFiles | indent 2 }}
+{{ toYaml .Values.serverDashboardFiles.value | indent 2 }}
+{{- end -}}
