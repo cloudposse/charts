@@ -3,11 +3,11 @@ kind: Service
 metadata:
   labels:
     app: {{ template "name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: kube-dns
     heritage: {{ .Release.Service }}
-    k8s-app: kube-dns
     release: {{ .Release.Name }}
-  name: kube-dns-prometheus-discovery
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+  name: {{ template "fullname" . }}
   namespace: kube-system
 spec:
   clusterIP: None

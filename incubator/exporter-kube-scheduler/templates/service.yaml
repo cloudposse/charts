@@ -3,19 +3,20 @@ kind: Service
 metadata:
   labels:
     app: {{ template "name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: kube-scheduler
     heritage: {{ .Release.Service }}
-    k8s-app: kube-apiserver
     release: {{ .Release.Name }}
-  name: kube-apiserver-prometheus-discovery
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+  name: {{ template "fullname" . }}
   namespace: kube-system
 spec:
   clusterIP: None
   ports:
-    - name: https-metrics
-      port: 443
+    - name: http-metrics
+      port: 10251
       protocol: TCP
-      targetPort: 443
+      targetPort: 10251
   selector:
-    k8s-app: kube-apiserver
+    k8s-app: kube-scheduler
   type: ClusterIP
+

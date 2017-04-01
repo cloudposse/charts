@@ -5,9 +5,21 @@ dependencies:
   - name: prometheus
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
-  - name: prometheus-node-exporter
+  - name: exporter-node
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
-  - name: prometheus-kube-state-exporter
+  - name: exporter-kube-api
+    version: 0.1.0
+    repository: https://charts.cloudposse.com/incubator
+  - name: exporter-kube-controller-manager
+    version: 0.1.0
+    repository: https://charts.cloudposse.com/incubator
+  - name: exporter-kube-dns
+    version: 0.1.0
+    repository: https://charts.cloudposse.com/incubator
+  - name: exporter-scheduler
+    version: 0.1.0
+    repository: https://charts.cloudposse.com/incubator
+  - name: exporter-kube-state
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator

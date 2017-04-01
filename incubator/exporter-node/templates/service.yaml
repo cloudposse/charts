@@ -4,7 +4,6 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     app: {{ template "name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     component: node-exporter
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}

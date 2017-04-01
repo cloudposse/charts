@@ -1,6 +1,6 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
-name: prometheus-node-exporter
+name: exporter-node
 version: 0.1.0
 maintainers:
    - name: Cloud Posse LLC
