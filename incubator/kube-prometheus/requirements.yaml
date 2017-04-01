@@ -11,7 +11,3 @@ dependencies:
   - name: prometheus-kube-state-exporter
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
-  - name: grafana
-    version: 0.2.5
-    repository: https://charts.cloudposse.com/incubator
-

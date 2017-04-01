@@ -1,4 +1,4 @@
-{{- if .Values.rules.specifiedInValues -}}
+{{- if and .Values.rules.specifiedInValues .Values.rules.value  -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,6 +8,7 @@ metadata:
     heritage: {{ .Release.Service }}
     prometheus: {{ .Release.Name }}
     release: {{ .Release.Name }}
+{{ toYaml .Values.rulesSelector | indent 4 }}
   name: prometheus-{{ .Release.Name }}-rules
 data:
 {{ toYaml .Values.rules.value | indent 2 }}

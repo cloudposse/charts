@@ -1,8 +1,9 @@
+{{- if not .Values.prometheus.rules.specifiedInValues }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: {{ template "name" . }}
+    app: "prometheys"
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     prometheus: {{ .Release.Name }}
@@ -10,3 +11,4 @@ metadata:
   name: prometheus-{{ .Release.Name }}-rules
 data:
 {{ (.Files.Glob "rules/*.rules").AsConfig | indent 2 }}
+{{- end }}
