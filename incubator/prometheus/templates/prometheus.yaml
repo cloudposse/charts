@@ -30,8 +30,22 @@ spec:
 {{- if .Values.routePrefix }}
   routePrefix: "{{ .Values.routePrefix }}"
 {{- end }}
-{{- if .Values.serviceMonitors }}
+{{- if .Values.serviceMonitorsSelector }}
   serviceMonitorSelector:
+    matchLabels:
+{{ toYaml .Values.serviceMonitorsSelector | indent 6 }}
+{{- else if  .Values.serviceMonitors }}
+  serviceMonitorSelector:
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
+{{- end }}
+{{- if .Values.rulesSelector }}
+  ruleSelector:
+    matchLabels:
+{{ toYaml .Values.rulesSelector | indent 6 }}
+{{- else if  .Values.rules.value }}
+  ruleSelector:
     matchLabels:
       app: {{ template "name" . }}
       release: {{ .Release.Name }}
