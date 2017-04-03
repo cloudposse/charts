@@ -4,7 +4,7 @@ metadata:
   labels:
     app: prometheus
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: kube-api
+    component: kubelets
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: {{ template "fullname" . }}
@@ -12,8 +12,7 @@ spec:
   jobLabel: {{ template "fullname" . }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}
-      component: kube-api
+      k8s-app: kubelet
   namespaceSelector:
     matchNames:
       - "kube-system"

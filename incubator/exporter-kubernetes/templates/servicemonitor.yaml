@@ -4,7 +4,7 @@ metadata:
   labels:
     app: prometheus
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: kube-api
+    component: kubelets
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: {{ template "fullname" . }}
@@ -12,13 +12,13 @@ spec:
   jobLabel: {{ template "fullname" . }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}
-      component: kube-api
+      component: apiserver
+      provider: kubernetes
   namespaceSelector:
     matchNames:
-      - "kube-system"
+      - "default"
   endpoints:
-  - port: https-metrics
+  - port: https
     interval: 15s
     scheme: https
     tlsConfig:

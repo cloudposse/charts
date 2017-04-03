@@ -3,5 +3,5 @@ description: A Helm chart for Kubernetes
 name: exporter-node
 version: 0.1.0
 maintainers:
-   - name: Cloud Posse LLC
-     email: hello@cloudposse.com
+  - name: Cloud Posse LLC
+    email: hello@cloudposse.com
