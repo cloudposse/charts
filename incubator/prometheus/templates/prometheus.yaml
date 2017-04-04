@@ -34,7 +34,7 @@ spec:
   serviceMonitorSelector:
     matchLabels:
 {{ toYaml .Values.serviceMonitorsSelector | indent 6 }}
-{{- else if  .Values.serviceMonitors }}
+{{- else }}
   serviceMonitorSelector:
     matchLabels:
       app: {{ template "name" . }}
@@ -44,7 +44,7 @@ spec:
   ruleSelector:
     matchLabels:
 {{ toYaml .Values.rulesSelector | indent 6 }}
-{{- else if  .Values.rules.value }}
+{{- else }}
   ruleSelector:
     matchLabels:
       app: {{ template "name" . }}
