@@ -26,7 +26,7 @@ dependencies:
   - name: exporter-kubelets
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
-  - name: exporter-kubernetesA
+  - name: exporter-kubernetes
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
   - name: exporter-node
