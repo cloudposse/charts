@@ -1,0 +1,10 @@
+# Default values for prometheus-alerts.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+labels:
+  app: prometheus
+  # In common case prometheus name is release name of chart that install prometheus
+  prometheus:
+level:
+  warning: 40
+  critical: 20

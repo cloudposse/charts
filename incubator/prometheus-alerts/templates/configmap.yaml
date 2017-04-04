@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+{{ toYaml .Values.labels | indent 4 }}
+  name: {{ template "fullname" . }}
+data:
+  alerts.rules: |-
+    # NOTE: These rules were kindly contributed by the Cloud Posse engineering team.
+
+    cluster:node_cpu_resources =
+      sum by (cluster) (machine_cpu_cores)
+
+    cluster:node_cpu_used =
+      sum by (cluster) (rate(node_cpu{mode!="idle"}[30s]))
+
+    cluster:node_cpu_idle:percent =
+      100 * (cluster:node_cpu_resources - cluster:node_cpu_used) / cluster:node_cpu_resources
+
+    ALERT ClusterCPULow
+      IF cluster:node_cpu_idle:percent <= {{ .Values.level.warning }}
+      FOR 30s
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "Cluster CPU high load",
+        description = "K8S cluster have high cpu load",
+      }
+
+    ALERT ClusterCPULow
+      IF cluster:node_cpu_idle:percent <= {{ .Values.level.critical }}
+      FOR 30s
+      LABELS {
+        service = "k8s",
+        severity = "critical",
+      }
+      ANNOTATIONS {
+        summary = "Cluster CPU critical load",
+        description = "K8S cluster have critical cpu load",
+      }
