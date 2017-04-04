@@ -17,7 +17,7 @@ dependencies:
   - name: exporter-kube-etcd
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
-  - name: exporter-scheduler
+  - name: exporter-kube-scheduler
     version: 0.1.0
     repository: https://charts.cloudposse.com/incubator
   - name: exporter-kube-state
