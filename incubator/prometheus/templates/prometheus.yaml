@@ -38,7 +38,7 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       app: {{ template "name" . }}
-      release: {{ .Release.Name }}
+      prometheus: {{ .Release.Name }}
 {{- end }}
 {{- if .Values.rulesSelector }}
   ruleSelector:
@@ -48,7 +48,7 @@ spec:
   ruleSelector:
     matchLabels:
       app: {{ template "name" . }}
-      release: {{ .Release.Name }}
+      prometheus: {{ .Release.Name }}
 {{- end }}
 {{- if .Values.storageSpec }}
   storage:

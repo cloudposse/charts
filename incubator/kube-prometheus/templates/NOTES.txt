@@ -1,1 +1,0 @@
-kube-prometheus has been installed.

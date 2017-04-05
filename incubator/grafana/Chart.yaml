@@ -8,4 +8,6 @@ sources:
 maintainers:
   - name: Ming Hsieh
     email: zanhsieh@gmail.com
+  - name: Cloud Posse LLC
+    email: hello@cloudposse.com
 engine: gotpl
