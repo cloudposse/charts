@@ -21,7 +21,7 @@ data:
       100 * (cluster:node_cpu_resources - cluster:node_cpu_used) / cluster:node_cpu_resources
 
     ALERT ClusterCPULow
-      IF cluster:node_cpu_idle:percent <= {{ .Values.level.warning }}
+      IF cluster:node_cpu_idle:percent <= {{ .Values.alerts.cluster_cpu_low.warning }}
       FOR 30s
       LABELS {
         service = "k8s",
@@ -33,7 +33,7 @@ data:
       }
 
     ALERT ClusterCPULow
-      IF cluster:node_cpu_idle:percent <= {{ .Values.level.critical }}
+      IF cluster:node_cpu_idle:percent <= {{ .Values.alerts.cluster_cpu_low.critical }}
       FOR 30s
       LABELS {
         service = "k8s",

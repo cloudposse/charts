@@ -5,6 +5,8 @@ labels:
   app: prometheus
   # In common case prometheus name is release name of chart that install prometheus
   prometheus:
-level:
-  warning: 40
-  critical: 20
+
+alerts:
+  cluster_cpu_low:
+     warning: 40
+     critical: 20
