@@ -13,10 +13,20 @@ spec:
   alerting:
     alertmanagers:
 {{ toYaml .Values.alertingEndpoints | indent 6 }}
+{{- else }}
+  alerting:
+    alertmanagers:
+      - namespace: {{ .Release.Namespace }}
+        name: {{ printf "%s-alertmanager" .Release.Name | trunc 63 | trimSuffix "-" }}
+        port: http
 {{- end }}
   baseImage: "{{ .Values.image.repository }}"
 {{- if .Values.externalUrl }}
   externalUrl: "{{ .Values.externalUrl }}"
+{{- else if .Values.ingress.fqdn }}
+  externalUrl: http://{{ .Values.ingress.fqdn }}{{ .Values.routePrefix }}
+{{- else }}
+  externalUrl: http://{{ template "fullname" . }}.{{ .Release.Namespace }}:9090
 {{- end }}
 {{- if .Values.nodeSelector }}
   nodeSelector:
