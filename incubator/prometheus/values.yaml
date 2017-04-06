@@ -11,7 +11,9 @@ alertingEndpoints: []
 ## Ignored if serviceMonitors are defined
 ## Ref: https://prometheus.io/docs/operating/configuration/
 ##
-config: {}
+config:
+  specifiedInValues: true
+  value: {}
 
 ## External URL at which Prometheus will be reachable
 ##
@@ -73,11 +75,18 @@ retention: 24h
 ##
 routePrefix: /
 
+## Rules configmap selector
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
+##
+rulesSelector: {}
+
 ## Prometheus alerting & recording rules
 ## Ref: https://prometheus.io/docs/querying/rules/
 ## Ref: https://prometheus.io/docs/alerting/rules/
 ##
-rules: {}
+rules:
+  specifiedInValues: true
+  value: {}
 
 service:
   ## Annotations to be added to the Service
@@ -110,6 +119,11 @@ service:
   ## Service type
   ##
   type: ClusterIP
+
+## Service monitors selector
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
+##
+serviceMonitorsSelector: {}
 
 ## ServiceMonitor TPRs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md

@@ -12,6 +12,10 @@ spec:
   baseImage: "{{ .Values.image.repository }}"
 {{- if .Values.externalUrl }}
   externalUrl: "{{ .Values.externalUrl }}"
+{{- else if .Values.ingress.fqdn }}
+  externalUrl: http://{{ .Values.ingress.fqdn }}{{ .Values.routePrefix }}
+{{- else }}
+  externalUrl: http://{{ template "fullname" . }}.{{ .Release.Namespace }}:9093
 {{- end }}
 # {{- if .Values.nodeSelector }}
 #   nodeSelector:

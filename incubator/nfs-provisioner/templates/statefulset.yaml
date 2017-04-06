@@ -53,10 +53,10 @@ spec:
             - name: data
               mountPath: /export
       volumes:
-      - name: data
+        - name: data
       {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}
       {{- else }}
-        emptyDir: {}
+{{ toYaml .Values.volume | indent 10 }}
       {{- end -}}
