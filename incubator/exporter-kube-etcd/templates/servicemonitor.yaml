@@ -7,6 +7,7 @@ metadata:
     component: kube-etcd
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
+    prometheus: {{ .Release.Name }}
   name: {{ template "fullname" . }}
 spec:
   jobLabel: {{ template "fullname" . }}

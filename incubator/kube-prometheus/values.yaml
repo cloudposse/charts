@@ -1,5 +1,29 @@
 alertmanager:
-  config: {}
+  config:
+    global:
+      resolve_timeout: 5m
+      # The default SMTP From header field.
+      smtp_from: ""
+      smtp_smarthost: ""
+      # SMTP authentication information.
+      smtp_auth_username: "postmaster"
+      smtp_auth_password: ""
+      smtp_auth_secret: ""
+      # The default SMTP TLS requirement.
+      smtp_require_tls: false
+
+    receivers:
+      - name: 'default'
+        email_configs:
+          - send_resolved: true
+            to: ""
+    route:
+      group_by: ['job']
+      group_interval: 5m
+      group_wait: 30s
+      receiver: 'default'
+      repeat_interval: 5m
+
 
   ## External URL at which Alertmanager will be reachable
   ##
@@ -57,9 +81,22 @@ alertmanager:
     ##
     annotations: {}
 
+    ## Cluster-internal IP address for Alertmanager Service
+    ##
     clusterIP: ""
+
+    ## List of external IP addresses at which the Alertmanager Service will be available
+    ##
     externalIPs: []
+
+    ## External IP address to assign to Alertmanager Service
+    ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+    ##
     loadBalancerIP: ""
+
+    ## List of client IPs allowed to access Alertmanager Service
+    ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+    ##
     loadBalancerSourceRanges: []
 
     ## Port to expose on each node
@@ -91,7 +128,13 @@ prometheus:
   #     port: 9093
   #     scheme: http
 
-  config: {}
+  ## Prometheus configuration directives
+  ## Ignored if serviceMonitors are defined
+  ## Ref: https://prometheus.io/docs/operating/configuration/
+  ##
+  config:
+    specifiedInValues: true
+    value: {}
 
   ## External URL at which Prometheus will be reachable
   ##
@@ -151,18 +194,42 @@ prometheus:
   ## Prefix used to register routes, overriding externalUrl route.
   ## Useful for proxies that rewrite URLs.
   ##
-  routePrefix: "/"
+  routePrefix: /
 
-  rules: {}
+  ## Rules configmap selector
+  ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
+  ##
+  rulesSelector: {}
+
+  ## Prometheus alerting & recording rules
+  ## Ref: https://prometheus.io/docs/querying/rules/
+  ## Ref: https://prometheus.io/docs/alerting/rules/
+  ##
+  rules:
+    specifiedInValues: true
+    value: {}
 
   service:
     ## Annotations to be added to the Service
     ##
     annotations: {}
 
+    ## Cluster-internal IP address for Prometheus Service
+    ##
     clusterIP: ""
+
+    ## List of external IP addresses at which the Prometheus Service will be available
+    ##
     externalIPs: []
+
+    ## External IP address to assign to Prometheus Service
+    ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+    ##
     loadBalancerIP: ""
+
+    ## List of client IPs allowed to access Prometheus Service
+    ## Only used if service.type is 'LoadBalancer' and supported by cloud provider
+    ##
     loadBalancerSourceRanges: []
 
     ## Port to expose on each node
@@ -174,7 +241,13 @@ prometheus:
     ##
     type: ClusterIP
 
+  ## Service monitors selector
+  ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md
+  ##
+  serviceMonitorsSelector: {}
+
   ## ServiceMonitor TPRs to create & be scraped by the Prometheus instance.
+  ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
   ##
   serviceMonitors: []
     ## Name of the ServiceMonitor to create
