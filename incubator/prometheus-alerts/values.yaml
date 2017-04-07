@@ -10,3 +10,5 @@ alerts:
   cluster_cpu_low:
      warning: 40
      critical: 20
+  pod_restarts:
+     more_then: 5
