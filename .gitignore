@@ -40,3 +40,5 @@ Session.vim
 **/**/.values.yaml
 
 build-harness
+
+**/*/*.lock

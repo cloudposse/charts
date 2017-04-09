@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart provide additional alerts for prometheus
+name: prometheus-alerts
+version: 0.1.0
