@@ -10,7 +10,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
   annotations:
-    volume.beta.kubernetes.io/storage-class:  {{ .Values.Persistence.StorageClass | quote }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.Persistence.StorageClass | quote }}
 spec:
   accessModes:
     - {{ .Values.Persistence.AccessMode | quote }}
