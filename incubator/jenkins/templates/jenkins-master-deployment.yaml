@@ -75,7 +75,8 @@ spec:
               cpu: "{{.Values.Master.Cpu}}"
               memory: "{{.Values.Master.Memory}}"
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /login
               port: {{.Values.Master.ContainerPort}}
             initialDelaySeconds: 60
             periodSeconds: 1
@@ -83,7 +84,8 @@ spec:
             successThreshold: 1
             failureThreshold: 10
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /login
               port: {{.Values.Master.ContainerPort}}
             initialDelaySeconds: 60
             periodSeconds: 1
