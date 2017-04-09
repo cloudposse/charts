@@ -9,6 +9,7 @@ metadata:
     component: "{{.Release.Name}}-{{.Values.Master.Component}}"
     dns: route53
   annotations:
+{{ toYaml .Values.Ingress.Annotations | indent 4 }}
     "helm.sh/created": {{.Release.Time.Seconds | quote }}
     kubernetes.io/tls-acme: "true"
     domainName: {{.Values.DNS.Hostname | quote}}
