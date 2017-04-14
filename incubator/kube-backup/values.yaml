@@ -12,7 +12,7 @@ define:
 
 image:
   repository: cloudposse/kube-backup
-  tag: feature-remove-requirements-aws-credentials
+  tag: latest
   pullPolicy: Always
 resources:
   limits:
