@@ -45,6 +45,6 @@ spec:
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/{{ template "default-backend" . }}
-        - --nginx-configmap=$(POD_NAMESPACE)/{{ template "fullname" . }}
+        - --configmap=$(POD_NAMESPACE)/{{ template "fullname" . }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
