@@ -183,9 +183,12 @@ prometheus:
   ## Resource limits & requests
   ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources: {}
-    # requests:
-    #   memory: 400Mi
+  resources:
+     requests:
+       memory: 400Mi
+     limits:
+       memory: 800Mi
+
 
   ## How long to retain metrics
   ##
