@@ -44,8 +44,8 @@ data:
         description = "K8S cluster have critical cpu load",
       }
 
-      cluster:memory_free:percent =
-        100 - cluster:memory_used:percent
+    cluster:memory_free:percent =
+      100 - cluster:memory_used:percent
 
     ALERT ClusterMemoryLow
       IF cluster:memory_free:percent <= {{ .Values.alerts.cluster_memory_low.warning }}
