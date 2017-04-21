@@ -55,8 +55,8 @@ data:
         severity = "warning",
       }
       ANNOTATIONS {
-        summary = "Cluster running out of  memory",
-        description = "Cluster running out of  memory",
+        summary = "Cluster running out of memory",
+        description = "Cluster running out of memory",
       }
 
     ALERT ClusterMemoryLow
@@ -67,6 +67,6 @@ data:
         severity = "critical",
       }
       ANNOTATIONS {
-        summary = "Cluster ran out of  memory",
-        description = "Cluster ran out of  memory",
+        summary = "Cluster ran out of memory",
+        description = "Cluster ran out of memory",
       }
