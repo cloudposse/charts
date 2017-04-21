@@ -7,10 +7,13 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   concurrencyPolicy: {{ .Values.mysql.concurrencyPolicy }}
+# @TODO: Uncomment it when helm version > 2.3.1 would be used
+{{/*
 {{- if and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) }}
   successfulJobsHistoryLimit: {{ .Values.mysql.successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ .Values.mysql.failedJobsHistoryLimit }}
 {{- end }}
+*/}}
   startingDeadlineSeconds: {{ .Values.mysql.startingDeadlineSeconds }}
   schedule: {{ .Values.mysql.schedule | quote }}
   jobTemplate:
