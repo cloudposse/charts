@@ -11,4 +11,5 @@ alerts:
      warning: 40
      critical: 20
   pod_restarts:
-     more_then: 5
+     warning: 5
+     critical: 10

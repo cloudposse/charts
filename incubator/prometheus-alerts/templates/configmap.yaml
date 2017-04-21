@@ -44,11 +44,23 @@ data:
         description = "K8S cluster have critical cpu load",
       }
 
-      kube_pod_container_restarts_per_hour =
-        delta(kube_pod_container_status_restarts[1h])
+    kube_pod_container_restarts_per_hour =
+      delta(kube_pod_container_status_restarts[1h])
 
     ALERT PodRestartsTooOften
-      IF kube_pod_container_restarts_per_hour >= {{ .Values.alerts.pod_restarts.more_then }}
+      IF kube_pod_container_restarts_per_hour >= {{ .Values.alerts.pod_restarts.warning }}
+      FOR 30s
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "Pod {{`{{ $labels.pod }}`}} restarts too often",
+        description = "Pod {{`{{ $labels.pod }}`}} restarts {{`{{ $value }}`}} during last 1 hour. Should be < {{ .Values.alerts.pod_restarts.warning }}",
+      }
+
+    ALERT PodRestartsTooOften
+      IF kube_pod_container_restarts_per_hour >= {{ .Values.alerts.pod_restarts.critical }}
       FOR 30s
       LABELS {
         service = "k8s",
@@ -56,5 +68,5 @@ data:
       }
       ANNOTATIONS {
         summary = "Pod {{`{{ $labels.pod }}`}} restarts too often",
-        description = "Pod {{`{{ $labels.pod }}`}} restarts {{`{{ $value }}`}} during last 1 hour. Should be < {{ .Values.alerts.pod_restarts.more_then }}",
+        description = "Pod {{`{{ $labels.pod }}`}} restarts {{`{{ $value }}`}} during last 1 hour. This is critical level, should be < {{ .Values.alerts.pod_restarts.critical }}",
       }
