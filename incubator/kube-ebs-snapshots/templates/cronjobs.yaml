@@ -8,6 +8,7 @@
 {{- $pull := .Values.image.pullPolicy -}}
 {{- $resources := .Values.resources -}}
 {{- $iam_role := include "iam_role" . -}}
+{{- $supportJobHistory := and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) -}}
 {{- if .Values.jobs }}
 apiVersion: v1
 kind: List
@@ -26,6 +27,10 @@ items:
       concurrencyPolicy: {{ .concurrencyPolicy }}
       startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
       schedule: {{ .schedule | quote }}
+{{- if $supportJobHistory }}
+      successfulJobsHistoryLimit: {{ .successfulJobsHistoryLimit }}
+      failedJobsHistoryLimit: {{ .failedJobsHistoryLimit }}
+{{- end }}
       jobTemplate:
         metadata:
           labels:

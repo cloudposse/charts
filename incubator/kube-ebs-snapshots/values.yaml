@@ -18,8 +18,8 @@ jobs:
   - name: ""
     schedule: "0 0 * * *"
     concurrencyPolicy: Allow
-    successfulJobsHistoryLimit: 1
-    failedJobsHistoryLimit: 5
+    successfulJobsHistoryLimit: 10
+    failedJobsHistoryLimit: 10
     startingDeadlineSeconds: 60
     annotations: {}
     namespace: ""
