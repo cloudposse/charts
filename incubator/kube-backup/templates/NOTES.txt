@@ -1,7 +1,10 @@
-# 1) To make backup working you need to have s3 bucket created.
-#   Here is terraform config to this.
-# --------------------------------------------------------------------------------
+#
+# Terraform Resources to Support Kube Backups to S3
+#
 
+#
+# Provide S3 bucket to store backups
+# 
 resource "aws_s3_bucket" "{{ template "s3bucket" . }}" {
   bucket = "{{ template "s3bucket" . }}"
   acl    = "private"
@@ -15,11 +18,9 @@ resource "aws_s3_bucket" "{{ template "s3bucket" . }}" {
   }
 }
 
-# --------------------------------------------------------------------------------
-#
-# 2) You need permissions to allow backup write data into s3 bucket.
-#   Here is terraform to create IAM profile
-# --------------------------------------------------------------------------------
+# 
+# Provide IAM Profile with sufficient permissions to upload backups to S3 bucket
+# 
 variable "base_role_arn" {
   type = "string"
 }
@@ -82,5 +83,3 @@ resource "aws_iam_role_policy" "AccessToS3-{{ template "iam_role" . }}" {
 }
 EOF
 }
-
-#--------------------------------------------------------------------------------
