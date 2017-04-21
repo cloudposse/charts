@@ -1,4 +1,4 @@
 apiVersion: v1
-description: Do mysql backups with K8S
+description: Perform backups to S3 of MySQL databases and pod/container files
 name: kube-backup
 version: 0.1.0
