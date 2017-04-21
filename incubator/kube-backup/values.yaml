@@ -25,10 +25,10 @@ resources:
 mysql:
   enabled: true
   schedule: *MYSQL_SCHEDULE
-  concurrencyPolicy: Allow
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 5
-  startingDeadlineSeconds: 60
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 10
+  startingDeadlineSeconds: 3600
   annotations: {}
   iamRole: *IAM_ROLE
   database: *MYSQL_DATABASE
