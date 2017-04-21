@@ -1,22 +1,49 @@
+#################################### REQUIRED CONFIGURATION ############################################################
+define:
+  - &CLUSTER_NAME ""              # Cluster name to differentiate alerts by cluster
+
+  - &SMTP_HOST ""                 # SMTP server host[:port]
+  - &SMTP_USER "postmaster"       # SMTP auth user
+  - &SMTP_PASSWORD ""             # SMTP auth password
+  - &SMTP_USE_TLS false           # SMTP use TLS
+  - &SMTP_FROM ""                 # Notification email from field
+  - &SMTP_TO ""                   # Notification email to field
+
+  - &SLACK_API_URL ""             # The API URL to use for Slack notifications.
+  - &SLACK_CHANNEL "alerts"       # The channel or user to send notifications to.
+  - &SLACK_USERNAME "Prometheus"  # User name that would be author of alert messages
+
+####################################### Developer configs ##############################################################
+
 alertmanager:
   config:
     global:
       resolve_timeout: 5m
       # The default SMTP From header field.
-      smtp_from: ""
-      smtp_smarthost: ""
+      smtp_from: *SMTP_FROM
+      smtp_smarthost: *SMTP_HOST
       # SMTP authentication information.
-      smtp_auth_username: "postmaster"
-      smtp_auth_password: ""
+      smtp_auth_username: *SMTP_USER
+      smtp_auth_password: *SMTP_PASSWORD
       smtp_auth_secret: ""
       # The default SMTP TLS requirement.
-      smtp_require_tls: false
-
+      smtp_require_tls: *SMTP_USE_TLS
+      slack_api_url: *SLACK_API_URL
     receivers:
       - name: 'default'
-        email_configs:
-          - send_resolved: true
-            to: ""
+## Uncomment to enable email notifications
+##        email_configs:
+##          - send_resolved: true
+##            to: *SMTP_TO
+## Uncomment to enable slack notifications
+##        slack_configs:
+##          - send_resolved: true
+##            channel: *SLACK_CHANNEL
+##            # API request data as defined by the Slack webhook API.
+##            username: *SLACK_USERNAME
+##            pretext: *CLUSTER_NAME
+##            text: |-
+##              {{ template "pushover.default.message" . }}
     route:
       group_by: ['job']
       group_interval: 5m
@@ -183,9 +210,12 @@ prometheus:
   ## Resource limits & requests
   ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources: {}
-    # requests:
-    #   memory: 400Mi
+  resources:
+     requests:
+       memory: 400Mi
+     limits:
+       memory: 800Mi
+
 
   ## How long to retain metrics
   ##
