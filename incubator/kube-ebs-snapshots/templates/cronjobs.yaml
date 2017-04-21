@@ -9,7 +9,9 @@
 {{- $resources := .Values.resources -}}
 {{- $iam_role := include "iam_role" . -}}
 # @TODO: Uncomment it when helm version > 2.3.1 would be used
-#{{- $supportJobHistory := and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) -}}
+{{/*
+{{- $supportJobHistory := and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) -}}
+*/}}
 {{- if .Values.jobs }}
 apiVersion: v1
 kind: List
@@ -29,10 +31,12 @@ items:
       startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
       schedule: {{ .schedule | quote }}
 # @TODO: Uncomment it when helm version > 2.3.1 would be used
-#{{- if $supportJobHistory }}
-#      successfulJobsHistoryLimit: {{ .successfulJobsHistoryLimit }}
-#      failedJobsHistoryLimit: {{ .failedJobsHistoryLimit }}
-#{{- end }}
+{{/*
+{{- if $supportJobHistory }}
+      successfulJobsHistoryLimit: {{ .successfulJobsHistoryLimit }}
+      failedJobsHistoryLimit: {{ .failedJobsHistoryLimit }}
+{{- end }}
+*/}}
       jobTemplate:
         metadata:
           labels:
