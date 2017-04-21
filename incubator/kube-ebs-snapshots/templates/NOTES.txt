@@ -1,7 +1,7 @@
-1) You need permissions to allow backup write data into s3 bucket.
-   Here is terraform to create IAM profile
-
---------------------------------------------------------------------------------
+# 1) You need permissions to allow backup write data into s3 bucket.
+#   Here is terraform to create IAM profile
+#
+#--------------------------------------------------------------------------------
 variable "base_role_arn" {
   type = "string"
 }
@@ -44,4 +44,4 @@ resource "aws_iam_role_policy" "AccessToS3-{{ template "iam_role" . }}" {
 }
 EOF
 }
---------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
