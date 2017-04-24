@@ -22,6 +22,11 @@ data:
     set_var {{ $name }} {{ $value | quote }}
 {{- end }}
 {{- end }}
+    if [ "$OVPN_CALLER" == "init" ]; then
+    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.serverCertExpire | quote }}
+    else
+    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.clientCertExpire | quote }}
+    fi
 {{ if .Values.ui.ssl.enabled }}
 ---
 apiVersion: v1

@@ -21,7 +21,7 @@ define:
                                ## WARNING: There are limits to request production ready certificates 
                                ##           (https://letsencrypt.org/docs/rate-limits/)
                                ##    Set to `false` during debuging, so that let's encrypt will generate untrusted certificates.
-    
+
 
 ####################################### Developer configs ##############################################################
 
@@ -48,6 +48,8 @@ persistence:
   size: 1Gi
 
 easyrsa:
+  clientCertExpire: "3650"
+  serverCertExpire: "3650"
   vars:
     EASYRSA_REQ_COUNTRY: "US"
     EASYRSA_REQ_PROVINCE: "California"
@@ -56,7 +58,6 @@ easyrsa:
     EASYRSA_REQ_EMAIL: "me@example.net"
     EASYRSA_REQ_OU: "My Organizational Unit"
     EASYRSA_CA_EXPIRE: "3650"
-    EASYRSA_CERT_EXPIRE: "3650"
     EASYRSA_CRL_DAYS: "180"
 
 debug: 0
