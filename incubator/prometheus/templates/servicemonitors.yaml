@@ -3,6 +3,7 @@
 {{- $chartName := .Chart.Name -}}
 {{- $chartVersion := .Chart.Version -}}
 {{- $releaseService := .Release.Service -}}
+{{- $serviceMonitorsSelector := .Values.serviceMonitorsSelector -}}
 {{- if .Values.serviceMonitors }}
 apiVersion: v1
 kind: List
@@ -16,7 +17,7 @@ items:
         chart: {{ $chartName }}-{{ $chartVersion }}
         heritage: {{ $releaseService }}
         release: {{ $releaseName }}
-{{ toYaml .Values.serviceMonitorSelector | indent 8 }}
+{{ toYaml $serviceMonitorsSelector | indent 8 }}
       name: {{ .name }}
     spec:
       endpoints:
