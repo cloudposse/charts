@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Dex is an OpenID Connect server that connects to other identity providers
+name: dex
+version: 0.1.0

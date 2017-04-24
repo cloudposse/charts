@@ -1,0 +1,38 @@
+# Default values for dex.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+dex:
+  mockCallback: true
+  github:
+    сlientID: "NTQ3YjRhYjA3M2I0ZTM5OGQ0ZjA="
+    clientSecret: "MjYzN2Y3OTMyMTNlMmI4ZDZlM2RlM2Y0YWU2NzUzMTVhOWMzZWVkMQ=="
+  oidc:
+    id: "google"
+    issuer: "https://accounts.google.com"
+    clientID: "ODc2MDc2NjM5NDQ0LW8zdTIzZjY5ZGlsdXMxYTBkNzd0ZHQxb3FzMWZpaDViLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t"
+    clientSecret: "T0pMc0FLeUpsY2ZjaUtnbkhzaHVwZjQ4"
+  staticPassword:
+    email: "admin@example.com"
+    hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"
+    username: "admin"
+    userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+
+image:
+  repository: quay.io/coreos/dex
+  tag: v2.4.0
+  pullPolicy: IfNotPresent
+service:
+  name: dex
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
