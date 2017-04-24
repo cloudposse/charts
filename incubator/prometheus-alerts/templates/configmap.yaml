@@ -44,6 +44,33 @@ data:
         description = "K8S cluster have critical cpu load",
       }
 
+    cluster:memory_free:percent =
+      100 - cluster:memory_used:percent
+
+    ALERT ClusterMemoryLow
+      IF cluster:memory_free:percent <= {{ .Values.alerts.cluster_memory_low.warning }}
+      FOR 30s
+      LABELS {
+        service = "k8s",
+        severity = "warning",
+      }
+      ANNOTATIONS {
+        summary = "Cluster running out of memory",
+        description = "Cluster running out of memory",
+      }
+
+    ALERT ClusterMemoryLow
+      IF cluster:memory_free:percent <= {{ .Values.alerts.cluster_memory_low.critical }}
+      FOR 30s
+      LABELS {
+        service = "k8s",
+        severity = "critical",
+      }
+      ANNOTATIONS {
+        summary = "Cluster ran out of memory",
+        description = "Cluster ran out of memory",
+      }
+      
     kube_pod_container_restarts_per_hour =
       delta(kube_pod_container_status_restarts[1h])
 
