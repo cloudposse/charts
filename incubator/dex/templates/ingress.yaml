@@ -26,6 +26,7 @@ spec:
 {{- end }}
   rules:
   {{- $root := . }}
+  {{- $port := .Values.service.externalPort}}
   {{- range .Values.ingress.hosts }}
     - host: {{ . }}
       http:
@@ -33,5 +34,5 @@ spec:
           - path: /
             backend:
               serviceName: {{ template "fullname" $root }}
-              servicePort: {{ .Values.service.externalPort }}
+              servicePort: {{ $port }}
   {{- end }}
