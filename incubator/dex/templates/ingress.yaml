@@ -13,15 +13,25 @@ metadata:
     release: {{ .Release.Name }}
   name: {{ template "fullname" . }}
 spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+  {{- range .Values.ingress.hosts }}
+      - {{ . }}
+  {{- end }}
+  {{- if .Values.ingress.tls.secretName }}
+    secretName: {{ .Values.ingress.tls.secretName | quote }}
+  {{- else }}
+    secretName: {{ template "fullname" . }}
+  {{- end }}
+{{- end }}
   rules:
-    - host: "{{ .Values.ingress.fqdn }}"
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . }}
       http:
         paths:
-          - path: "{{ .Values.routePrefix }}"
+          - path: /
             backend:
               serviceName: {{ template "fullname" . }}
-              servicePort: 9090
-{{- if .Values.ingress.tls }}
-  tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-{{- end }}
+              servicePort: {{ .Values.service.externalPort }}
+  {{- end }}

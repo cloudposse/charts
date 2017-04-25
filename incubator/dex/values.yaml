@@ -11,13 +11,13 @@ dex:
   oidc:
     id: "google"
     issuer: "https://accounts.google.com"
-    clientID: "ODc2MDc2NjM5NDQ0LW8zdTIzZjY5ZGlsdXMxYTBkNzd0ZHQxb3FzMWZpaDViLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t"
-    clientSecret: "T0pMc0FLeUpsY2ZjaUtnbkhzaHVwZjQ4"
+    clientID: ""
+    clientSecret: ""
   staticPassword:
     email: "admin@example.com"
-    hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"
+    hash: ""
     username: "admin"
-    userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+    userID: ""
 
 image:
   repository: quay.io/coreos/dex
@@ -36,3 +36,14 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+
+  hosts:
+    - ""
+
+  tls:
+    enabled: false
+    secretName: ""
