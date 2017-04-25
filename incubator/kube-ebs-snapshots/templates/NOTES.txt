@@ -1,7 +1,8 @@
-# 1) You need permissions to allow backup write data into s3 bucket.
-#   Here is terraform to create IAM profile
 #
-#--------------------------------------------------------------------------------
+# Terraform Configuration for Kube EBS Snapshots
+#
+
+# Allow backups to s3 bucket.
 variable "base_role_arn" {
   type = "string"
 }
@@ -44,4 +45,3 @@ resource "aws_iam_role_policy" "AccessToS3-{{ template "iam_role" . }}" {
 }
 EOF
 }
-#--------------------------------------------------------------------------------
