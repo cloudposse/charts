@@ -1,23 +1,35 @@
 # Default values for dex.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+#################################### REQUIRED CONFIGURATION ############################################################
+define:
+  - &HOST ""                # Dex host name
+  - &TLS  "false"           # Use https
+  - &GITHUB_ID ""           # Github id
+  - &GITHUB_SECRET ""       # Github secret
+
+####################################### Developer configs ##############################################################
+
 replicaCount: 1
 
 dex:
   mockCallback: true
   github:
-    сlientID: ""
-    clientSecret: ""
-  oidc:
-    id: "google"
-    issuer: "https://accounts.google.com"
-    clientID: ""
-    clientSecret: ""
-  staticPassword:
-    email: "admin@example.com"
-    hash: ""
-    username: "admin"
-    userID: ""
+    сlientID: *GITHUB_ID
+    clientSecret: *GITHUB_SECRET
+# Uncomment to connect google oauth
+#  oidc:
+#    id: "google"
+#    issuer: "https://accounts.google.com"
+#    clientID: ""
+#    clientSecret: ""
+# Uncomment to use static admin account
+#  staticPassword:
+#    email: "admin@example.com"
+#    hash: ""
+#    username: "admin"
+#    userID: ""
 
 image:
   repository: quay.io/coreos/dex
@@ -40,10 +52,8 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-
   hosts:
-    - ""
-
+    - *HOST
   tls:
-    enabled: false
+    enabled: *TLS
     secretName: ""
