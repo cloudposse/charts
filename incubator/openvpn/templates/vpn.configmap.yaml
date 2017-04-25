@@ -17,14 +17,14 @@ data:
             echo "'How to use this file' near the top comments for more details." >&2
             return 1
     fi
+    if [ "$OVPN_CALLER" == "init" ]; then
+    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.vars.EASYRSA_CA_EXPIRE | quote }}
+    fi
 {{- range $name, $value := .Values.easyrsa.vars }}
 {{- if not (empty $value) }}
     set_var {{ $name }} {{ $value | quote }}
 {{- end }}
 {{- end }}
-    if [ "$OVPN_CALLER" == "init" ]; then
-    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.EASYRSA_CA_EXPIRE | quote }}
-    fi
 {{ if .Values.ui.ssl.enabled }}
 ---
 apiVersion: v1
