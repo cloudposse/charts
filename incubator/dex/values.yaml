@@ -6,8 +6,8 @@ replicaCount: 1
 dex:
   mockCallback: true
   github:
-    сlientID: "NTQ3YjRhYjA3M2I0ZTM5OGQ0ZjA="
-    clientSecret: "MjYzN2Y3OTMyMTNlMmI4ZDZlM2RlM2Y0YWU2NzUzMTVhOWMzZWVkMQ=="
+    сlientID: ""
+    clientSecret: ""
   oidc:
     id: "google"
     issuer: "https://accounts.google.com"
