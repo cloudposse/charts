@@ -10,7 +10,7 @@ define:
   - &GITHUB_SECRET   ""                   # Github secret
   - &ADMIN_EMAIL     "admin@example.com"  # Admin email
   - &ADMIN_USERNAME  ""                   # Admin user name
-  - &ADMIN_HASH      ""                   # Admin password hash encrypted with bcrypt
+  - &ADMIN_HASH      ""                   # Admin password hash encrypted with bcrypt (use https://www.dailycred.com/article/bcrypt-calculator)
 
 ####################################### Developer configs ##############################################################
 
@@ -23,7 +23,7 @@ dex:
     clientSecret: *GITHUB_SECRET
   staticPassword:
     email: *ADMIN_EMAIL
-    # bcrypt hash of the string "password"
+    # bcrypt hash of the string "password" (use https://www.dailycred.com/article/bcrypt-calculator)
     hash: *ADMIN_HASH
     username: *ADMIN_USERNAME
 # Uncomment to connect google oauth
