@@ -20,6 +20,7 @@ spec:
                   "env": [
                     { "name": "OVPN_OTP_AUTH", "value": "1" },
                     { "name": "EASYRSA_BATCH", "value": "1" },
+                    { "name": "OVPN_CALLER", "value": "init" },
                     { "name": "EASYRSA_VARS_FILE", "value": "/etc/easyrsa.d/vars" },
                     { "name": "EASYRSA_REQ_CN", "value": {{ .Values.host | quote }} },
                     { "name": "UPSTREAM", "value": "tcp://{{ .Values.host }}:{{ template "exposed_port" .}}" }
