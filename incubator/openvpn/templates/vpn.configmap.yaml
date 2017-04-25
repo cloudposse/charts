@@ -23,9 +23,7 @@ data:
 {{- end }}
 {{- end }}
     if [ "$OVPN_CALLER" == "init" ]; then
-    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.serverCertExpire | quote }}
-    else
-    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.clientCertExpire | quote }}
+    set_var EASYRSA_CERT_EXPIRE {{ .Values.easyrsa.EASYRSA_CA_EXPIRE | quote }}
     fi
 {{ if .Values.ui.ssl.enabled }}
 ---

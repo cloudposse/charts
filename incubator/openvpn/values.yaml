@@ -48,8 +48,6 @@ persistence:
   size: 1Gi
 
 easyrsa:
-  clientCertExpire: "3650"
-  serverCertExpire: "3650"
   vars:
     EASYRSA_REQ_COUNTRY: "US"
     EASYRSA_REQ_PROVINCE: "California"
@@ -58,6 +56,7 @@ easyrsa:
     EASYRSA_REQ_EMAIL: "me@example.net"
     EASYRSA_REQ_OU: "My Organizational Unit"
     EASYRSA_CA_EXPIRE: "3650"
+    EASYRSA_CERT_EXPIRE: "30"
     EASYRSA_CRL_DAYS: "180"
 
 debug: 0
