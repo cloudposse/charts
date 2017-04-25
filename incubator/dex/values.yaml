@@ -4,10 +4,13 @@
 
 #################################### REQUIRED CONFIGURATION ############################################################
 define:
-  - &HOST ""                # Dex host name
-  - &TLS  "false"           # Use https
-  - &GITHUB_ID ""           # Github id
-  - &GITHUB_SECRET ""       # Github secret
+  - &HOST            ""                   # Dex host name
+  - &TLS             "false"              # Use https
+  - &GITHUB_ID       ""                   # Github id
+  - &GITHUB_SECRET   ""                   # Github secret
+  - &ADMIN_EMAIL     "admin@example.com"  # Admin email
+  - &ADMIN_USERNAME  ""                   # Admin user name
+  - &ADMIN_HASH      ""                   # Admin password hash encrypted with bcrypt
 
 ####################################### Developer configs ##############################################################
 
@@ -18,18 +21,17 @@ dex:
   github:
     сlientID: *GITHUB_ID
     clientSecret: *GITHUB_SECRET
+  staticPassword:
+    email: *ADMIN_EMAIL
+    # bcrypt hash of the string "password"
+    hash: *ADMIN_HASH
+    username: *ADMIN_USERNAME
 # Uncomment to connect google oauth
 #  oidc:
 #    id: "google"
 #    issuer: "https://accounts.google.com"
 #    clientID: ""
 #    clientSecret: ""
-# Uncomment to use static admin account
-#  staticPassword:
-#    email: "admin@example.com"
-#    hash: ""
-#    username: "admin"
-#    userID: ""
 
 image:
   repository: quay.io/coreos/dex
