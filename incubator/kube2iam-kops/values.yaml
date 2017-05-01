@@ -1,0 +1,43 @@
+# Default values for kube2iam-umbrella.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+define:
+  - &IAM_BASE_ROLE_ARN ""  # Role base ARN. Ex: arn:aws:iam::312041674177:role/
+  - &IAM_DEFAULT_ROLE ""   # Default role
+
+kube2iam:
+  extraArgs:
+    base-role-arn: *IAM_BASE_ROLE_ARN
+    default-role: *IAM_DEFAULT_ROLE
+  #   api-server: ...
+  #   api-token: ...
+
+  host:
+    ip: $(HOST_IP)
+    iptables: true
+    interface: cbr0
+
+  image:
+    repository: jtblin/kube2iam
+    tag: 0.4.0
+    pullPolicy: IfNotPresent
+
+  ## Node labels for pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Annotations to be added to pods
+  ##
+  podAnnotations: {}
+
+  resources:
+    limits:
+      cpu: 4m
+      memory: 16Mi
+    requests:
+      cpu: 4m
+      memory: 16Mi
+
+  verbose: false
