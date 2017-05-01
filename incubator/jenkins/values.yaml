@@ -43,6 +43,6 @@ Agent:
 
 Persistence:
   Enabled: true
-  StorageClass: generic
+  StorageClass: default
   AccessMode: ReadWriteOnce
   Size: 8Gi
