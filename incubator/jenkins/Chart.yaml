@@ -13,4 +13,4 @@ name: jenkins
 sources:
 - https://github.com/cloudposse/jenkins
 - https://github.com/cloudposse/jenkins-slave
-version: 0.1.0
+version: 0.1.1

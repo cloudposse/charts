@@ -46,3 +46,6 @@ Persistence:
   StorageClass: default
   AccessMode: ReadWriteOnce
   Size: 8Gi
+
+Ingress:
+  Annotations: {}
