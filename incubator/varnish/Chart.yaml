@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart Varnish running under Kubernetes
 name: varnish
-version: 0.1.2
+version: 0.1.3
