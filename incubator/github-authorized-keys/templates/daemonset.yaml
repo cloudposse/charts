@@ -16,6 +16,9 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: Default
+      tolerations:
+       - key: node-role.kubernetes.io/master
+         effect: NoSchedule
       containers:
       - name: github-authorized-keys
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
