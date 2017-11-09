@@ -13,7 +13,7 @@ spec:
         app: {{ template "fullname" . }}
         k8s-addon: ingress-nginx.addons.k8s.io
       annotations:
-        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       terminationGracePeriodSeconds: 60
       containers:
