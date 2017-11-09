@@ -8,7 +8,9 @@ metadata:
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
     dns: route53
+{{ toYaml .Values.ingress.labels | indent 4 }}
   annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
     "helm.sh/created": {{.Release.Time.Seconds | quote }}
     kubernetes.io/tls-acme: "true"
     domainName: {{.Values.DNS.Hostname | quote}}

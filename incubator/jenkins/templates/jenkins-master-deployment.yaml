@@ -42,6 +42,8 @@ spec:
                   ]
               }
           ]'
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       securityContext:
         runAsUser: 0

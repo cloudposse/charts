@@ -20,6 +20,7 @@ spec:
                   "env": [
                     { "name": "OVPN_OTP_AUTH", "value": "1" },
                     { "name": "EASYRSA_BATCH", "value": "1" },
+                    { "name": "OVPN_CALLER", "value": "init" },
                     { "name": "EASYRSA_VARS_FILE", "value": "/etc/easyrsa.d/vars" },
                     { "name": "EASYRSA_REQ_CN", "value": {{ .Values.host | quote }} },
                     { "name": "UPSTREAM", "value": "tcp://{{ .Values.host }}:{{ template "exposed_port" .}}" }
@@ -36,11 +37,11 @@ spec:
                   ]
               }
           ]'
-        checksum/ui-config:    {{ include (print $.Chart.Name "/templates/dashboard.configmap.yaml") . | sha256sum }}
-        checksum/vpn-config:   {{ include (print $.Chart.Name "/templates/vpn.configmap.yaml") . | sha256sum }}
-        checksum/vpn-secret:   {{ include (print $.Chart.Name "/templates/vpn.secret.yaml") . | sha256sum }}
-        checksum/oauth-config: {{ include (print $.Chart.Name "/templates/oauth.configmap.yaml") . | sha256sum }}
-        checksum/oauth-secret: {{ include (print $.Chart.Name "/templates/oauth.secret.yaml") . | sha256sum }}
+        checksum/ui-config:    {{ include (print $.Template.BasePath "/dashboard.configmap.yaml") . | sha256sum }}
+        checksum/vpn-config:   {{ include (print $.Template.BasePath "/vpn.configmap.yaml") . | sha256sum }}
+        checksum/vpn-secret:   {{ include (print $.Template.BasePath "/vpn.secret.yaml") . | sha256sum }}
+        checksum/oauth-config: {{ include (print $.Template.BasePath "/oauth.configmap.yaml") . | sha256sum }}
+        checksum/oauth-secret: {{ include (print $.Template.BasePath "/oauth.secret.yaml") . | sha256sum }}
     spec:
       containers:
       - name: vpn

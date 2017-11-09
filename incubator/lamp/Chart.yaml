@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Linux, Apache, MySQL, PHP (aka LAMP)
 name: lamp
-version: 0.1.2
+version: 0.1.3
