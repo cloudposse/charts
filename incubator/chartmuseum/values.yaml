@@ -34,7 +34,7 @@ env:
     # allow chart versions to be re-uploaded
     ALLOW_OVERWRITE: false
     # absolute url for .tgzs in index.yaml
-    CHART_URL: http://localhost
+    CHART_URL:
   secret:
     # username for basic http authentication
     BASIC_AUTH_USER:
