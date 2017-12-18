@@ -37,7 +37,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         volumeMounts:
-        - mountPath: /etc/helm-chart-publisher/config.yaml
+        - mountPath: /etc/helm-chart-publisher
           name: config
         resources:
 {{ toYaml .Values.resources | indent 10 }}
