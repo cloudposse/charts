@@ -6,6 +6,8 @@ ADD ./ /charts
 
 WORKDIR /charts
 
+VOLUME ["/charts"]
+
 ENV CURRENT_REPO_URL=
 
 RUN set -ex \
