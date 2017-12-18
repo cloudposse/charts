@@ -1,9 +1,0 @@
-apiVersion: v1
-description: Helm Chart Publisher to Amazon S3, Google Cloud Storage and Openstack Swift
-name: chart-publisher
-version: 0.1.0
-appVersion: 0.1.0
-home: https://github.com/luizbafilho/helm-chart-publisher
-maintainers:
-- name: Cloud Posse
-  email: hello@cloudposse.com

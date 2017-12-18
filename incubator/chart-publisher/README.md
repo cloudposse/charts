@@ -1,3 +1,0 @@
-# Helm Chart Publisher
-
-Work in progress...
