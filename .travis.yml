@@ -15,8 +15,6 @@ services:
 install:
   - make init
   - sudo make helm:install
-  - helm repo add opsgoodness http://charts.opsgoodness.com
-  - helm repo add inclubator https://kubernetes-charts-incubator.storage.googleapis.com
   - make helm:repo:add-remote
   - make helm:repo:add-current
   - make docker:login
