@@ -40,10 +40,15 @@ env:
     BASIC_AUTH_USER:
     # password for basic http authentication
     BASIC_AUTH_PASS:
-    # tls certificate chain file content
-    TLS_CERT:
-    # tls key file content
-    TLS_KEY:
+deployment:
+  ## Chartmuseum Deployment annotations
+  annotations:
+  #   name: value
+replica:
+  ## Chartmuseum Replicas annotations
+  annotations:
+  ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+  #   iam.amazonaws.com/role: role-arn
 service:
   type: ClusterIP
   externalPort: 8080
@@ -64,7 +69,7 @@ persistence:
   ## If defined, PVC must be created manually before volume will be bound
   # ExistingClaim:
 
-  ## jenkins data Persistent Volume Storage Class
+  ## Chartmuseum data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
@@ -72,3 +77,27 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # StorageClass: "-"
+ingress:
+  ## If true, Chartmuseum Ingress will be created
+  ##
+  enabled: false
+
+  ## Chartmuseum Ingress annotations
+  ##
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   kubernetes.io/tls-acme: 'true'
+
+  ## Chartmuseum Ingress hostnames
+  ## Must be provided if Ingress is enabled
+  ##
+  # hosts:
+  #   "chartmuseum.domain.com": /
+
+  ## Chartmuseum Ingress TLS configuration
+  ## Secrets must be manually created in the namespace
+  ##
+  # tls:
+  #   - secretName: chartmuseum-server-tls
+  #     hosts:
+  #       - chartmuseum.domain.com

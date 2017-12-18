@@ -2,6 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ include "common.fullname" . }}
+  annotations:
+{{ toYaml .Values.deployment.annotations | indent 4 }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
@@ -9,6 +11,8 @@ spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
+      annotations:
+{{ toYaml .Values.replica.annotations | indent 8 }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}
@@ -24,18 +28,19 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
+{{- $secret_name := include "common.fullname" . }}
 {{- range $name, $value := .Values.env.secret }}
-{{- if not (empty $value) }}
+{{- if not ( empty $value) }}
         - name: {{ $name | quote }}
           valueFrom:
             secretKeyRef:
-              name: {{ include "common.fullname" . }}
+              name: {{ $secret_name }}
               key: {{ $name | quote }}
 {{- end }}
 {{- end }}
         args:
         - --port={{ .Values.service.internalPort }}
-{{- if .Values.env.open.STORAGE == "local" }}
+{{- if eq .Values.env.open.STORAGE "local" }}
         - --storage-local-rootdir=/storage
 {{- end }}
         ports:
@@ -43,14 +48,14 @@ spec:
         livenessProbe:
           tcpSocket:
             port: {{ .Values.service.internalPort }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
+          initialDelaySeconds: 5
+          periodSeconds: 10
         readinessProbe:
           tcpSocket:
             port: {{ .Values.service.internalPort }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
-{{- if and ( .Values.env.open.STORAGE == "local") }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+{{- if eq .Values.env.open.STORAGE "local" }}
         volumeMounts:
         - mountPath: /storage
           name: storage-volume
@@ -58,9 +63,6 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
-{{- if .Values.persistence.volumes }}
-{{ toYaml .Values.persistence.volumes | indent 6 }}
-{{- end }}
       - name: storage-volume
       {{- if .Values.persistence.Enabled }}
         persistentVolumeClaim:

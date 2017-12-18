@@ -15,7 +15,6 @@ services:
 install:
   - make init
   - sudo make helm:install
-  - helm repo add opsgoodness http://charts.opsgoodness.com
   - make helm:repo:add-remote
   - make helm:repo:add-current
   - make docker:login
