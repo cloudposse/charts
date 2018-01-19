@@ -5,7 +5,7 @@ dependencies:
     version: 0.3.1
     alias: server
   - name: chartmuseum
-    epository: https://kubernetes-charts-incubator.storage.googleapis.com/
+    repository: https://kubernetes-charts-incubator.storage.googleapis.com/
     condition: gateway.enabled, global.gateway.enabled
     version: 0.3.1
     alias: gateway
