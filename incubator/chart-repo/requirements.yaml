@@ -1,0 +1,11 @@
+dependencies:
+  - name: chartmuseum
+    repository: https://charts.cloudposse.com/incubator/
+    condition: server.enabled, global.server.enabled
+    version: 0.2.0
+    alias: server
+  - name: chartmuseum
+    repository: https://charts.cloudposse.com/incubator/
+    condition: gateway.enabled, global.gateway.enabled
+    version: 0.2.0
+    alias: gateway
