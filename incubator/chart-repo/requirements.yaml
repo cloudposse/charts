@@ -1,11 +1,11 @@
 dependencies:
   - name: chartmuseum
-    repository: https://charts.cloudposse.com/incubator/
+    repository: https://kubernetes-charts-incubator.storage.googleapis.com/
     condition: server.enabled, global.server.enabled
-    version: 0.2.0
+    version: 0.3.1
     alias: server
   - name: chartmuseum
-    repository: https://charts.cloudposse.com/incubator/
+    epository: https://kubernetes-charts-incubator.storage.googleapis.com/
     condition: gateway.enabled, global.gateway.enabled
-    version: 0.2.0
+    version: 0.3.1
     alias: gateway
