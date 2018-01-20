@@ -29,14 +29,15 @@ $ helm install --name my-release cloudposse-incubator/nfs-provisioner
 The following tables lists the configurable parameters of the etcd chart and their default values.
 
 
-| Parameter               | Description                            | Default                                                    |
-| ----------------------- | -------------------------------------- | ---------------------------------------------------------- |
-| `image`                 | Container image name                   | `quay.io/kubernetes_incubator/nfs-provisioner`             |
-| `imageTag`              | Container image tag                    | `v1.0.1`                                                   |
-| `provisionerName`       | Provisoner Name                        | `cluster.local/nfs`                                        |
-| `storageClass`          | The provisioner storage Class          | `local-nfs`                                                |
-| `defaultClass`          | Set-up as default class                | `false`                                                    |
-| `serviceIp`             | Setup the service ip                   | ``                                                         |
+| Parameter                  | Description                            | Default                                                    |
+| -------------------------- | -------------------------------------- | ---------------------------------------------------------- |
+| `image`                    | Container image name                   | `quay.io/kubernetes_incubator/nfs-provisioner`             |
+| `imageTag`                 | Container image tag                    | `v1.0.1`                                                   |
+| `provisionerName`          | Provisoner Name                        | `cluster.local/nfs`                                        |
+| `storageClass`             | The provisioner storage Class          | `local-nfs`                                                |
+| `defaultClass`             | Set-up as default class                | `false`                                                    |
+| `serviceIp`                | Setup the service ip                   | ``                                                         |
+| `persistence.storageClass` | Storage class of backing PVC           | `nil`                                                      |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
