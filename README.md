@@ -25,7 +25,7 @@ You can then run `helm search cloudposse-incubator` to see the charts.
 To add the `stable` chart repository to your local `helm` client, run `helm repo add`:
 
 ```shell
-$ helm repo add cloudposse-incubator https://charts.cloudposse.com/stable/
+$ helm repo add cloudposse-stable https://charts.cloudposse.com/stable/
 "cloudposse-stable" has been added to your repositories
 ```
 
