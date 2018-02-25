@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "common.fullname" . }}
+  annotations:
+{{ toYaml .Values.deployment.annotations | indent 4 }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      annotations:
+{{ toYaml .Values.deployment.replicas.annotations | indent 8 }}
+      labels:
+        app: {{ template "common.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      hostNetwork: true
+      dnsPolicy: Default
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: INGRESS_SERVICE_SELECTOR
+            value: {{ .Values.ingress_service_selector | quote }}
+          - name: DNS_RECORD_TYPE
+            value: {{ .Values.dns_record_type | quote }}
+          - name: DNS_RECORD_TTL
+            value: {{ .Values.dns_record_ttl | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
