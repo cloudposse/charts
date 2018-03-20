@@ -22,8 +22,7 @@ gateway:
 #      kubernetes.io/tls-acme: "true"
 #    hosts:
 #      chartmuseum.domain.com:
-#        - /charts
-#        - /index.yaml
+#        - /api
 #    tls:
 #      - secretName: chartmuseum-server-tls
 #        hosts:
@@ -65,7 +64,8 @@ server:
 #      kubernetes.io/tls-acme: "true"
 #    hosts:
 #      chartmuseum.domain.com:
-#        - /api
+#        - /charts
+#        - /index.yaml
 #    tls:
 #      - secretName: chartmuseum-server-tls
 #        hosts:
@@ -73,25 +73,25 @@ server:
   replicaCount: 1
   image:
     tag: *IMAGE_TAG
-    env:
-      open:
-        # storage backend, can be one of: local, amazon, google
-        STORAGE: "amazon"
-        # s3 bucket to store charts for amazon storage backend
-        STORAGE_AMAZON_BUCKET: *STORAGE_AMAZON_BUCKET
-        # prefix to store charts for amazon storage backend
-        STORAGE_AMAZON_PREFIX: *STORAGE_AMAZON_PREFIX
-        # region of s3 bucket to store charts
-        STORAGE_AMAZON_REGION: *STORAGE_AMAZON_REGION
-        # show debug messages
-        DEBUG: *DEBUG
-      secret:
-        # username for basic http authentication
-        BASIC_AUTH_USER: *SERVER_AUTH_USER
-        # password for basic http authentication
-        BASIC_AUTH_PASS: *SERVER_AUTH_PASS
-    replica:
-      annotations:
-        iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
+  env:
+    open:
+      # storage backend, can be one of: local, amazon, google
+      STORAGE: "amazon"
+      # s3 bucket to store charts for amazon storage backend
+      STORAGE_AMAZON_BUCKET: *STORAGE_AMAZON_BUCKET
+      # prefix to store charts for amazon storage backend
+      STORAGE_AMAZON_PREFIX: *STORAGE_AMAZON_PREFIX
+      # region of s3 bucket to store charts
+      STORAGE_AMAZON_REGION: *STORAGE_AMAZON_REGION
+      # show debug messages
+      DEBUG: *DEBUG
+    secret:
+      # username for basic http authentication
+      BASIC_AUTH_USER: *SERVER_AUTH_USER
+      # password for basic http authentication
+      BASIC_AUTH_PASS: *SERVER_AUTH_PASS
+  replica:
+    annotations:
+      iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
 
 
