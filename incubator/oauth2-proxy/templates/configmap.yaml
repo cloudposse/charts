@@ -63,7 +63,7 @@ data:
       ## Htpasswd File (optional)
       ## Additionally authenticate against a htpasswd file. Entries must be created with "htpasswd -s" for SHA encryption
       ## enabling exposes a username/login signin form
-      {{- if  .Values.app.htpasswdFile) }}
+      {{- if not ( empty .Values.app.htpasswdFile) }}
       htpasswd_file = "/usr/share/oauth2_proxy/htpasswd"
       {{- end }}
 
