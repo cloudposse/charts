@@ -4,18 +4,18 @@ metadata:
   annotations:
     helm.sh/hook: post-install
   labels:
-    app: {{ template "name" . }}
+    app: {{ template "prometheus-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-get-tpr-{{ randAlphaNum 10 | lower }}
+  name: {{ template "prometheus-operator.fullname" . }}-get-tpr-{{ randAlphaNum 10 | lower }}
 spec:
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}
+        app: {{ template "prometheus-operator.name" . }}
         release: {{ .Release.Name }}
-      name: {{ template "fullname" . }}-get-tprs
+      name: {{ template "prometheus-operator.fullname" . }}-get-tprs
     spec:
       containers:
         - name: hyperkube

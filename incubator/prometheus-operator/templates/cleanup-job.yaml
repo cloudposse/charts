@@ -4,18 +4,18 @@ metadata:
   annotations:
     helm.sh/hook: post-delete
   labels:
-    app: {{ template "name" . }}
+    app: {{ template "prometheus-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}-cleanup
+  name: {{ template "prometheus-operator.fullname" . }}-cleanup
 spec:
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}
+        app: {{ template "prometheus-operator.name" . }}
         release: {{ .Release.Name }}
-      name: {{ template "fullname" . }}-cleanup
+      name: {{ template "prometheus-operator.fullname" . }}-cleanup
     spec:
       containers:
         - name: delete-services

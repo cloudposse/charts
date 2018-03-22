@@ -2,23 +2,23 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: {{ template "name" . }}
+    app: {{ template "prometheus-operator.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     operator: prometheus
     release: {{ .Release.Name }}
-  name: {{ template "fullname" . }}
+  name: {{ template "prometheus-operator.fullname" . }}
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}
+        app: {{ template "prometheus-operator.name" . }}
         operator: prometheus
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "name" . }}
+        - name: {{ template "prometheus-operator.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           args:
