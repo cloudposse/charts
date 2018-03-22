@@ -22,7 +22,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           args:
-            - --analytics={{ .Values.sendAnalytics }}
+            - --alertmanager-default-base-image={{ .Values.app.images.alertManager }}
+            - --alsologtostderr=true
+            - --config-reloader-image={{ .Values.app.images.configReloaded }}
+            - --crd-apigroup={{ .Values.app.crd }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}

@@ -13,6 +13,12 @@ image:
   tag: v0.7.0
   pullPolicy: IfNotPresent
 
+app:
+  images:
+    alertManager: quay.io/prometheus/alertmanager
+    configReloaded: quay.io/coreos/configmap-reload:v0.0.1
+  crd: monitoring.coreos.com
+
 ## Node labels for prometheus-operator pod assignment
 ##
 nodeSelector: {}
@@ -25,10 +31,10 @@ sendAnalytics: true
 ## Prometheus-operator resource limits & requests
 ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
 ##
-resources: {}
-  # limits:
-  #   cpu: 200m
-  #   memory: 300Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 50Mi
+resources:
+  limits:
+    cpu: 200m
+    memory: 300Mi
+  requests:
+    cpu: 100m
+    memory: 50Mi

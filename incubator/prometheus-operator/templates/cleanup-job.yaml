@@ -33,7 +33,7 @@ spec:
             - delete
             - --ignore-not-found
             - thirdpartyresource
-            - alertmanager.monitoring.coreos.com
-            - prometheus.monitoring.coreos.com
-            - service-monitor.monitoring.coreos.com
+            - alertmanager.{{ .Values.app.crd }}
+            - prometheus.{{ .Values.app.crd }}
+            - service-monitor.{{ .Values.app.crd }}
       restartPolicy: OnFailure
