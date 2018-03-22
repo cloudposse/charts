@@ -24,7 +24,7 @@ spec:
           command:
             - ./kubectl
             - get
-            - thirdpartyresource
+            - customresourcedefinition
             - alertmanager.{{ .Values.app.crd }}
             - prometheus.{{ .Values.app.crd }}
             - service-monitor.{{ .Values.app.crd }}

@@ -32,7 +32,7 @@ spec:
             - /kubectl
             - delete
             - --ignore-not-found
-            - thirdpartyresource
+            - customresourcedefinition
             - alertmanager.{{ .Values.app.crd }}
             - prometheus.{{ .Values.app.crd }}
             - service-monitor.{{ .Values.app.crd }}
