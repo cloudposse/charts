@@ -15,7 +15,7 @@ image:
 
 app:
   images:
-    alertManager: quay.io/prometheus/alertmanager
+    alertManager: quay.io/prometheus/alertmanager:v0.14.0
     configReloaded: quay.io/coreos/configmap-reload:v0.0.1
   crd: monitoring.coreos.com
 

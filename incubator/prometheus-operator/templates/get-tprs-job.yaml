@@ -25,7 +25,7 @@ spec:
             - ./kubectl
             - get
             - customresourcedefinition
-            - alertmanager.{{ .Values.app.crd }}
-            - prometheus.{{ .Values.app.crd }}
-            - service-monitor.{{ .Values.app.crd }}
+            - alertmanagers.{{ .Values.app.crd }}
+            - prometheuss.{{ .Values.app.crd }}
+            - service-monitors.{{ .Values.app.crd }}
       restartPolicy: OnFailure
