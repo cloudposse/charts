@@ -34,6 +34,6 @@ spec:
             - --ignore-not-found
             - customresourcedefinition
             - alertmanagers.{{ .Values.app.crd }}
-            - prometheuss.{{ .Values.app.crd }}
+            - prometheuses.{{ .Values.app.crd }}
             - service-monitors.{{ .Values.app.crd }}
       restartPolicy: OnFailure
