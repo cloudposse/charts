@@ -27,5 +27,5 @@ spec:
             - customresourcedefinition
             - alertmanagers.{{ .Values.app.crd }}
             - prometheuses.{{ .Values.app.crd }}
-            - service-monitors.{{ .Values.app.crd }}
+            - servicemonitors.{{ .Values.app.crd }}
       restartPolicy: OnFailure
