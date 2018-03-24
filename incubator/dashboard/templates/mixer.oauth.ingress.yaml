@@ -1,0 +1,33 @@
+{{- if .Values.ingress.enabled -}}
+
+{{- $root := . -}}
+{{- $servicePort := .Values.mixer.service.externalPort -}}
+{{- $serviceName := include "dashboard.mixer.fullname" . -}}
+
+{{- $basehost := .Values.config.basehost -}}
+{{- $schema := "http" -}}
+
+{{ range $name, $value := .Values.upstreams }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}-oauth
+spec:
+  rules:
+  - host: {{ printf "%s.%s" $name $basehost  | quote }}
+    http:
+      paths:
+      - path: /oauth2
+        backend:
+          serviceName: dsh-oauth2-proxy
+          servicePort: 80
+{{- if $root.Values.ingress.tls.enabled }}
+  tls:
+  - secretName: {{ $serviceName }}-{{ $name }}-tls
+    hosts:
+    - {{ printf "%s.%s" $name $basehost  | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- end }}

@@ -1,0 +1,7 @@
+dependencies:
+- name: common
+  version: 0.0.1
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com/
+- name: oauth2-proxy
+  version: 0.1.3
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com/

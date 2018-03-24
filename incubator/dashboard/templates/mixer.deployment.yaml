@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "dashboard.mixer.fullname" . }}
+  annotations:
+{{ toYaml .Values.mixer.deployment.annotations | indent 4 }}
+  labels:
+{{ include "dashboard.mixer.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.mixer.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      name: {{ include "dashboard.mixer.fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mixer.configmap.yaml") . | sha256sum }}
+{{ toYaml .Values.mixer.deployment.replicas.annotations | indent 8 }}
+      labels:
+        app: {{ template "dashboard.mixer.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: mixer
+        image: {{ .Values.mixer.image.repository }}:{{ .Values.mixer.image.tag }}
+        imagePullPolicy: {{ .Values.mixer.image.pullPolicy }}
+        args:
+          - --configFile=/config/traefik.toml
+        ports:
+        - containerPort: {{ .Values.mixer.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        resources:
+{{ toYaml .Values.mixer.resources | indent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "dashboard.mixer.fullname" . }}

@@ -1,0 +1,19 @@
+{{- if .Values.ingress.enabled -}}
+{{- $root := . -}}
+{{- $servicePort := .Values.dashboard.service.externalPort -}}
+{{- $serviceName := include "common.fullname" . -}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+spec:
+  rules:
+  - host: {{ $root.Values.config.basehost | quote }}
+    http:
+      paths:
+      - path: /oauth2
+        backend:
+          serviceName: dsh-oauth2-proxy
+          servicePort: 80
+{{- end -}}

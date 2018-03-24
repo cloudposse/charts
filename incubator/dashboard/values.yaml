@@ -1,0 +1,227 @@
+---
+upstreams:
+  dashboard:
+    name: "Kubernetes"
+    endpoint: "http://ui-kubernetes-dashboard.kube-system"
+  ui:
+    name: "K8s"
+    endpoint: "http://ui-kubernetes-dashboard.kube-system"
+
+config:
+  basehost: debug.ui.staging.aws.popchest.io
+
+dashboard:
+  replicaCount: 1
+  config:
+    title: Cluster Dashboard
+  image:
+    repository: nginx
+    tag: latest
+    pullPolicy: Always
+    pullSecrets:
+  deployment:
+    ## Deployment annotations
+    annotations:
+      for: bar
+    replicas:
+    ## Replicas annotations
+      annotations:
+        for: bar
+    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #     iam.amazonaws.com/role: role-arn
+  service:
+    externalPort: 80
+    internalPort: 80
+    # annotations:
+    #   foo.io/bar: "true"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 80m
+      memory: 64Mi
+
+mixer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: traefik
+    tag: 1.5.4
+    pullPolicy: Always
+    pullSecrets:
+  deployment:
+    ## Deployment annotations
+    annotations:
+      for: bar
+    replicas:
+    ## Replicas annotations
+      annotations:
+        for: bar
+    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #     iam.amazonaws.com/role: role-arn
+  service:
+    externalPort: 80
+    internalPort: 80
+    # annotations:
+    #   foo.io/bar: "true"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 80m
+      memory: 64Mi
+
+oauth2-proxy:
+  app:
+    useSSL: false
+    upstreams:
+      - file:///dev/null
+  #	  - example.com
+
+  # Enabled provider
+    provider: "github"
+
+  # Common oauth configs
+    clientID: 13220c022d69d8a36233
+    clientSecret: 032a4e63485b45396ce7b84995a244b1a4735bca
+    scope:
+    redirectUrl: http://debug.ui.staging.aws.popchest.io/oauth2
+
+  # Github specific configs
+    githubOrg: cloudposse-demo
+    githubTeam: developers
+
+  # Github or Gitlab specific configs
+    loginUrl:
+    redeemUrl:
+    validateUrl:
+
+  # MS Azure specific configs
+    azureTenant:
+    resource:
+
+  # Google specific configs
+    googleGroups:
+  #      - "group"
+    googleAdminEmail:
+    googleServiceAccountJson:
+
+  # HTTP auth configs
+    basicAuthPassword:
+    displayHtpasswdForm:
+    htpasswdFile:
+
+  # Email filters
+    emailDomains:
+      - "*"
+    emails:
+  #      - igor@cloudposse.com
+
+  # OAuth2 proxy configs
+    approvalPrompt:
+    requestLogging: false
+    passAccessToken: false
+    passBasicAuth: false
+    passHostHeader: true
+    customTemplatesDir:
+    proxyPrefix:
+    skipAuthRegex:
+  #	  - ".*"
+    skipProviderButton:
+    profileUrl:
+    signatureKey:
+
+  # OAuth2 proxy session cookie config
+    cookieName:
+    cookieSecret: amQ9Yh07mIipqmoyUNnoirwGB9B24XlL0ZIiZaUC
+    cookieDomain:
+    cookieExpire:
+    cookieRefresh:
+    cookieSecure: false
+    cookieHttponly: false
+
+  ## Ingress for load balancer
+  #ingress:
+  # - name: "default"
+  #   tls: "true"
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+  #   hosts:
+  #     - "oauth2.example.com"
+  #     - "example.com"
+
+  replicaCount: 1
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: oauth
+    type: ClusterIP
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+    http:
+      externalPort: 80
+      internalPort: 80
+    https:
+      externalPort: 443
+      internalPort: 443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+ingress:
+  enabled: true
+  dns:
+    enabled: true
+  tls:
+    enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+## Ingress for load balancer
+##ingress:
+##- name: "default"
+##  labels:
+##    dns: "route53"
+##  annotations:
+##    domainName: "debug.ui.staging.aws.popchest.io"
+##    kubernetes.io/tls-acme: "true"
+##    kubernetes.io/ingress.class: nginx
+##  hosts:
+##    debug.ui.staging.aws.popchest.io: /
+##  tls:
+##  - secretName: server-tls
+##    hosts:
+##    - debug.ui.staging.aws.popchest.io
+
+##- name: "dashboard"
+##  labels:
+##    dns: "route53"
+##  annotations:
+##    domainName: "dashboard.debug.ui.staging.aws.popchest.io"
+##    kubernetes.io/tls-acme: "true"
+##    kubernetes.io/ingress.class: nginx
+##    ingress.kubernetes.io/rewrite-target: /dashboard
+##  hosts:
+##    dashboard.debug.ui.staging.aws.popchest.io: /
+##  tls:
+##  - secretName: server-dashboard-tls
+##    hosts:
+##    - dashboard.debug.ui.staging.aws.popchest.io

@@ -1,0 +1,44 @@
+{{- if .Values.ingress.enabled -}}
+{{- $root := . -}}
+{{- $servicePort := .Values.dashboard.service.externalPort -}}
+{{- $serviceName := include "common.fullname" . -}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+{{- if $root.Values.ingress.dns.enabled }}
+    domainName: {{ $root.Values.config.basehost | quote }}
+{{- end }}
+    kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
+    ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
+    ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
+{{- if $root.Values.ingress.annotations }}
+{{ toYaml $root.Values.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+{{- if $root.Values.ingress.labels }}
+{{ toYaml $root.Values.ingress.labels | indent 4 }}
+{{- end }}
+{{- if $root.Values.ingress.dns.enabled }}
+    dns: "route53"
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+    ingressName: "dashboard"
+  name: {{ include "common.fullname" $root }}
+spec:
+  rules:
+  - host: {{ $root.Values.config.basehost | quote }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $serviceName }}
+          servicePort: {{ $servicePort }}
+{{- if $root.Values.ingress.tls.enabled }}
+  tls:
+  - secretName: {{ $serviceName }}-tls
+    hosts:
+    - {{ $root.Values.config.basehost | quote }}
+{{- end -}}
+{{- end -}}
