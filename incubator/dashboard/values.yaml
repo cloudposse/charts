@@ -131,7 +131,7 @@ oauth2-proxy:
   # OAuth2 proxy session cookie config
     cookieName:
     cookieSecret:
-    cookieDomain: 
+    cookieDomain:
     cookieExpire:
     cookieRefresh:
     cookieSecure: false
