@@ -1,11 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
-{{- $servicePort := .Values.mixer.service.externalPort -}}
 {{- $serviceName := include "dashboard.mixer.fullname" . -}}
-
 {{- $basehost := .Values.config.basehost -}}
-{{- $schema := "http" -}}
 
 {{ range $name, $value := .Values.upstreams }}
 ---
@@ -20,14 +17,16 @@ spec:
       paths:
       - path: /oauth2
         backend:
-          serviceName: dsh-oauth2-proxy
-          servicePort: 80
+          serviceName: {{ template "dashboard.oauth2-proxy.fullname" . }}
+          servicePort: {{ .Values.oauth2-proxy.service.http.externalPort }}
+
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
   - secretName: {{ $serviceName }}-{{ $name }}-tls
     hosts:
     - {{ printf "%s.%s" $name $basehost  | quote }}
 {{- end -}}
+
 {{- end -}}
 
 {{- end }}

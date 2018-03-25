@@ -5,7 +5,6 @@
 {{- $serviceName := include "dashboard.mixer.fullname" . -}}
 
 {{- $basehost := .Values.config.basehost -}}
-{{- $schema := "http" -}}
 
 {{ range $name, $value := .Values.upstreams }}
 ---
@@ -15,12 +14,15 @@ metadata:
   name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
-    ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
-    ingress.kubernetes.io/auth-request-redirect: http://$host/
-    nginx.ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
-    nginx.ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
-    nginx.ingress.kubernetes.io/auth-request-redirect: http://$host/
+
+    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
+    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
+    ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" . }}
+
+
+    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
+    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
+    nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" . }}
 
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ printf "%s.%s" $name $basehost  | quote }}

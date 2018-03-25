@@ -9,10 +9,10 @@ metadata:
   name: {{ include "common.fullname" $root }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
-    ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
-    nginx.ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
-    nginx.ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
+    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
+    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
+    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
+    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
 
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ $root.Values.config.basehost | quote }}

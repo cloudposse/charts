@@ -1,3 +1,5 @@
+{{- $basehost := .Values.config.basehost -}}
+{{- $schema := ( include "dashboard.schema" . ) -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -31,19 +33,19 @@ data:
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
+
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
 {{ range $name, $value := .Values.upstreams }}
               <li class="nav-item">
-                <a class="nav-link lead" id="{{ $name }}-link" href="#{{ $name }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+                <a class="nav-link lead" id="{{ $name }}-link" href="{{ printf "%s://%s.%s" $schema $name $basehost }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
               </li>
 {{ end }}
             </ul>
           </div>
         </nav>
+
         <div class="embed-responsive embed-responsive-16by9" id="accordion">
-{{- $basehost := .Values.config.basehost -}}
-{{- $schema := "http" -}}
 {{ range $name, $value := .Values.upstreams }}
            <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ printf "%s://%s.%s" $schema $name $basehost }}" allowfullscreen></iframe>
 {{ end }}
@@ -56,11 +58,13 @@ data:
         <script type="text/javascript">
           $(document).ready(function() {
               $(".navbar-nav .nav-link").on("click", function(){
-                 $(".navbar-nav").find(".active").not(this).removeClass("active");
-                 $(this).toggleClass("active");
+                return false;
               });
 
               $("iframe").on("show.bs.collapse", function(){
+                 $(".navbar-nav").find(".active").not(this).removeClass("active");
+                 var link = $(this).attr('aria-labelledby');
+                 $('#' + link).toggleClass("active");
                  var attr = $(this).attr('data-src');
                  if (typeof attr !== typeof undefined && attr !== false) {
                     $(this).attr("src", attr);

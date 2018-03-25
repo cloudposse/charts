@@ -1,12 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $root := . -}}
-{{- $servicePort := .Values.dashboard.service.externalPort -}}
 {{- $serviceName := include "common.fullname" . -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: oauth2-proxy
+  name: {{ include "common.fullname" $root }}-oauth2
 spec:
   rules:
   - host: {{ $root.Values.config.basehost | quote }}
@@ -14,6 +13,13 @@ spec:
       paths:
       - path: /oauth2
         backend:
-          serviceName: dsh-oauth2-proxy
-          servicePort: 80
+          serviceName: {{ template "dashboard.oauth2-proxy.fullname" $root }}
+          servicePort: {{ $root.Values.oauth2-proxy.service.http.externalPort }}
+
+{{- if $root.Values.ingress.tls.enabled }}
+  tls:
+  - secretName: {{ $serviceName }}-tls
+    hosts:
+    - {{ $root.Values.config.basehost | quote }}
+{{- end -}}
 {{- end -}}
