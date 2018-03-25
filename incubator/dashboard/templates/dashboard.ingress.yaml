@@ -13,6 +13,8 @@ metadata:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
     ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
     ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
+    nginx.ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
+    nginx.ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
 {{- if $root.Values.ingress.annotations }}
 {{ toYaml $root.Values.ingress.annotations | indent 4 }}
 {{- end }}
