@@ -2,10 +2,10 @@
 upstreams:
   dashboard:
     name: "Kubernetes"
-    endpoint: "http://ui-kubernetes-dashboard.kube-system"
+    endpoint: "http://example.com"
 
 config:
-  basehost: debug.ui.staging.aws.popchest.io
+  basehost:
 
 dashboard:
   replicaCount: 1
@@ -79,14 +79,14 @@ oauth2-proxy:
     provider: "github"
 
   # Common oauth configs
-    clientID: 13220c022d69d8a36233
-    clientSecret: 032a4e63485b45396ce7b84995a244b1a4735bca
+    clientID:
+    clientSecret:
     scope:
     redirectUrl:
 
   # Github specific configs
-    githubOrg: cloudposse-demo
-    githubTeam: developers
+    githubOrg:
+    githubTeam:
 
   # Github or Gitlab specific configs
     loginUrl:
@@ -130,8 +130,8 @@ oauth2-proxy:
 
   # OAuth2 proxy session cookie config
     cookieName:
-    cookieSecret: amQ9Yh07mIipqmoyUNnoirwGB9B24XlL0ZIiZaUC
-    cookieDomain: .debug.ui.staging.aws.popchest.io
+    cookieSecret:
+    cookieDomain: 
     cookieExpire:
     cookieRefresh:
     cookieSecure: false
