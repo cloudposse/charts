@@ -12,7 +12,7 @@ upstreams:
     namespace: kube-system
 
 config:
-  basehost: debug.ui.staging.aws.popchest.io
+  basehost:
 
 dashboard:
   replicaCount: 1
@@ -57,14 +57,14 @@ auth2-proxy:
     provider: "github"
 
   # Common oauth configs
-    clientID: 13220c022d69d8a36233
-    clientSecret: 032a4e63485b45396ce7b84995a244b1a4735bca
+    clientID:
+    clientSecret:
     scope:
-    redirectUrl: http://debug.ui.staging.aws.popchest.io/oauth2
+    redirectUrl:
 
   # Github specific configs
-    githubOrg: cloudposse-demo
-    githubTeam: developers
+    githubOrg:
+    githubTeam:
 
   # Github or Gitlab specific configs
     loginUrl:
@@ -108,7 +108,7 @@ auth2-proxy:
 
   # OAuth2 proxy session cookie config
     cookieName:
-    cookieSecret: amQ9Yh07mIipqmoyUNnoirwGB9B24XlL0ZIiZaUC
+    cookieSecret:
     cookieDomain:
     cookieExpire:
     cookieRefresh:
@@ -168,33 +168,3 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
 
-## Ingress for load balancer
-##ingress:
-##- name: "default"
-##  labels:
-##    dns: "route53"
-##  annotations:
-##    domainName: "debug.ui.staging.aws.popchest.io"
-##    kubernetes.io/tls-acme: "true"
-##    kubernetes.io/ingress.class: nginx
-##  hosts:
-##    debug.ui.staging.aws.popchest.io: /
-##  tls:
-##  - secretName: server-tls
-##    hosts:
-##    - debug.ui.staging.aws.popchest.io
-
-##- name: "dashboard"
-##  labels:
-##    dns: "route53"
-##  annotations:
-##    domainName: "dashboard.debug.ui.staging.aws.popchest.io"
-##    kubernetes.io/tls-acme: "true"
-##    kubernetes.io/ingress.class: nginx
-##    ingress.kubernetes.io/rewrite-target: /dashboard
-##  hosts:
-##    dashboard.debug.ui.staging.aws.popchest.io: /
-##  tls:
-##  - secretName: server-dashboard-tls
-##    hosts:
-##    - dashboard.debug.ui.staging.aws.popchest.io
