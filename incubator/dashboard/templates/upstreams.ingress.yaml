@@ -1,9 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
-{{- $servicePort := .Values.mixer.service.externalPort -}}
-{{- $serviceName := include "dashboard.mixer.fullname" . -}}
-
 {{- $basehost := .Values.config.basehost -}}
 {{- $schema := "http" -}}
 

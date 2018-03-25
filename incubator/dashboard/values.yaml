@@ -2,10 +2,14 @@
 upstreams:
   dashboard:
     name: "Kubernetes"
-    endpoint: "http://ui-kubernetes-dashboard.kube-system"
+    service: ui-kubernetes-dashboard
+    port: 80
+    namespace: kube-system
   ui:
     name: "K8s"
-    endpoint: "http://ui-kubernetes-dashboard.kube-system"
+    service: ui-kubernetes-dashboard
+    port: 80
+    namespace: kube-system
 
 config:
   basehost: debug.ui.staging.aws.popchest.io
@@ -42,38 +46,7 @@ dashboard:
       cpu: 80m
       memory: 64Mi
 
-mixer:
-  enabled: true
-  replicaCount: 1
-  image:
-    repository: traefik
-    tag: 1.5.4
-    pullPolicy: Always
-    pullSecrets:
-  deployment:
-    ## Deployment annotations
-    annotations:
-      for: bar
-    replicas:
-    ## Replicas annotations
-      annotations:
-        for: bar
-    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #     iam.amazonaws.com/role: role-arn
-  service:
-    externalPort: 80
-    internalPort: 80
-    # annotations:
-    #   foo.io/bar: "true"
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 80m
-      memory: 64Mi
-
-oauth2-proxy:
+auth2-proxy:
   app:
     useSSL: false
     upstreams:
