@@ -1,3 +1,4 @@
+{{- $basehost := .Values.config.basehost -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -39,5 +40,5 @@ data:
 
         [frontends.{{ $name }}.routes]
           [frontends.{{ $name }}.routes.route0]
-            rule = {{ printf "PathPrefixStrip: /%s/" $name | quote }}
+            rule = {{ printf "Host: %s.%s" $name $basehost | quote }}
 {{ end }}

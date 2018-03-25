@@ -13,7 +13,6 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    ingress.kubernetes.io/rewrite-target: {{ printf "/%s" $name }}
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ printf "%s.%s" $name $basehost  | quote }}
 {{- end }}
