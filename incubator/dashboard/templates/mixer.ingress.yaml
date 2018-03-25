@@ -12,10 +12,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}
   annotations:
-{{- if $root.Values.ingress.dns.enabled }}
-    domainName: {{ printf "%s.%s" $name $basehost  | quote }}
-{{- end }}
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
     ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
     ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
@@ -23,19 +21,27 @@ metadata:
     nginx.ingress.kubernetes.io/auth-signin: http://$host/oauth2/start
     nginx.ingress.kubernetes.io/auth-url: http://$host/oauth2/auth
     nginx.ingress.kubernetes.io/auth-request-redirect: http://$host/
+
+{{- if $root.Values.ingress.dns.enabled }}
+    domainName: {{ printf "%s.%s" $name $basehost  | quote }}
+{{- end }}
+
 {{- if $root.Values.ingress.annotations }}
 {{ toYaml $root.Values.ingress.annotations | indent 4 }}
 {{- end }}
+
   labels:
+    ingressName: "mixer-{{ $name }}"
+{{ include "common.labels.standard" $root | indent 4 }}
+
 {{- if $root.Values.ingress.labels }}
 {{ toYaml $root.Values.ingress.labels | indent 4 }}
 {{- end }}
+
 {{- if $root.Values.ingress.dns.enabled }}
     dns: "route53"
 {{- end }}
-{{ include "common.labels.standard" $root | indent 4 }}
-    ingressName: "mixer-{{ $name }}"
-  name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}
+
 spec:
   rules:
   - host: {{ printf "%s.%s" $name $basehost  | quote }}
@@ -45,12 +51,14 @@ spec:
         backend:
           serviceName: {{ $serviceName }}
           servicePort: {{ $servicePort }}
+
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
   - secretName: {{ $serviceName }}-{{ $name }}-tls
     hosts:
     - {{ printf "%s.%s" $name $basehost  | quote }}
 {{- end -}}
+
 {{- end -}}
 
 {{- end }}
