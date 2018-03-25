@@ -15,14 +15,14 @@ metadata:
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
 
-    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
-    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
-    ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" . }}
+    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" $root }}
+    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" $root }}
+    ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" $root }}
 
 
-    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
-    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
-    nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" . }}
+    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" $root }}
+    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" $root }}
+    nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" $root }}
 
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ printf "%s.%s" $name $basehost  | quote }}

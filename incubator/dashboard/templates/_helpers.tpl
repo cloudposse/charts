@@ -21,7 +21,7 @@ Create a default fully qualified mixer name.
 Create a default fully qualified oauth2-proxy name.
 */}}
 {{- define "dashboard.oauth2-proxy.fullname" -}}
-{{- $base := default (printf "%s-%s" .Release.Name "oauth2-proxy") .Values.oauth2-proxy.fullnameOverride -}}
+{{- $base := ( printf "%s-%s" .Release.Name "oauth2-proxy" ) -}}
 {{- $diff := dict "fullnameOverride" $base | dict "Values" -}}
 {{- $values := merge $diff . -}}
 {{- template "common.fullname" $values -}}

@@ -160,7 +160,7 @@ oauth2-proxy:
       memory: 128Mi
 
 ingress:
-  enabled: false
+  enabled: true
   dns:
     enabled: true
   tls:

@@ -57,21 +57,27 @@ data:
 
         <script type="text/javascript">
           $(document).ready(function() {
-              $(".navbar-nav .nav-link").on("click", function(){
-                return false;
-              });
+            $(".navbar-nav .nav-link").on("click", function( event ) {
+                event.preventDefault();
+            });
 
-              $("iframe").on("show.bs.collapse", function(){
-                 $(".navbar-nav").find(".active").not(this).removeClass("active");
-                 var link = $(this).attr('aria-labelledby');
-                 $('#' + link).toggleClass("active");
-                 var attr = $(this).attr('data-src');
-                 if (typeof attr !== typeof undefined && attr !== false) {
-                    $(this).attr("src", attr);
-                    $(this).removeAttr('data-src');
-                 }
-              });
+            $("iframe").on("show.bs.collapse", function(){
+               var link = $(this).attr('aria-labelledby');
+               $('#' + link).addClass("active");
+               var attr = $(this).attr('data-src');
+               if (typeof attr !== typeof undefined && attr !== false) {
+                  $(this).attr("src", attr);
+                  $(this).removeAttr('data-src');
+               }
+            });
+
+            $("iframe").on("hide.bs.collapse", function(){
+               var link = $(this).attr('aria-labelledby');
+               $('#' + link).removeClass("active");
+            });
+
           });
+
         </script>
 
       </body>

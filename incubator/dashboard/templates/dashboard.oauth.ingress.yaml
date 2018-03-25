@@ -14,7 +14,7 @@ spec:
       - path: /oauth2
         backend:
           serviceName: {{ template "dashboard.oauth2-proxy.fullname" $root }}
-          servicePort: {{ $root.Values.oauth2-proxy.service.http.externalPort }}
+          servicePort: {{ $root.Values.oauth2.externalPort }}
 
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
