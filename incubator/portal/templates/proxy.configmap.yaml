@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "dashboard.mixer.fullname" . }}
+  name: {{ include "portal.proxy.fullname" . }}
   labels:
-{{ include "dashboard.mixer.labels.standard" . | indent 4 }}
+{{ include "portal.proxy.labels.standard" . | indent 4 }}
 data:
   traefik.toml: |-
     # traefik.toml
@@ -13,7 +13,7 @@ data:
 
     [entryPoints]
       [entryPoints.http]
-      address = ":{{ .Values.mixer.service.internalPort }}"
+      address = ":{{ .Values.proxy.service.internalPort }}"
 
     [api]
 
@@ -24,7 +24,7 @@ data:
 
   rules.toml: |-
     [backends]
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
       [backends.{{ $name }}]
         [backends.{{ $name }}.servers]
           [backends.{{ $name }}.servers.server0]
@@ -32,7 +32,7 @@ data:
 {{ end }}
 
     [frontends]
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
       [frontends.{{ $name }}]
         entryPoints = ["http"]
         backend = {{ $name | quote }}

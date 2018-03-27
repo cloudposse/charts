@@ -1,28 +1,28 @@
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
-{{- $servicePort := .Values.mixer.service.externalPort -}}
-{{- $serviceName := include "dashboard.mixer.fullname" . -}}
+{{- $servicePort := .Values.proxy.service.externalPort -}}
+{{- $serviceName := include "portal.proxy.fullname" . -}}
 
 {{- $basehost := .Values.config.basehost -}}
 
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}
+  name: {{ include "portal.proxy.fullname" $root }}-{{ $name }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
 
-    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" $root }}
-    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" $root }}
-    ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" $root }}
+    ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" $root }}
+    ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" $root }}
+    ingress.kubernetes.io/auth-request-redirect: {{ template "portal.auth-request-redirect" $root }}
 
 
-    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" $root }}
-    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" $root }}
-    nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "dashboard.auth-request-redirect" $root }}
+    nginx.ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" $root }}
+    nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" $root }}
+    nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "portal.auth-request-redirect" $root }}
 
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ printf "%s.%s" $name $basehost  | quote }}
@@ -33,7 +33,7 @@ metadata:
 {{- end }}
 
   labels:
-    ingressName: "mixer-{{ $name }}"
+    ingressName: "proxy-{{ $name }}"
 {{ include "common.labels.standard" $root | indent 4 }}
 
 {{- if $root.Values.ingress.labels }}

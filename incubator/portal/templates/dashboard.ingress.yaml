@@ -9,10 +9,10 @@ metadata:
   name: {{ include "common.fullname" $root }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
-    ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
-    nginx.ingress.kubernetes.io/auth-signin: {{ template "dashboard.auth-signin" . }}
-    nginx.ingress.kubernetes.io/auth-url: {{ template "dashboard.auth-url" . }}
+    ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" . }}
+    ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" . }}
+    nginx.ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" . }}
+    nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" . }}
 
 {{- if $root.Values.ingress.dns.enabled }}
     domainName: {{ $root.Values.config.basehost | quote }}
@@ -23,7 +23,7 @@ metadata:
 {{- end }}
 
   labels:
-    ingressName: "dashboard"
+    ingressName: "portal"
 {{ include "common.labels.standard" $root | indent 4 }}
 
 {{- if $root.Values.ingress.dns.enabled }}

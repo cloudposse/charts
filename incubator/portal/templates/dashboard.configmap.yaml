@@ -1,5 +1,5 @@
 {{- $basehost := .Values.config.basehost -}}
-{{- $schema := ( include "dashboard.schema" . ) -}}
+{{- $schema := ( include "portal.schema" . ) -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -36,7 +36,7 @@ data:
 
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
               <li class="nav-item">
                 <a class="nav-link" id="{{ $name }}-link" href="{{ printf "%s://%s.%s" $schema $name $basehost }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
               </li>
@@ -46,7 +46,7 @@ data:
         </nav>
 
         <div class="embed-responsive embed-responsive-16by9" id="accordion">
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
            <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ printf "%s://%s.%s" $schema $name $basehost }}" allowfullscreen></iframe>
 {{ end }}
         </div>

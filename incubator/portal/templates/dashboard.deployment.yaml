@@ -25,7 +25,7 @@ spec:
         release: {{ .Release.Name | quote }}
     spec:
       containers:
-      - name: "dashboard"
+      - name: "portal"
         image: "{{ .Values.dashboard.image.repository }}:{{ .Values.dashboard.image.tag }}"
         imagePullPolicy: "{{ .Values.dashboard.image.pullPolicy }}"
         ports:

@@ -1,5 +1,5 @@
 ---
-upstreams:
+backends:
   dashboard:
     name: "Kubernetes"
     endpoint: "http://example.com"
@@ -45,7 +45,7 @@ dashboard:
       cpu: 80m
       memory: 64Mi
 
-mixer:
+proxy:
   enabled: true
   replicaCount: 1
   image:
@@ -79,7 +79,7 @@ mixer:
 oauth2-proxy:
   app:
     useSSL: false
-    upstreams:
+    backends:
       - file:///dev/null
 
     provider: "github"

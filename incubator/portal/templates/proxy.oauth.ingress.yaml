@@ -1,15 +1,15 @@
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
-{{- $serviceName := include "dashboard.mixer.fullname" . -}}
+{{- $serviceName := include "portal.proxy.fullname" . -}}
 {{- $basehost := .Values.config.basehost -}}
 
-{{ range $name, $value := .Values.upstreams }}
+{{ range $name, $value := .Values.backends }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "dashboard.mixer.fullname" $root }}-{{ $name }}-oauth
+  name: {{ include "portal.proxy.fullname" $root }}-{{ $name }}-oauth
 spec:
   rules:
   - host: {{ printf "%s.%s" $name $basehost  | quote }}
@@ -17,7 +17,7 @@ spec:
       paths:
       - path: /oauth2
         backend:
-          serviceName: {{ template "dashboard.oauth2-proxy.fullname" $root }}
+          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
           servicePort: {{ $root.Values.oauth2.externalPort }}
 
 {{- if $root.Values.ingress.tls.enabled }}

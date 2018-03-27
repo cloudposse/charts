@@ -1,17 +1,17 @@
 {{/*
-Create a default fully qualified mixer name.
+Create a default fully qualified proxy name.
 */}}
-{{- define "dashboard.mixer.name" -}}
-{{- $diff := dict "nameOverride" "mixer" | dict "Values" -}}
+{{- define "portal.proxy.name" -}}
+{{- $diff := dict "nameOverride" "proxy" | dict "Values" -}}
 {{- $values := merge $diff . -}}
 {{- include "common.name" $values -}}
 {{- end -}}
 
 {/*
-Create a default fully qualified mixer name.
+Create a default fully qualified proxy name.
 */}}
-{{- define "dashboard.mixer.fullname" -}}
-{{- $base := default (printf "%s-%s" .Release.Name "mixer") .Values.mixer.fullnameOverride -}}
+{{- define "portal.proxy.fullname" -}}
+{{- $base := default (printf "%s-%s" .Release.Name "proxy") .Values.proxy.fullnameOverride -}}
 {{- $diff := dict "fullnameOverride" $base | dict "Values" -}}
 {{- $values := merge $diff . -}}
 {{- template "common.fullname" $values -}}
@@ -20,7 +20,7 @@ Create a default fully qualified mixer name.
 {/*
 Create a default fully qualified oauth2-proxy name.
 */}}
-{{- define "dashboard.oauth2-proxy.fullname" -}}
+{{- define "portal.oauth2-proxy.fullname" -}}
 {{- $base := ( printf "%s-%s" .Release.Name "oauth2-proxy" ) -}}
 {{- $diff := dict "fullnameOverride" $base | dict "Values" -}}
 {{- $values := merge $diff . -}}
@@ -30,7 +30,7 @@ Create a default fully qualified oauth2-proxy name.
 {/*
 Schema
 */}}
-{{- define "dashboard.schema" -}}
+{{- define "portal.schema" -}}
 {{- if .Values.ingress.tls.enabled -}}
 {{- printf "https" -}}
 {{- else -}}
@@ -42,31 +42,31 @@ Schema
 {/*
 External auth auth-url endpoint
 */}}
-{{- define "dashboard.auth-url" -}}
-{{- printf "%s://$host/oauth2/auth" (include "dashboard.schema" . ) -}}
+{{- define "portal.auth-url" -}}
+{{- printf "%s://$host/oauth2/auth" (include "portal.schema" . ) -}}
 {{- end -}}
 
 {/*
 External auth auth-signin endpoint
 */}}
-{{- define "dashboard.auth-signin" -}}
-{{- printf "%s://$host/oauth2/start" (include "dashboard.schema" . ) -}}
+{{- define "portal.auth-signin" -}}
+{{- printf "%s://$host/oauth2/start" (include "portal.schema" . ) -}}
 {{- end -}}
 
 {/*
 External auth auth-request-redirect endpoint
 */}}
-{{- define "dashboard.auth-request-redirect" -}}
-{{- printf "%s://$host/" (include "dashboard.schema" . ) -}}
+{{- define "portal.auth-request-redirect" -}}
+{{- printf "%s://$host/" (include "portal.schema" . ) -}}
 {{- end -}}
 
 {{- /*
-dashboard.mixer.labels.standard prints the standard Helm labels for mixer.
+portal.proxy.labels.standard prints the standard Helm labels for proxy.
 
 The standard labels are frequently used in metadata.
 */ -}}
-{{- define "dashboard.mixer.labels.standard" -}}
-app: {{ template "dashboard.mixer.name" . }}
+{{- define "portal.proxy.labels.standard" -}}
+app: {{ template "portal.proxy.name" . }}
 chart: {{ template "common.chartref" . }}
 heritage: {{ .Release.Service | quote }}
 release: {{ .Release.Name | quote }}
