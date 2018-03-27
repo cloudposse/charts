@@ -16,19 +16,19 @@ data:
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Bootstrap 4, from LayoutIt!</title>
+        <title>{{ .Values.config.title }}</title>
 
         <meta name="description" content="Source code generated using layoutit.com">
         <meta name="author" content="LayoutIt!">
-
+        <link rel="icon" type="image/x-icon" href="{{ .Values.config.image.favicon }}">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       </head>
       <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
           <span class="navbar-brand">
-            <img src="https://raw.githubusercontent.com/cloudposse/helm-chart-scaffolding/master/logo.png" width="45" class="d-inline-block align-top" alt="">
-            Cluster Dashboard
+            <img src="{{ .Values.config.image.url }}" width="{{ .Values.config.image.width }}" class="d-inline-block align-top" alt="">
+            {{ .Values.config.brand }}
           </span>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@ data:
             <ul class="navbar-nav mr-auto">
 {{ range $name, $value := .Values.upstreams }}
               <li class="nav-item">
-                <a class="nav-link lead" id="{{ $name }}-link" href="{{ printf "%s://%s.%s" $schema $name $basehost }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+                <a class="nav-link" id="{{ $name }}-link" href="{{ printf "%s://%s.%s" $schema $name $basehost }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
               </li>
 {{ end }}
             </ul>

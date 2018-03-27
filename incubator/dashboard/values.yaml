@@ -5,6 +5,12 @@ upstreams:
     endpoint: "http://example.com"
 
 config:
+  title: "Cluster Dashboard"
+  brand: "Cluster Dashboard"
+  image:
+    favicon: https://cloudposse.com/wp-content/uploads/sites/29/2016/04/favicon-152.png
+    url: https://raw.githubusercontent.com/cloudposse/helm-chart-scaffolding/master/logo.png
+    width: 45
   basehost:
 
 dashboard:
