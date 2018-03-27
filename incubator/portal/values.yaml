@@ -176,4 +176,5 @@ ingress:
 
 
 ## Do not change. This is exported from subcharts values
-oauth:
+oauth2:
+  externalPort:
