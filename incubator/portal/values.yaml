@@ -173,3 +173,7 @@ ingress:
     enabled: false
   annotations:
     kubernetes.io/ingress.class: nginx
+
+
+## Do not change. This is exported from subcharts values
+oauth:
