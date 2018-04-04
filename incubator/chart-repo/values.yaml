@@ -1,5 +1,5 @@
 define:
-  - &IMAGE_TAG "v0.2.7"
+  - &IMAGE_TAG "v0.5.0"
   - &STORAGE_AMAZON_BUCKET ""
   - &STORAGE_AMAZON_PREFIX ""
   - &STORAGE_AMAZON_REGION ""
@@ -9,7 +9,11 @@ define:
   - &SERVER_AUTH_USER ""
   - &SERVER_AUTH_PASS ""
   - &DEBUG "false"
-
+  - &PROBE_DELAY "5"
+  - &PROBE_PERIOD "10"
+  - &PROBE_TIMEOUT "1"
+  - &PROBE_SUCCESS "1"
+  - &PROBE_FAILURE "3"
 
 gateway:
   enabled: true
@@ -52,7 +56,19 @@ gateway:
   replica:
     annotations:
       iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
-
+  probes:
+    liveness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
+    readiness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
 server:
   enabled: true
   ingress:
@@ -93,5 +109,16 @@ server:
   replica:
     annotations:
       iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
-
-
+  probes:
+    liveness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
+    readiness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
