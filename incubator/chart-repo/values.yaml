@@ -9,11 +9,11 @@ define:
   - &SERVER_AUTH_USER ""
   - &SERVER_AUTH_PASS ""
   - &DEBUG "false"
-  - &PROBE_DELAY "5"
-  - &PROBE_PERIOD "10"
-  - &PROBE_TIMEOUT "1"
-  - &PROBE_SUCCESS "1"
-  - &PROBE_FAILURE "3"
+  - &PROBE_DELAY 5
+  - &PROBE_PERIOD 10
+  - &PROBE_TIMEOUT 1
+  - &PROBE_SUCCESS 1
+  - &PROBE_FAILURE 3
 
 gateway:
   enabled: true
