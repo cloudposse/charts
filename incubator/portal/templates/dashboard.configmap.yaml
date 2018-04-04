@@ -18,8 +18,8 @@ data:
 
         <title>{{ .Values.config.title }}</title>
 
-        <meta name="description" content="Source code generated using layoutit.com">
-        <meta name="author" content="LayoutIt!">
+        <meta name="description" content="{{ .Values.config.description }}">
+        <meta name="author" content="Cloud Posse">
         <link rel="icon" type="image/x-icon" href="{{ .Values.config.image.favicon }}">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       </head>
