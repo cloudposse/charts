@@ -3,6 +3,7 @@ backends:
   dashboard:
     name: "Kubernetes"
     endpoint: "http://example.com"
+    external: false
 
 config:
   title: "Cloud Portal"
@@ -177,5 +178,4 @@ ingress:
 
 
 ## Do not change. This is exported from subcharts values
-oauth2:
-  externalPort:
+oauth2: {}

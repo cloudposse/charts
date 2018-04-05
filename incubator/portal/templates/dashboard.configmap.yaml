@@ -38,7 +38,13 @@ data:
             <ul class="navbar-nav mr-auto">
 {{ range $name, $value := .Values.backends }}
               <li class="nav-item">
-                <a class="nav-link" id="{{ $name }}-link" href="{{ printf "%s://%s.%s" $schema $name $basehost }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+{{ if $value.external }}
+  {{ $url := $value.endpoint }}
+                <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+{{ else }}
+  {{ $url := ( printf "%s://%s.%s" $schema $name $basehost ) }}
+                <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+{{ end }}
               </li>
 {{ end }}
             </ul>
@@ -47,7 +53,13 @@ data:
 
         <div class="embed-responsive embed-responsive-16by9" id="accordion">
 {{ range $name, $value := .Values.backends }}
-           <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ printf "%s://%s.%s" $schema $name $basehost }}" allowfullscreen></iframe>
+{{ if $value.external }}
+  {{ $url := $value.endpoint }}
+          <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
+{{ else }}
+  {{ $url := ( printf "%s://%s.%s" $schema $name $basehost ) }}
+          <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
+{{ end }}
 {{ end }}
         </div>
 

@@ -5,6 +5,7 @@
 {{- $basehost := .Values.config.basehost -}}
 
 {{ range $name, $value := .Values.backends }}
+{{ if not $value.external }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -28,5 +29,5 @@ spec:
 {{- end -}}
 
 {{- end -}}
-
+{{- end -}}
 {{- end }}
