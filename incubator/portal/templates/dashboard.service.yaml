@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.fullname" . }}
+  annotations:
+{{ toYaml .Values.dashboard.service.annotations | indent 4 }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- if .Values.dashboard.service.annotations }}
+  annotations:
+{{ toYaml .Values.dashboard.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.dashboard.service.externalPort }}
+    targetPort: {{ .Values.dashboard.service.internalPort }}
+    protocol: TCP
+    name: {{ .Release.Name }}
+  selector:
+    app: {{ template "common.name" . }}
+    release: {{ .Release.Name | quote }}

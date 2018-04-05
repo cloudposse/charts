@@ -28,3 +28,5 @@ spec:
             value: {{ .Values.dns_record_type | quote }}
           - name: DNS_RECORD_TTL
             value: {{ .Values.dns_record_ttl | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
