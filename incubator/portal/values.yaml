@@ -17,8 +17,6 @@ config:
 
 dashboard:
   replicaCount: 1
-  config:
-    title: Cluster Dashboard
   image:
     repository: nginx
     tag: latest
