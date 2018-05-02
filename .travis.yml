@@ -14,6 +14,7 @@ services:
 
 install:
   - make init
+  - git -C build-harnes checkout fix-path
   - sudo make helm/install
   - make helm/repo/add-remote
   - make helm/repo/add-current
