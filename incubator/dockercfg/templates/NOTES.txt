@@ -1,0 +1,7 @@
+Created docker pull secret named `{{ include "common.fullname" . }}`. 
+
+Refer to the following resources for usage:
+  - https://github.com/kubernetes/helm/blob/master/docs/charts_tips_and_tricks.md
+  - https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+
+

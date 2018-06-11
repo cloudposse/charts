@@ -86,7 +86,7 @@ app:
 replicaCount: 1
 image:
   repository: cloudposse/oauth2-proxy
-  tag: latest
+  tag: 2.2
   pullPolicy: Always
 service:
   name: oauth

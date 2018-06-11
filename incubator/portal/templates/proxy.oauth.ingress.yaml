@@ -1,0 +1,33 @@
+{{- if .Values.ingress.enabled -}}
+
+{{- $root := . -}}
+{{- $serviceName := include "portal.proxy.fullname" . -}}
+{{- $basehost := .Values.config.basehost -}}
+
+{{ range $name, $value := .Values.backends }}
+{{ if not $value.external }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "portal.proxy.fullname" $root }}-{{ $name }}-oauth
+spec:
+  rules:
+  - host: {{ printf "%s.%s" $name $basehost  | quote }}
+    http:
+      paths:
+      - path: /oauth2
+        backend:
+          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
+          servicePort: {{ $root.Values.oauth2.externalPort }}
+
+{{- if $root.Values.ingress.tls.enabled }}
+  tls:
+  - secretName: {{ $serviceName }}-{{ $name }}-tls
+    hosts:
+    - {{ printf "%s.%s" $name $basehost  | quote }}
+{{- end -}}
+
+{{- end -}}
+{{- end -}}
+{{- end }}
