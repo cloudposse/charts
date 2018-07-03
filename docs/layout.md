@@ -1,6 +1,3 @@
-## How do I enable these repositories?
-
-
   ### Incubator Repository
 
   To add the `incubator` chart repository to your local `helm` client, run `helm repo add`:

@@ -35,9 +35,6 @@ Currently, most of the charts are located in the `incubator/` directory until th
 
 
 
-## How do I enable these repositories?
-
-
   ### Incubator Repository
 
   To add the `incubator` chart repository to your local `helm` client, run `helm repo add`:
@@ -194,10 +191,10 @@ Check out [our other projects][github], [apply for a job][jobs], or [hire us][hi
 |---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144
+  [osterman_avatar]: https://github.com/osterman.png?size=150
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: http://s.gravatar.com/avatar/bc70834d32ed4517568a1feb0b9be7e2?s=144
+  [goruha_avatar]: https://github.com/goruha.png?size=150
   [mkj28_homepage]: https://github.com/mkj28
-  [mkj28_avatar]: https://avatars1.githubusercontent.com/u/2279299?s=460&v=4
+  [mkj28_avatar]: https://github.com/mkj28.png?size=150
 
 
