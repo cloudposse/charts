@@ -95,14 +95,8 @@ description: |-
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"
-    homepage: "https://github.com/osterman"
-    avatar: "http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144"
     github: "osterman"
   - name: "Igor Rodionov"
-    homepage: "https://github.com/goruha"
-    avatar: "http://s.gravatar.com/avatar/bc70834d32ed4517568a1feb0b9be7e2?s=144"
     github: "goruha"
   - name: "Michal Matyjek"
-    homepage: "https://github.com/mkj28"
-    avatar: "https://avatars1.githubusercontent.com/u/2279299?s=460&v=4"
     github: "mkj28"
