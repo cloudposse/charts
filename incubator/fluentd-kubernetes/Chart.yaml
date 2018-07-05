@@ -10,6 +10,6 @@ sources:
 - https://github.com/coreos/fluentd-kubernetes-daemonset
 maintainers:
 - name: cloudposse
-  email: helloa@cloudposse.com
+  email: hello@cloudposse.com
 - name: goruha
   email: goruha@gmail.com
