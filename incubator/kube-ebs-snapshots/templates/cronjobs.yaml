@@ -1,0 +1,75 @@
+{{- $app := include "name" . -}}
+{{- $fullname := include "fullname" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := .Chart.Name -}}
+{{- $chartVersion := .Chart.Version -}}
+{{- $releaseService := .Release.Service -}}
+{{- $image := printf "%s:%s" .Values.image.repository .Values.image.tag -}}
+{{- $pull := .Values.image.pullPolicy -}}
+{{- $resources := .Values.resources -}}
+{{- $iam_role := include "iam_role" . -}}
+# @TODO: Uncomment it when helm version > 2.3.1 would be used
+{{/*
+{{- $supportJobHistory := and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) -}}
+*/}}
+{{- if .Values.jobs }}
+apiVersion: v1
+kind: List
+items:
+{{- range .Values.jobs }}
+  - apiVersion: batch/v2alpha1
+    kind: CronJob
+    metadata:
+      labels:
+        app: {{ $app | quote }}
+        chart: "{{ $chartName }}-{{ $chartVersion }}"
+        heritage: {{ $releaseService | quote }}
+        release: {{ $releaseName | quote }}
+      name: {{ printf "%s-%s" $releaseName .name | trunc 63 | trimSuffix "-" | quote }}
+    spec:
+      concurrencyPolicy: {{ .concurrencyPolicy }}
+      startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
+      schedule: {{ .schedule | quote }}
+# @TODO: Uncomment it when helm version > 2.3.1 would be used
+{{/*
+{{- if $supportJobHistory }}
+      successfulJobsHistoryLimit: {{ .successfulJobsHistoryLimit }}
+      failedJobsHistoryLimit: {{ .failedJobsHistoryLimit }}
+{{- end }}
+*/}}
+      jobTemplate:
+        metadata:
+          labels:
+            app: {{ $fullname | quote }}
+            release: {{ $releaseName | quote }}
+        spec:
+          template:
+            metadata:
+              labels:
+                release: {{ $releaseName | quote }}
+                app: {{ $fullname | quote }}
+              annotations:
+                iam.amazonaws.com/role: {{ $iam_role | quote }}
+{{ if .annotations }}
+{{ toYaml .annotations | indent 16 }}
+{{ end }}
+            spec:
+              restartPolicy: Never
+              containers:
+              - name: {{ $chartName | quote }}
+                image: {{ $image | quote }}
+                imagePullPolicy: {{ $pull }}
+                command:
+                  - '/bin/create-snapshot'
+                  - {{ .namespace | quote }}
+                  - {{ .selector | quote }}
+                  - {{ .volume | quote }}
+                env:
+                  - name: DESCRIPTION
+                    value: {{ .descripton | quote }}
+                  - name: TAGS
+                    value: "{{ range $index, $element := .tags }} Key={{ $index }},Value={{ $element }} {{ end }}"
+                resources:
+{{ toYaml $resources | indent 18 }}
+{{- end }}
+{{- end }}

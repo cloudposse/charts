@@ -1,0 +1,29 @@
+# Default values for lamp-backup.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: cloudposse/kube-ebs-snapshot
+  tag: latest
+  pullPolicy: Always
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+iamRole: ""
+jobs:
+  - name: ""
+    schedule: "0 0 * * *"
+    concurrencyPolicy: Allow
+    successfulJobsHistoryLimit: 10
+    failedJobsHistoryLimit: 10
+    startingDeadlineSeconds: 60
+    annotations: {}
+    namespace: ""
+    selector: ""
+    volume: "all"
+    descripton: ""
+

@@ -1,0 +1,47 @@
+#
+# Terraform Configuration for Kube EBS Snapshots
+#
+
+# Allow backups to s3 bucket.
+variable "base_role_arn" {
+  type = "string"
+}
+
+resource "aws_iam_role" "{{ template "iam_role" . }}" {
+  name = "{{ template "iam_role" . }}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow"
+    },
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "${var.base_role_arn}"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "AccessToS3-{{ template "iam_role" . }}" {
+  name = "AccessToS3-{{ template "iam_role" . }}"
+  role = "${aws_iam_role.{{ template "iam_role" . }}}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      ]
+}
+EOF
+}
