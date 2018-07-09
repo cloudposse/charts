@@ -1,0 +1,52 @@
+{{- if .Values.mysql.enabled -}}
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: {{ template "fullname_mysql" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  concurrencyPolicy: {{ .Values.mysql.concurrencyPolicy }}
+# @TODO: Uncomment it when helm version > 2.3.1 would be used
+{{/*
+{{- if and ( atoi .Capabilities.KubeVersion.Major | le 1 ) ( atoi .Capabilities.KubeVersion.Minor | lt 5 ) }}
+  successfulJobsHistoryLimit: {{ .Values.mysql.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.mysql.failedJobsHistoryLimit }}
+{{- end }}
+*/}}
+  startingDeadlineSeconds: {{ .Values.mysql.startingDeadlineSeconds }}
+  schedule: {{ .Values.mysql.schedule | quote }}
+  jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        component: "backup_mysql"
+        release: "{{ .Release.Name }}"
+    spec:
+      template:
+        metadata:
+          labels:
+            component: "backup_mysql"
+            release: "{{ .Release.Name }}"
+            app: {{ template "fullname" . }}
+          annotations:
+            iam.amazonaws.com/role: {{ template "iam_role" . }}
+{{ if .Values.mysql.annotations }}
+{{ toYaml .Values.mysql.annotations | indent 12 }}
+{{ end }}
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args:
+              - --task=backup-mysql-exec
+              - --database={{ .Values.mysql.database }}
+              - --namespace={{ .Values.mysql.namespace }}
+              - --selector={{ .Values.mysql.selector }}
+              - --container={{ .Values.mysql.container }}
+              - --s3-bucket={{ template "s3bucket" . }}
+            resources:
+{{ toYaml .Values.resources | indent 15 }}
+{{- end -}}

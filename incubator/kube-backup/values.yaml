@@ -1,0 +1,39 @@
+# Default values for lamp-backup.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+define:
+  - &MYSQL_SCHEDULE "0 0 * * *"   # Mysql backup schedule
+  - &MYSQL_DATABASE ""            # Mysql Database name
+  - &NAMESPACE ""                 # Namespace of mysql pod
+  - &SELECTOR ""                  # Selector to find mysql pod
+  - &CONTAINER ""                 # Mysql container name in pod
+  - &S3BUCKET ""                  # S3 bucket name ( destination )
+  - &IAM_ROLE ""                  # IAM Role to assume for s3 bucket access
+
+image:
+  repository: cloudposse/kube-backup
+  tag: latest
+  pullPolicy: Always
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+mysql:
+  enabled: true
+  schedule: *MYSQL_SCHEDULE
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 10
+  startingDeadlineSeconds: 3600
+  annotations: {}
+  iamRole: *IAM_ROLE
+  database: *MYSQL_DATABASE
+  namespace: *NAMESPACE
+  selector: *SELECTOR
+  container: *CONTAINER
+  s3Bucket: *S3BUCKET
+
