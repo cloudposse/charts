@@ -1,0 +1,53 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "common.fullname" . }}
+  annotations:
+{{ toYaml .Values.dashboard.deployment.annotations | indent 4 }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.dashboard.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      name: {{ include "common.fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/dashboard.configmap.yaml") . | sha256sum }}
+{{ toYaml .Values.dashboard.deployment.replicas.annotations | indent 8 }}
+      labels:
+        app: "{{ template "common.name" . }}"
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: "portal"
+        image: "{{ .Values.dashboard.image.repository }}:{{ .Values.dashboard.image.tag }}"
+        imagePullPolicy: "{{ .Values.dashboard.image.pullPolicy }}"
+        ports:
+        - containerPort: {{ .Values.dashboard.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.dashboard.service.internalPort }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.dashboard.service.internalPort }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: config
+        resources:
+{{ toYaml .Values.dashboard.resources | indent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "common.fullname" . }}
