@@ -1,0 +1,124 @@
+define:
+  - &IMAGE_TAG "v0.5.0"
+  - &STORAGE_AMAZON_BUCKET ""
+  - &STORAGE_AMAZON_PREFIX ""
+  - &STORAGE_AMAZON_REGION ""
+  - &STORAGE_AMAZON_IAM_ROLE ""
+  - &GATEWAY_AUTH_USER ""
+  - &GATEWAY_AUTH_PASS ""
+  - &SERVER_AUTH_USER ""
+  - &SERVER_AUTH_PASS ""
+  - &DEBUG "false"
+  - &PROBE_DELAY 5
+  - &PROBE_PERIOD 10
+  - &PROBE_TIMEOUT 1
+  - &PROBE_SUCCESS 1
+  - &PROBE_FAILURE 3
+
+gateway:
+  enabled: true
+  ingress:
+    enabled: false
+#    labels:
+#      dns: "route53"
+#    annotations:
+#      kubernetes.io/ingress.class: nginx
+#      kubernetes.io/tls-acme: "true"
+#    hosts:
+#      chartmuseum.domain.com:
+#        - /api
+#    tls:
+#      - secretName: chartmuseum-server-tls
+#        hosts:
+#          - chartmuseum.domain.com
+  replicaCount: 1
+  image:
+    tag: *IMAGE_TAG
+  env:
+    open:
+      # storage backend, can be one of: local, amazon, google
+      STORAGE: "amazon"
+      # s3 bucket to store charts for amazon storage backend
+      STORAGE_AMAZON_BUCKET: *STORAGE_AMAZON_BUCKET
+      # prefix to store charts for amazon storage backend
+      STORAGE_AMAZON_PREFIX: *STORAGE_AMAZON_PREFIX
+      # region of s3 bucket to store charts
+      STORAGE_AMAZON_REGION: *STORAGE_AMAZON_REGION
+      # show debug messages
+      DEBUG: *DEBUG
+      # disable all routes prefixed with /api
+      DISABLE_API: false
+    secret:
+      # username for basic http authentication
+      BASIC_AUTH_USER: *GATEWAY_AUTH_USER
+      # password for basic http authentication
+      BASIC_AUTH_PASS: *GATEWAY_AUTH_PASS
+  replica:
+    annotations:
+      iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
+  probes:
+    liveness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
+    readiness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
+server:
+  enabled: true
+  ingress:
+    enabled: false
+#    labels:
+#      dns: "route53"
+#    annotations:
+#      kubernetes.io/ingress.class: nginx
+#      kubernetes.io/tls-acme: "true"
+#    hosts:
+#      chartmuseum.domain.com:
+#        - /charts
+#        - /index.yaml
+#    tls:
+#      - secretName: chartmuseum-server-tls
+#        hosts:
+#          - chartmuseum.domain.com
+  replicaCount: 1
+  image:
+    tag: *IMAGE_TAG
+  env:
+    open:
+      # storage backend, can be one of: local, amazon, google
+      STORAGE: "amazon"
+      # s3 bucket to store charts for amazon storage backend
+      STORAGE_AMAZON_BUCKET: *STORAGE_AMAZON_BUCKET
+      # prefix to store charts for amazon storage backend
+      STORAGE_AMAZON_PREFIX: *STORAGE_AMAZON_PREFIX
+      # region of s3 bucket to store charts
+      STORAGE_AMAZON_REGION: *STORAGE_AMAZON_REGION
+      # show debug messages
+      DEBUG: *DEBUG
+    secret:
+      # username for basic http authentication
+      BASIC_AUTH_USER: *SERVER_AUTH_USER
+      # password for basic http authentication
+      BASIC_AUTH_PASS: *SERVER_AUTH_PASS
+  replica:
+    annotations:
+      iam.amazonaws.com/role: *STORAGE_AMAZON_IAM_ROLE
+  probes:
+    liveness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE
+    readiness:
+      initialDelaySeconds: *PROBE_DELAY
+      periodSeconds: *PROBE_PERIOD
+      timeoutSeconds: *PROBE_TIMEOUT
+      successThreshold: *PROBE_SUCCESS
+      failureThreshold: *PROBE_FAILURE

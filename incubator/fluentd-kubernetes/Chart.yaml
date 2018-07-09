@@ -1,0 +1,15 @@
+apiVersion: v1
+description: Kubernetes logs collect and forward with Fluentd.
+icon: https://raw.githubusercontent.com/fluent/fluentd-docs/master/public/logo/Fluentd_square.png
+name: fluentd-kubernetes
+version: 0.2.0
+appVersion: 0.12
+home: https://www.fluentd.org/
+sources:
+- https://quay.io/repository/coreos/fluentd-kubernetes
+- https://github.com/coreos/fluentd-kubernetes-daemonset
+maintainers:
+- name: cloudposse
+  email: hello@cloudposse.com
+- name: goruha
+  email: goruha@gmail.com

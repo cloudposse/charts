@@ -1,0 +1,119 @@
+{{- $basehost := .Values.config.basehost -}}
+{{- $schema := ( include "portal.schema" . ) -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{ .Values.config.title }}</title>
+
+        <meta name="description" content="{{ .Values.config.description }}">
+        <meta name="author" content="Cloud Posse">
+        <link rel="icon" type="image/x-icon" href="{{ .Values.config.image.favicon }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      </head>
+      <body>
+
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+          <span class="navbar-brand">
+            <img src="{{ .Values.config.image.url }}" width="{{ .Values.config.image.width }}" class="d-inline-block align-top" alt="">
+            {{ .Values.config.brand }}
+          </span>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+{{ range $name, $value := .Values.backends }}
+              <li class="nav-item">
+{{ if $value.external }}
+  {{ $url := $value.endpoint }}
+                <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+{{ else }}
+  {{ $url := ( printf "%s://%s.%s" $schema $name $basehost ) }}
+                <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
+{{ end }}
+              </li>
+{{ end }}
+            </ul>
+          </div>
+        </nav>
+
+        <div class="embed-responsive embed-responsive-16by9" id="accordion">
+{{ range $name, $value := .Values.backends }}
+{{ if $value.external }}
+  {{ $url := $value.endpoint }}
+          <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
+{{ else }}
+  {{ $url := ( printf "%s://%s.%s" $schema $name $basehost ) }}
+          <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
+{{ end }}
+{{ end }}
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $(".navbar-nav .nav-link").on("click", function( event ) {
+                event.preventDefault();
+            });
+
+            $("iframe").on("show.bs.collapse", function(){
+               var link = $(this).attr('aria-labelledby');
+               $('#' + link).addClass("active");
+               var attr = $(this).attr('data-src');
+               if (typeof attr !== typeof undefined && attr !== false) {
+                  $(this).attr("src", attr);
+                  $(this).removeAttr('data-src');
+               }
+            });
+
+            $("iframe").on("hide.bs.collapse", function(){
+               var link = $(this).attr('aria-labelledby');
+               $('#' + link).removeClass("active");
+            });
+
+          });
+
+        </script>
+
+      </body>
+    </html>
+
+  50x.html: |-
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Error</title>
+    <style>
+        body {
+            width: 35em;
+            margin: 0 auto;
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+        }
+    </style>
+    </head>
+    <body>
+    <h1>An error occurred.</h1>
+    <p>Sorry, the page you are looking for is currently unavailable.<br/>
+    Please try again later.</p>
+    <p>If you are the system administrator of this resource then you should check
+    the <a href="http://nginx.org/r/error_log">error log</a> for details.</p>
+    <p><em>Faithfully yours, nginx.</em></p>
+    </body>
+    </html>
