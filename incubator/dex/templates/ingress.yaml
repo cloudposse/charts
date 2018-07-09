@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    heritage: {{ .Release.Service }}
+    prometheus: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+  {{- range .Values.ingress.hosts }}
+      - {{ . | quote }}
+  {{- end }}
+  {{- if .Values.ingress.tls.secretName }}
+    secretName: {{ .Values.ingress.tls.secretName | quote }}
+  {{- else }}
+    secretName: {{ template "fullname" . }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- $root := . }}
+  {{- $port := .Values.service.externalPort}}
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "fullname" $root }}
+              servicePort: {{ $port }}
+  {{- end }}

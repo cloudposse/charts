@@ -1,0 +1,61 @@
+# Default values for dex.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#################################### REQUIRED CONFIGURATION ############################################################
+define:
+  - &HOST            ""                   # Dex host name
+  - &TLS             "false"              # Use https
+  - &GITHUB_ID       ""                   # Github id
+  - &GITHUB_SECRET   ""                   # Github secret
+  - &ADMIN_EMAIL     "admin@example.com"  # Admin email
+  - &ADMIN_USERNAME  ""                   # Admin user name
+  - &ADMIN_HASH      ""                   # Admin password hash encrypted with bcrypt (use https://www.dailycred.com/article/bcrypt-calculator)
+
+####################################### Developer configs ##############################################################
+
+replicaCount: 1
+
+dex:
+  mockCallback: true
+  github:
+    сlientID: *GITHUB_ID
+    clientSecret: *GITHUB_SECRET
+  staticPassword:
+    email: *ADMIN_EMAIL
+    # bcrypt hash of the string "password" (use https://www.dailycred.com/article/bcrypt-calculator)
+    hash: *ADMIN_HASH
+    username: *ADMIN_USERNAME
+# Uncomment to connect google oauth
+#  oidc:
+#    id: "google"
+#    issuer: "https://accounts.google.com"
+#    clientID: ""
+#    clientSecret: ""
+
+image:
+  repository: quay.io/coreos/dex
+  tag: v2.4.0
+  pullPolicy: IfNotPresent
+service:
+  name: dex
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - *HOST
+  tls:
+    enabled: *TLS
+    secretName: ""
