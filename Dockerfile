@@ -8,19 +8,9 @@ WORKDIR /charts
 
 ENV CURRENT_REPO_URL=
 
-RUN set -ex \
-      && apk update \
-      && apk add --no-cache \
-          curl \
-          git \
-          make \
-          bash \
-      && make init \
-      && make helm:install \
-      && make helm:repo:add-remote \
-      && make helm:repo:build REPO_NAME=demo \
-      && make helm:repo:build REPO_NAME=incubator \
-      && make helm:repo:build REPO_NAME=stable ;
+## Do not pack charts inside of container until this bug would be solved
+## https://github.com/moby/moby/issues/22260
+## https://github.com/kubernetes/helm/blob/master/pkg/downloader/manager.go#L220
 
 EXPOSE 8879
 

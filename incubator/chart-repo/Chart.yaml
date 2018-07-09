@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Helm repo (private/public) with protected push gateway
+name: chart-repo
+version: 0.2.1

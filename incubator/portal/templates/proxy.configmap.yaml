@@ -1,0 +1,50 @@
+{{- $basehost := .Values.config.basehost -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "portal.proxy.fullname" . }}
+  labels:
+{{ include "portal.proxy.labels.standard" . | indent 4 }}
+data:
+  traefik.toml: |-
+    # traefik.toml
+    defaultEntryPoints = ["http"]
+
+    InsecureSkipVerify=true
+
+    [entryPoints]
+      [entryPoints.http]
+      address = ":{{ .Values.proxy.service.internalPort }}"
+
+    [api]
+
+    [ping]
+
+    [file]
+      filename = "/config/rules.toml"
+
+  rules.toml: |-
+    [backends]
+{{ range $name, $value := .Values.backends }}
+{{ if not $value.external }}
+      [backends.{{ $name }}]
+        [backends.{{ $name }}.servers]
+          [backends.{{ $name }}.servers.server0]
+            url = {{ $value.endpoint | quote }}
+{{ end }}
+{{ end }}
+
+    [frontends]
+{{ range $name, $value := .Values.backends }}
+{{ if not $value.external }}
+      [frontends.{{ $name }}]
+        entryPoints = ["http"]
+        backend = {{ $name | quote }}
+        passHostHeader = true
+
+        [frontends.{{ $name }}.routes]
+          [frontends.{{ $name }}.routes.route0]
+            rule = {{ printf "Host: %s.%s" $name $basehost | quote }}
+{{ end }}
+{{ end }}

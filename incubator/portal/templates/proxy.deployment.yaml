@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "portal.proxy.fullname" . }}
+  annotations:
+{{ toYaml .Values.proxy.deployment.annotations | indent 4 }}
+  labels:
+{{ include "portal.proxy.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.proxy.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      name: {{ include "portal.proxy.fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/proxy.configmap.yaml") . | sha256sum }}
+{{ toYaml .Values.proxy.deployment.replicas.annotations | indent 8 }}
+      labels:
+        app: {{ template "portal.proxy.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: proxy
+        image: {{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}
+        imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+        args:
+          - --configFile=/config/traefik.toml
+        ports:
+        - containerPort: {{ .Values.proxy.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        resources:
+{{ toYaml .Values.proxy.resources | indent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "portal.proxy.fullname" . }}

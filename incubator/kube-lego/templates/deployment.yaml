@@ -12,7 +12,7 @@ spec:
 # This label should be hardcoded https://github.com/jetstack/kube-lego/issues/25
         app: "kube-lego"
       annotations:
-        checksum/config: {{ include (print $.Chart.Name "/templates/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}

@@ -7,11 +7,13 @@ define:
   - &IAM_DEFAULT_ROLE ""   # Default role
 
 kube2iam:
+  verbose: false
+
   extraArgs:
     base-role-arn: *IAM_BASE_ROLE_ARN
     default-role: *IAM_DEFAULT_ROLE
-  #   api-server: ...
-  #   api-token: ...
+    #   api-server: ...
+    #   api-token: ...
 
   host:
     ip: $(HOST_IP)
@@ -20,8 +22,14 @@ kube2iam:
 
   image:
     repository: jtblin/kube2iam
-    tag: 0.4.0
+    tag: 0.7.0
     pullPolicy: IfNotPresent
+
+  # AWS Access keys to inject as environment variables
+  aws:
+    secret_key: ""
+    access_key: ""
+    region: ""
 
   ## Node labels for pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -32,6 +40,17 @@ kube2iam:
   ##
   podAnnotations: {}
 
+  podLabels: {}
+
+  rbac:
+    ## If true, create & use RBAC resources
+    ##
+    create: false
+
+    ## Ignored if rbac.create is true
+    ##
+    serviceAccountName: default
+
   resources:
     limits:
       cpu: 4m
@@ -40,4 +59,11 @@ kube2iam:
       cpu: 4m
       memory: 16Mi
 
+  ## Strategy for DaemonSet updates (requires Kubernetes 1.6+)
+  ## Ref: https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/
+  ##
+  updateStrategy: OnDelete
+
   verbose: false
+
+  tolerations: []

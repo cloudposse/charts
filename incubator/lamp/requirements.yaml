@@ -4,7 +4,7 @@ dependencies:
   version: "0.1.3"
   repository: "https://charts.cloudposse.com/incubator"
 - name: "vps"
-  version: "0.1.0"
+  version: "0.1.1"
   repository: "https://charts.cloudposse.com/incubator"
 - name: "mysql"
   version: "0.2.4"

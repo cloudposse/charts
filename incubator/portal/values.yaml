@@ -1,0 +1,179 @@
+---
+backends:
+  dashboard:
+    name: "Kubernetes"
+    endpoint: "http://example.com"
+    external: false
+
+config:
+  title: "Cloud Portal"
+  brand: "Cloud Portal"
+  description: "Cloud Portal"
+  image:
+    favicon: https://cloudposse.com/wp-content/uploads/sites/29/2016/04/favicon-152.png
+    url: https://raw.githubusercontent.com/cloudposse/helm-chart-scaffolding/master/logo.png
+    width: 45
+  basehost:
+
+dashboard:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: latest
+    pullPolicy: Always
+    pullSecrets:
+  deployment:
+    ## Deployment annotations
+    annotations:
+      for: bar
+    replicas:
+    ## Replicas annotations
+      annotations:
+        for: bar
+    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #     iam.amazonaws.com/role: role-arn
+  service:
+    externalPort: 80
+    internalPort: 80
+    # annotations:
+    #   foo.io/bar: "true"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 80m
+      memory: 64Mi
+
+proxy:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: traefik
+    tag: 1.5.4
+    pullPolicy: Always
+    pullSecrets:
+  deployment:
+    ## Deployment annotations
+    annotations:
+      for: bar
+    replicas:
+    ## Replicas annotations
+      annotations:
+        for: bar
+    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #     iam.amazonaws.com/role: role-arn
+  service:
+    externalPort: 80
+    internalPort: 80
+    # annotations:
+    #   foo.io/bar: "true"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 80m
+      memory: 64Mi
+
+oauth2-proxy:
+  app:
+    useSSL: false
+    backends:
+      - file:///dev/null
+
+    provider: "github"
+
+  # Common oauth configs
+    clientID:
+    clientSecret:
+    scope:
+    redirectUrl:
+
+  # Github specific configs
+    githubOrg:
+    githubTeam:
+
+  # Github or Gitlab specific configs
+    loginUrl:
+    redeemUrl:
+    validateUrl:
+
+  # MS Azure specific configs
+    azureTenant:
+    resource:
+
+  # Google specific configs
+    googleGroups:
+  #      - "group"
+    googleAdminEmail:
+    googleServiceAccountJson:
+
+  # HTTP auth configs
+    basicAuthPassword:
+    displayHtpasswdForm:
+    htpasswdFile:
+
+  # Email filters
+    emailDomains:
+      - "*"
+    emails:
+  #      - igor@cloudposse.com
+
+  # OAuth2 proxy configs
+    approvalPrompt:
+    requestLogging: false
+    passAccessToken: false
+    passBasicAuth: false
+    passHostHeader: true
+    customTemplatesDir:
+    proxyPrefix:
+    skipAuthRegex:
+  #	  - ".*"
+    skipProviderButton:
+    profileUrl:
+    signatureKey:
+
+  # OAuth2 proxy session cookie config
+    cookieName:
+    cookieSecret:
+    cookieDomain:
+    cookieExpire:
+    cookieRefresh:
+    cookieSecure: false
+    cookieHttponly: false
+
+  replicaCount: 1
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: 2.2
+    pullPolicy: Always
+  service:
+    name: oauth
+    type: ClusterIP
+    http:
+      externalPort: 80
+      internalPort: 80
+    https:
+      externalPort: 443
+      internalPort: 443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+ingress:
+  enabled: true
+  dns:
+    enabled: true
+  tls:
+    enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+
+## Do not change. This is exported from subcharts values
+oauth2: {}
