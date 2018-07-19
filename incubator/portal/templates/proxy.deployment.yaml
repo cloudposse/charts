@@ -1,3 +1,4 @@
+{{- if .Values.proxy.enabled -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -53,3 +54,5 @@ spec:
       - name: config
         configMap:
           name: {{ include "portal.proxy.fullname" . }}
+{{ end }}
+

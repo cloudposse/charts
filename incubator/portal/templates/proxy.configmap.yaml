@@ -1,3 +1,4 @@
+{{- if .Values.proxy.enabled -}}
 {{- $basehost := .Values.config.basehost -}}
 ---
 apiVersion: v1
@@ -46,5 +47,6 @@ data:
         [frontends.{{ $name }}.routes]
           [frontends.{{ $name }}.routes.route0]
             rule = {{ printf "Host: %s.%s" $name $basehost | quote }}
+{{ end }}
 {{ end }}
 {{ end }}

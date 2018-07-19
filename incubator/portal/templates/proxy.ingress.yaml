@@ -1,3 +1,4 @@
+{{- if .Values.proxy.enabled -}}
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
@@ -61,4 +62,5 @@ spec:
 
 {{- end -}}
 {{- end -}}
+{{- end }}
 {{- end }}
