@@ -45,6 +45,6 @@ data:
 
         [frontends.{{ $name }}.routes]
           [frontends.{{ $name }}.routes.route0]
-            rule = {{ printf "Host: %s.%s" $name $basehost | quote }}
+            rule = {{ printf ("Host: " + .Values.config.hostnameFormat) $name $basehost | quote }}
 {{ end }}
 {{ end }}

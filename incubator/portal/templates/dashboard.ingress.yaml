@@ -9,12 +9,12 @@ metadata:
   name: {{ include "common.fullname" $root }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" . }}
-    ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" . }}
+    # https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md#external-authentication
     nginx.ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" . }}
     nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" . }}
 
 {{- if $root.Values.ingress.dns.enabled }}
+    # route53-kubernetes annotation
     domainName: {{ $root.Values.config.basehost | quote }}
 {{- end }}
 
@@ -27,6 +27,7 @@ metadata:
 {{ include "common.labels.standard" $root | indent 4 }}
 
 {{- if $root.Values.ingress.dns.enabled }}
+    # route53-kubernetes label
     dns: "route53"
 {{- end }}
 

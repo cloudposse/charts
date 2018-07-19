@@ -3,6 +3,7 @@
 {{- $root := . -}}
 {{- $serviceName := include "portal.proxy.fullname" . -}}
 {{- $basehost := .Values.config.basehost -}}
+{{- $hostnameFormat := .Values.config.hostnameFormat -}}
 
 {{ range $name, $value := .Values.backends }}
 {{ if not $value.external }}
@@ -13,7 +14,7 @@ metadata:
   name: {{ include "portal.proxy.fullname" $root }}-{{ $name }}-oauth
 spec:
   rules:
-  - host: {{ printf "%s.%s" $name $basehost  | quote }}
+  - host: {{ printf $hostnameFormat $name $basehost  | quote }}
     http:
       paths:
       - path: /oauth2
@@ -25,7 +26,7 @@ spec:
   tls:
   - secretName: {{ $serviceName }}-{{ $name }}-tls
     hosts:
-    - {{ printf "%s.%s" $name $basehost  | quote }}
+    - {{ printf $hostnameFormat $name $basehost  | quote }}
 {{- end -}}
 
 {{- end -}}
