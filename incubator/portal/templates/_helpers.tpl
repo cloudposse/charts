@@ -30,7 +30,7 @@ Create a default fully qualified oauth2-proxy name.
 {/*
 Schema
 */}}
-{{- define "portal.schema" -}}
+{{- define "portal.scheme" -}}
 {{- if .Values.ingress.tls.enabled -}}
 {{- printf "https" -}}
 {{- else -}}
@@ -43,21 +43,21 @@ Schema
 External auth auth-url endpoint
 */}}
 {{- define "portal.auth-url" -}}
-{{- printf "%s://$host/oauth2/auth" (include "portal.schema" . ) -}}
+{{- printf "%s://$host/oauth2/auth" (include "portal.scheme" . ) -}}
 {{- end -}}
 
 {/*
 External auth auth-signin endpoint
 */}}
 {{- define "portal.auth-signin" -}}
-{{- printf "%s://$host/oauth2/start" (include "portal.schema" . ) -}}
+{{- printf "%s://$host/oauth2/start" (include "portal.scheme" . ) -}}
 {{- end -}}
 
 {/*
 External auth auth-request-redirect endpoint
 */}}
 {{- define "portal.auth-request-redirect" -}}
-{{- printf "%s://$host/" (include "portal.schema" . ) -}}
+{{- printf "%s://$host/" (include "portal.scheme" . ) -}}
 {{- end -}}
 
 {{- /*
