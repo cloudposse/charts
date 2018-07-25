@@ -2,7 +2,9 @@
 backends:
   dashboard:
     name: "Kubernetes"
-    endpoint: "http://example.com"
+    externalName: "kubernetes-dashboard.kube-system.svc.cluster.local"
+    servicePort: 443
+    tls: true
     external: false
 
 config:
@@ -13,6 +15,7 @@ config:
     favicon: https://cloudposse.com/wp-content/uploads/sites/29/2016/04/favicon-152.png
     url: https://raw.githubusercontent.com/cloudposse/helm-chart-scaffolding/master/logo.png
     width: 45
+  hostnameFormat: "%s.%s"
   basehost:
 
 dashboard:
@@ -167,8 +170,6 @@ oauth2-proxy:
 
 ingress:
   enabled: true
-  dns:
-    enabled: true
   tls:
     enabled: false
   annotations:
