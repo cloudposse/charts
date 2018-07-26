@@ -6,6 +6,15 @@ backends:
     servicePort: 443
     tls: true
     external: false
+  grafana:
+    name: "Grafana"
+    serviceName: "kube-prometheus"
+    servicePort: 80
+    external: false
+  docs:
+    name: "Docs"
+    endpoint: "https://docs.cloudposse.com"
+    external: true
 
 config:
   title: "Cloud Portal"
@@ -13,7 +22,7 @@ config:
   description: "Cloud Portal"
   image:
     favicon: https://cloudposse.com/wp-content/uploads/sites/29/2016/04/favicon-152.png
-    url: https://raw.githubusercontent.com/cloudposse/helm-chart-scaffolding/master/logo.png
+    url: https://cloudposse.com/wp-content/uploads/sites/29/2018/07/cloudposse-cloud.svg
     width: 45
   hostnameFormat: "%s.%s"
   basehost:
@@ -28,44 +37,13 @@ dashboard:
   deployment:
     ## Deployment annotations
     annotations:
-      for: bar
+      foo: bar
     replicas:
     ## Replicas annotations
       annotations:
-        for: bar
-    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #     iam.amazonaws.com/role: role-arn
-  service:
-    externalPort: 80
-    internalPort: 80
-    # annotations:
-    #   foo.io/bar: "true"
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 80m
-      memory: 64Mi
-
-proxy:
-  enabled: true
-  replicaCount: 1
-  image:
-    repository: traefik
-    tag: 1.5.4
-    pullPolicy: Always
-    pullSecrets:
-  deployment:
-    ## Deployment annotations
-    annotations:
-      for: bar
-    replicas:
-    ## Replicas annotations
-      annotations:
-        for: bar
-    ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #     iam.amazonaws.com/role: role-arn
+        foo: bar
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #   iam.amazonaws.com/role: role-arn
   service:
     externalPort: 80
     internalPort: 80
@@ -174,7 +152,6 @@ ingress:
     enabled: false
   annotations:
     kubernetes.io/ingress.class: nginx
-
 
 ## Do not change. This is exported from subcharts values
 oauth2: {}
