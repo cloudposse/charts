@@ -1,30 +1,39 @@
 {{- if .Values.ingress.enabled -}}
 
 {{- $root := . -}}
-{{- $servicePort := .Values.proxy.service.externalPort -}}
-{{- $serviceName := include "portal.proxy.fullname" . -}}
+{{- $serviceName := include "common.fullname" . -}}
 
 {{- $basehost := .Values.config.basehost -}}
 
 {{ range $name, $value := .Values.backends }}
 {{ if not $value.external }}
+
+{{ if $value.externalName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  type: ExternalName
+  externalName: {{ $value.externalName | quote }}
+{{ end }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "portal.proxy.fullname" $root }}-{{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" $root }}
-    ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" $root }}
-    ingress.kubernetes.io/auth-request-redirect: {{ template "portal.auth-request-redirect" $root }}
     nginx.ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" $root }}
     nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" $root }}
     nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "portal.auth-request-redirect" $root }}
-
-{{- if $root.Values.ingress.dns.enabled }}
-    domainName: {{ printf "%s.%s" $name $basehost  | quote }}
-{{- end }}
+{{ if $value.tls }}
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+    nginx.ingress.kubernetes.io/server-snippet: "proxy_ssl_verify off;"
+{{ end }}
 
 {{- if $root.Values.ingress.annotations }}
 {{ toYaml $root.Values.ingress.annotations | indent 4 }}
@@ -38,25 +47,24 @@ metadata:
 {{ toYaml $root.Values.ingress.labels | indent 4 }}
 {{- end }}
 
-{{- if $root.Values.ingress.dns.enabled }}
-    dns: "route53"
-{{- end }}
-
 spec:
   rules:
-  - host: {{ printf "%s.%s" $name $basehost  | quote }}
+  - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ $serviceName }}
-          servicePort: {{ $servicePort }}
-
+{{ if $value.externalName }}
+          serviceName: {{ include "common.fullname" $root }}-{{ $name }}
+{{ else }}
+          serviceName: {{ $value.serviceName }}
+{{ end }}
+          servicePort: {{ $value.servicePort }}
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
   - secretName: {{ $serviceName }}-{{ $name }}-tls
     hosts:
-    - {{ printf "%s.%s" $name $basehost  | quote }}
+    - {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
 {{- end -}}
 
 {{- end -}}
