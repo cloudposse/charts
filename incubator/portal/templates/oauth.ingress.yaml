@@ -11,6 +11,12 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $serviceName }}-{{ $name }}-oauth
+  annotations:
+
+{{- if $root.Values.ingress.annotations }}
+{{ toYaml $root.Values.ingress.annotations | indent 4 }}
+{{- end }}
+
 spec:
   rules:
   - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}

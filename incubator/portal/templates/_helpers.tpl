@@ -32,7 +32,7 @@ External auth auth-url endpoint
 External auth auth-signin endpoint
 */}}
 {{- define "portal.auth-signin" -}}
-{{- printf "%s://$host/oauth2/start" (include "portal.scheme" . ) -}}
+{{- printf "%s://$host/oauth2/start?rd=$request_uri" (include "portal.scheme" . ) -}}
 {{- end -}}
 
 {/*
