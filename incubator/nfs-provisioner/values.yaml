@@ -6,6 +6,7 @@ defaultClass: false
 #serviceIp:
 persistence:
   enabled: true
+  storageClass: generic
   accessMode: ReadWriteOnce
   size: 8Gi
 volume:

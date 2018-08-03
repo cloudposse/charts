@@ -37,7 +37,7 @@ The following tables lists the configurable parameters of the etcd chart and the
 | `storageClass`             | The provisioner storage Class          | `local-nfs`                                                |
 | `defaultClass`             | Set-up as default class                | `false`                                                    |
 | `serviceIp`                | Setup the service ip                   | ``                                                         |
-| `persistence.storageClass` | Storage class of backing PVC           | `nil`                                                      |
+| `persistence.storageClass` | Storage class of backing PVC           | `generic`                                                      |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
