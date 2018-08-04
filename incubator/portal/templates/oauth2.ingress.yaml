@@ -10,7 +10,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $serviceName }}-{{ $name }}-oauth
+  name: {{ $serviceName }}-{{ $name }}-oauth2
   annotations:
 
 {{- if $root.Values.ingress.annotations }}
