@@ -6,6 +6,13 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ include "common.fullname" $root }}-oauth2
+  annotations:
+    kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
+
+{{- if $root.Values.ingress.annotations }}
+{{ toYaml $root.Values.ingress.annotations | indent 4 }}
+{{- end }}
+
 spec:
   rules:
   - host: {{ $root.Values.config.basehost | quote }}
