@@ -1,17 +1,13 @@
-
 {{- if .Values.ingress.enabled -}}
-
 {{- $root := . -}}
 {{- $serviceName := include "common.fullname" . -}}
-{{- $basehost := .Values.config.basehost -}}
-{{ range $name, $value := .Values.backends }}
-{{ if not $value.external }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $serviceName }}-{{ $name }}-oauth2
+  name: {{ include "common.fullname" $root }}-oauth2
   annotations:
+    kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
 
 {{- if $root.Values.ingress.annotations }}
 {{ toYaml $root.Values.ingress.annotations | indent 4 }}
@@ -19,20 +15,18 @@ metadata:
 
 spec:
   rules:
-  - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
+  - host: {{ $root.Values.config.basehost | quote }}
     http:
       paths:
       - path: /oauth2
         backend:
           serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
           servicePort: {{ $root.Values.oauth2.externalPort }}
+
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
-  - secretName: {{ $serviceName }}-{{ $name }}-tls
+  - secretName: {{ $serviceName }}-tls
     hosts:
-    - {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
-{{- end -}}
-
+    - {{ $root.Values.config.basehost | quote }}
 {{- end -}}
 {{- end -}}
-{{- end }}
