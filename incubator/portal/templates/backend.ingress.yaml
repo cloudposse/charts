@@ -52,6 +52,10 @@ spec:
   - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
     http:
       paths:
+      - path: /oauth2
+        backend:
+          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
+          servicePort: {{ $root.Values.oauth2.externalPort }}
       - path: /
         backend:
 {{ if $value.externalName }}
@@ -60,10 +64,6 @@ spec:
           serviceName: {{ $value.serviceName }}
 {{ end }}
           servicePort: {{ $value.servicePort }}
-      - path: /oauth2
-        backend:
-          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
-          servicePort: {{ $root.Values.oauth2.externalPort }}
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
   - secretName: {{ $serviceName }}-{{ $name }}-tls
