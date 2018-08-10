@@ -1,0 +1,110 @@
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: {{ include "common.fullname" . }}
+  annotations:
+{{ toYaml .Values.statefulset.annotations | indent 4 }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+spec:
+  serviceName: {{ include "common.fullname" . }}
+  replicas: 1
+  template:
+    metadata:
+      name: {{ include "common.fullname" . }}
+      annotations:
+{{ toYaml .Values.statefulset.replicas.annotations | indent 8 }}
+      labels:
+        app: {{ template "common.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullSecrets:
+{{ toYaml .Values.image.pullSecrets | indent 10 }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "common.fullname" . }}
+        env:
+{{- range $name, $value := .Values.env.open }}
+{{- if not (empty $value) }}
+        - name: {{ $name | quote }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+
+{{- $config_name := include "common.fullname" . }}
+{{- range $name, $value := .Values.env.open }}
+{{- if not ( empty $value) }}
+        - name: {{ $name | quote }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ $config_name }}
+              key: {{ $name | quote }}
+{{- end }}
+{{- end }}
+
+{{- $secret_name := include "common.fullname" . }}
+{{- range $name, $value := .Values.env.secret }}
+{{- if not ( empty $value) }}
+        - name: {{ $name | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $secret_name }}
+              key: {{ $name | quote }}
+{{- end }}
+{{- end }}
+
+        args: {}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /data
+          name: storage
+        - mountPath: /config
+          name: config
+        - mountPath: /secret
+          name: secret
+          readOnly: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      volumes:
+      - name: storage
+      {{- if .Values.persistence.Enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.ExistingClaim | default (include "common.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+
+      - name: config
+        configMap:
+          # Provide the name of the ConfigMap containing the files you want
+          # to add to the container
+          name: {{ include "common.fullname" . }}
+          items:
+          - key: special.level
+            path: keys
+
+      - name: secret
+        secret:
+          secretName: {{ include "common.fullname" . }}
+          defaultMode: 256
+          items:
+          - key: username
+            path: my-group/my-username

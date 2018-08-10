@@ -1,0 +1,108 @@
+replicaCount: 1
+image:
+  repository: nginx
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+  pullSecrets:
+config:
+#   name: value
+env:
+  open:
+    ENV_NAME: ENV_VALUE
+  secret:
+    SECRET_ENV_NAME: SECRET_ENV_VALUE
+deployment:
+  ## Deployment annotations
+  # annotations:
+  #   name: value
+  replicas:
+  ## Replicas annotations
+  #   annotations:
+  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+  #     iam.amazonaws.com/role: role-arn
+statefulset:
+  ## Statefulset annotations
+  # annotations:
+  #   name: value
+  replicas:
+  ## Replicas annotations
+  #   annotations:
+  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+  #     iam.amazonaws.com/role: role-arn
+daemonset:
+  ## Deamonset annotations
+  # annotations:
+  #   name: value
+  pod:
+  ## Pod annotations
+  #   annotations:
+  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+  #     iam.amazonaws.com/role: role-arn
+job:
+  ## Job annotations
+  # annotations:
+  #   name: value
+  pod:
+  ## Pod annotations
+  #   annotations:
+  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+  #     iam.amazonaws.com/role: role-arn
+service:
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
+  # annotations:
+  #   foo.io/bar: "true"
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 80m
+    memory: 64Mi
+persistence:
+  Enabled: false
+  AccessMode: ReadWriteOnce
+  Size: 8Gi
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # ExistingClaim:
+
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # StorageClass: "-"
+
+## Ingress for load balancer
+# ingress:
+# - name: "default"
+## Ingress labels
+##
+#   labels:
+#     dns: "route53"
+
+## Ingress annotations
+##
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     kubernetes.io/tls-acme: "true"
+
+## Ingress hostnames
+## Must be provided if Ingress is enabled
+##
+#   hosts:
+#     "domain.com": /
+#     "www.domain.com": /
+
+## Ingress TLS configuration
+## Secrets must be manually created in the namespace
+##
+#   tls:
+#   - secretName: server-tls
+#     hosts:
+#     - domain.com
