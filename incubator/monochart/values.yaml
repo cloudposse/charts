@@ -66,13 +66,13 @@ resources:
     cpu: 80m
     memory: 64Mi
 persistence:
-  Enabled: false
-  AccessMode: ReadWriteOnce
-  Size: 8Gi
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 8Gi
   ## A manually managed Persistent Volume and Claim
   ## Requires Persistence.Enabled: true
   ## If defined, PVC must be created manually before volume will be bound
-  # ExistingClaim:
+  # existingClaim:
 
   ## Data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -81,7 +81,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # StorageClass: "-"
+  # storageClass: "-"
 
 ## Ingress for load balancer
 # ingress:
