@@ -1,3 +1,3 @@
-# Helm Chart Scaffolding
+# Monochart
 
-Use this chart when creating new charts to make it easy to get up and running quickly. 
+A declarative helm chart for deploying common types of services on kubernetes.
