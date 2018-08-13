@@ -1,3 +1,4 @@
+{{- if .Values.daemonset.enabled -}}
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -105,3 +106,4 @@ spec:
           items:
           - key: username
             path: my-group/my-username
+{{- end -}}

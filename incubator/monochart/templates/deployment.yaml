@@ -1,3 +1,4 @@
+{{- if .Values.deployment.enabled -}}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -26,7 +27,7 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         imagePullSecrets:
 {{ toYaml .Values.image.pullSecrets | indent 10 }}
@@ -113,3 +114,4 @@ spec:
           items:
           - key: username
             path: my-group/my-username
+{{- end -}}

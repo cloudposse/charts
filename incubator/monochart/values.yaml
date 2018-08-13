@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
-  repository: nginx
-  tag: 0.1.0
+  # repository: ""
+  # tag: ""
   pullPolicy: IfNotPresent
   pullSecrets:
 config:
@@ -12,6 +12,7 @@ env:
   secret:
     SECRET_ENV_NAME: SECRET_ENV_VALUE
 deployment:
+  enabled: true
   ## Deployment annotations
   # annotations:
   #   name: value
@@ -21,6 +22,7 @@ deployment:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
   #     iam.amazonaws.com/role: role-arn
 statefulset:
+  enabled: true
   ## Statefulset annotations
   # annotations:
   #   name: value
@@ -30,6 +32,7 @@ statefulset:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
   #     iam.amazonaws.com/role: role-arn
 daemonset:
+  enabled: true
   ## Deamonset annotations
   # annotations:
   #   name: value
@@ -39,6 +42,7 @@ daemonset:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
   #     iam.amazonaws.com/role: role-arn
 job:
+  enabled: true
   ## Job annotations
   # annotations:
   #   name: value
@@ -48,6 +52,7 @@ job:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
   #     iam.amazonaws.com/role: role-arn
 service:
+  enabled: true
   type: ClusterIP
   externalPort: 8080
   internalPort: 8080
