@@ -6,12 +6,6 @@ metadata:
 rules:
 - apiGroups:
   - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - ""
   - "extensions"
   resources:
   - endpoints
