@@ -1,5 +1,5 @@
 image: quay.io/kubernetes_incubator/nfs-provisioner
-imageTag: v1.0.3
+imageTag: v1.0.9
 provisionerName: "cluster.local/nfs"
 storageClass: local-nfs
 defaultClass: false
