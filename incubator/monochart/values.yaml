@@ -3,7 +3,9 @@ image:
   # repository: ""
   # tag: ""
   pullPolicy: IfNotPresent
-  pullSecrets:
+  # pullSecrets:
+  #   - "docker-secret-1"
+  #   - "docker-secret-2"
 config:
 #   name: value
 env:

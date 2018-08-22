@@ -24,8 +24,6 @@ spec:
       - name: {{ .Chart.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        imagePullSecrets:
-{{ toYaml .Values.image.pullSecrets | indent 10 }}
         envFrom:
         - configMapRef:
             name: {{ include "common.fullname" . }}
@@ -84,6 +82,12 @@ spec:
           readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+{{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range . }}
+        - name: {{ . }}
+      {{- end }}
+{{- end }}
       volumes:
       - name: storage
       {{- if .Values.persistence.Enabled }}
