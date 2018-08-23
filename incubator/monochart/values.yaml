@@ -18,7 +18,7 @@ deployment:
   ## Deployment annotations
   # annotations:
   #   name: value
-  replicas:
+  pod:
   ## Replicas annotations
   #   annotations:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
@@ -28,8 +28,8 @@ statefulset:
   ## Statefulset annotations
   # annotations:
   #   name: value
-  replicas:
-  ## Replicas annotations
+  pod:
+  ## Pod annotations
   #   annotations:
   ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
   #     iam.amazonaws.com/role: role-arn

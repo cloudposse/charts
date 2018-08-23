@@ -14,7 +14,7 @@ spec:
     metadata:
       name: {{ include "common.fullname" . }}
       annotations:
-{{ toYaml .Values.statefulset.replicas.annotations | indent 8 }}
+{{ toYaml .Values.statefulset.pod.annotations | indent 8 }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}

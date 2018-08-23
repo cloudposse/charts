@@ -20,7 +20,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-{{ toYaml .Values.deployment.replica.annotations | indent 8 }}
+{{ toYaml .Values.deployment.pod.annotations | indent 8 }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}
