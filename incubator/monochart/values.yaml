@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
-  # repository: ""
-  # tag: ""
+  repository: scratch
+  tag: latest
   pullPolicy: IfNotPresent
   # pullSecrets:
   #   - "docker-secret-1"
