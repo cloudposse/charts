@@ -3,20 +3,20 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: {{ include "common.fullname" . }}
-{{- if .Values.daemonset.annotations }}
+{{- with .Values.daemonset.annotations -}}
   annotations:
-{{ toYaml .Values.daemonset.annotations | indent 4 }}
-{{- end }}
+{{ toYaml . | indent 4 }}
+{{- end -}}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
-{{- if .Values.daemonset.pod.annotations }}
+{{- with .Values.daemonset.pod.annotations -}}
       annotations:
-{{ toYaml .Values.daemonset.pod.annotations | indent 8 }}
-{{- end }}
+{{ toYaml . | indent 8 }}
+{{- end -}}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}

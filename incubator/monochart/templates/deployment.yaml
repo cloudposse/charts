@@ -3,10 +3,10 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ include "common.fullname" . }}
-{{- if .Values.deployment.annotations }}
+{{- with .Values.deployment.annotations -}}
   annotations:
-{{ toYaml .Values.deployment.annotations | indent 4 }}
-{{- end }}
+{{ toYaml . | indent 4 }}
+{{- end -}}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
@@ -22,9 +22,9 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-{{- if .Values.deployment.pod.annotations }}
-{{ toYaml .Values.deployment.pod.annotations | indent 8 }}
-{{- end }}
+{{- with .Values.deployment.pod.annotations -}}
+{{ toYaml . | indent 8 }}
+{{- end -}}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}
