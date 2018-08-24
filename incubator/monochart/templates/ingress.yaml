@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- $servicePort := .Values.service.externalPort -}}
+{{- $servicePort := .Values.service.port -}}
 {{- $serviceName := include "common.labels.standard" . -}}
 {{- range .Values.ingress }}
 ---

@@ -56,10 +56,18 @@ job:
 service:
   enabled: true
   type: ClusterIP
-  externalPort: 8080
-  internalPort: 8080
-  # annotations:
+  port: 80
+  annotations: {}
   #   foo.io/bar: "true"
+probes:
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
 resources:
   limits:
     cpu: 100m
