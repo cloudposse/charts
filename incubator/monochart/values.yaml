@@ -7,7 +7,7 @@ image:
   #   - "docker-secret-1"
   #   - "docker-secret-2"
 config:
-#   name: value
+  # name: value
 env:
   open:
     ENV_NAME: ENV_VALUE
@@ -16,43 +16,43 @@ env:
 deployment:
   enabled: true
   ## Deployment annotations
-  # annotations:
-  #   name: value
+  annotations: {}
+    # name: value
   pod:
-  ## Replicas annotations
-  #   annotations:
-  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-  #     iam.amazonaws.com/role: role-arn
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
 statefulset:
   enabled: true
   ## Statefulset annotations
-  # annotations:
-  #   name: value
+  annotations: {}
+    # name: value
   pod:
-  ## Pod annotations
-  #   annotations:
-  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-  #     iam.amazonaws.com/role: role-arn
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
 daemonset:
   enabled: true
   ## Deamonset annotations
-  # annotations:
-  #   name: value
+  annotations: {}
+    # name: value
   pod:
-  ## Pod annotations
-  #   annotations:
-  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-  #     iam.amazonaws.com/role: role-arn
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
 job:
   enabled: true
   ## Job annotations
-  # annotations:
-  #   name: value
+  annotations: {}
+    # name: value
   pod:
-  ## Pod annotations
-  #   annotations:
-  ##    Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-  #     iam.amazonaws.com/role: role-arn
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
 service:
   enabled: true
   type: ClusterIP
