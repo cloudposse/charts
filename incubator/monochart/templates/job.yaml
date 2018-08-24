@@ -3,8 +3,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "common.fullname" . }}
+{{- if .Values.job.annotations }}
   annotations:
 {{ toYaml .Values.job.annotations | indent 4 }}
+{{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
@@ -12,8 +14,10 @@ spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
+{{- if .Values.job.pod.annotations }}
       annotations:
 {{ toYaml .Values.job.pod.annotations | indent 8 }}
+{{- end }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}

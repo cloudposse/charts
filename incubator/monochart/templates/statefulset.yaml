@@ -3,8 +3,10 @@ kind: StatefulSet
 apiVersion: apps/v1beta1
 metadata:
   name: {{ include "common.fullname" . }}
+{{- if .Values.statefulset.annotations }}
   annotations:
 {{ toYaml .Values.statefulset.annotations | indent 4 }}
+{{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
@@ -13,8 +15,10 @@ spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
+{{- if .Values.statefulset.pod.annotations }}
       annotations:
 {{ toYaml .Values.statefulset.pod.annotations | indent 8 }}
+{{- end }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}
