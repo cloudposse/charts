@@ -5,4 +5,4 @@ metadata:
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 data:
-{{ toYaml (merge .Values.configMap.env .Values.configMap.files) | indent 2 }}
+{{ toYaml (merge (merge (dict) .Values.configMap.env) .Values.configMap.files) | indent 2 }}

@@ -13,7 +13,7 @@ envFrom:
 env:
 {{- range $name, $value := .Values.env }}
 {{- if not (empty $value) }}
-{{ include "common.envvar.value" $name $value }}
+{{ include "common.envvar.value" (list $name $value) | indent 2 }}
 {{- end }}
 {{- end }}
 
@@ -21,7 +21,7 @@ env:
 {{- $configMapName := include "common.fullname" . }}
 {{- range $name, $value := .Values.configMap.env }}
 {{- if not ( empty $value) }}
-{{ include "common.envvar.configmap" $name $configMapName $name  }}
+{{ include "common.envvar.configmap" (list $name $configMapName $name) | indent 2  }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -30,7 +30,7 @@ env:
 {{- $secretName := include "common.fullname" . }}
 {{- range $name, $value := .Values.secret.env }}
 {{- if not ( empty $value) }}
-{{ include "common.envvar.secret" $name $secretName $name  }}
+{{ include "common.envvar.secret" (list $name $secretName $name) | indent 2  }}
 {{- end }}
 {{- end }}
 {{- end }}
