@@ -12,6 +12,11 @@ metadata:
 spec:
   serviceName: {{ include "common.fullname" . }}
   replicas: 1
+{{- with .Values.statefulset.strategy }}
+  updateStrategy:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  revisionHistoryLimit: {{ .Values.statefulset.revisionHistoryLimit }}
   template:
     metadata:
       name: {{ include "common.fullname" . }}

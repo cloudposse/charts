@@ -15,6 +15,10 @@ env:
     SECRET_ENV_NAME: SECRET_ENV_VALUE
 deployment:
   enabled: true
+  ## Deployment pods replace strategy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # strategy: {}    
+  revisionHistoryLimit: 10
   ## Deployment annotations
   annotations: {}
     # name: value
@@ -25,6 +29,10 @@ deployment:
     #  iam.amazonaws.com/role: role-arn
 statefulset:
   enabled: true
+  ## StatefulSet pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
+  # strategy: {}    
+  revisionHistoryLimit: 10
   ## Statefulset annotations
   annotations: {}
     # name: value
@@ -35,6 +43,10 @@ statefulset:
     #  iam.amazonaws.com/role: role-arn
 daemonset:
   enabled: true
+  ## DaemonSet pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
+  # strategy: {}    
+  revisionHistoryLimit: 10
   ## Deamonset annotations
   annotations: {}
     # name: value
