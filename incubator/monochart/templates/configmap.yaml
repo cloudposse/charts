@@ -5,6 +5,4 @@ metadata:
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 data:
-{{/* TODO merge objects */}}
-{{ toYaml .Values.configMap.env | indent 2 }}
-{{ toYaml .Values.configMap.files | indent 2 }}
+{{ toYaml (merge .Values.configMap.env .Values.configMap.files) | indent 2 }}

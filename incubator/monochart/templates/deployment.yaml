@@ -26,45 +26,14 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
-        app: {{ template "common.name" . }}
+        app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "common.fullname" . }}
-        env:
-{{- range $name, $value := .Values.env.open }}
-{{- if not (empty $value) }}
-        - name: {{ $name | quote }}
-          value: {{ $value | quote }}
-{{- end }}
-{{- end }}
-
-{{- $config_name := include "common.fullname" . }}
-{{- range $name, $value := .Values.env.open }}
-{{- if not ( empty $value) }}
-        - name: {{ $name | quote }}
-          valueFrom:
-            configMapKeyRef:
-              name: {{ $config_name }}
-              key: {{ $name | quote }}
-{{- end }}
-{{- end }}
-
-{{- $secret_name := include "common.fullname" . }}
-{{- range $name, $value := .Values.env.secret }}
-{{- if not ( empty $value) }}
-        - name: {{ $name | quote }}
-          valueFrom:
-            secretKeyRef:
-              name: {{ $secret_name }}
-              key: {{ $name | quote }}
-{{- end }}
-{{- end }}
+{{ include "monochart.env" . | indent 8 }}
         args: {}
         ports:
           - name: http
