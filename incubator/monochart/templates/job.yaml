@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "common.fullname" . }}
-{{- with .Values.job.annotations -}}
+{{- with .Values.job.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
@@ -92,8 +92,7 @@ spec:
           claimName: {{ .Values.persistence.ExistingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
-      {{- end -}}
-
+      {{- end }}
       - name: config
         configMap:
           # Provide the name of the ConfigMap containing the files you want

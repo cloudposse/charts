@@ -3,20 +3,20 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: {{ include "common.fullname" . }}
-{{- with .Values.daemonset.annotations -}}
+{{- with .Values.daemonset.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
-{{- end -}}
+{{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
-{{- with .Values.daemonset.pod.annotations -}}
+{{- with .Values.daemonset.pod.annotations }}
       annotations:
 {{ toYaml . | indent 8 }}
-{{- end -}}
+{{- end }}
       labels:
         app: {{ template "common.name" . }}
         release: {{ .Release.Name | quote }}
@@ -91,8 +91,7 @@ spec:
           claimName: {{ .Values.persistence.ExistingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
-      {{- end -}}
-
+      {{- end }}
       - name: config
         configMap:
           # Provide the name of the ConfigMap containing the files you want

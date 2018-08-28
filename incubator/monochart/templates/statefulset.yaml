@@ -3,10 +3,10 @@ kind: StatefulSet
 apiVersion: apps/v1beta1
 metadata:
   name: {{ include "common.fullname" . }}
-{{- with .Values.statefulset.annotations -}}
+{{- with .Values.statefulset.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
-{{- end -}}
+{{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
@@ -94,8 +94,7 @@ spec:
           claimName: {{ .Values.persistence.ExistingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
-      {{- end -}}
-
+      {{- end }}
       - name: config
         configMap:
           # Provide the name of the ConfigMap containing the files you want
