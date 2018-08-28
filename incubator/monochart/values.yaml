@@ -1,4 +1,5 @@
 replicaCount: 1
+
 image:
   repository: scratch
   tag: latest
@@ -6,13 +7,27 @@ image:
   # pullSecrets:
   #   - "docker-secret-1"
   #   - "docker-secret-2"
-config:
-  # name: value
+
+configMap:
+  enabled: true
+  # env:
+  #   ENV_NAME: ENV_VALUE
+  # files:
+  #    "/etc/ssl/test.crt": |-
+  #       ...
+
+secret:
+  enabled: true
+  # env:
+  #   ENV_NAME: ENV_VALUE
+  # files:
+  #    "/etc/ssl/test.crt": |-
+  #       ...
+
+# Inline environment
 env:
-  open:
-    ENV_NAME: ENV_VALUE
-  secret:
-    SECRET_ENV_NAME: SECRET_ENV_VALUE
+  # ENV_NAME: ENV_VALUE
+
 deployment:
   enabled: true
   ## Deployment pods replace strategy
@@ -27,6 +42,7 @@ deployment:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+
 statefulset:
   enabled: true
   ## StatefulSet pods replace strategy
@@ -41,6 +57,7 @@ statefulset:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+
 daemonset:
   enabled: true
   ## DaemonSet pods replace strategy
@@ -55,6 +72,7 @@ daemonset:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+
 job:
   enabled: true
   ## Job annotations
@@ -65,12 +83,14 @@ job:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+
 service:
   enabled: true
   type: ClusterIP
   port: 80
   annotations: {}
   #   foo.io/bar: "true"
+
 probes:
   livenessProbe:
     httpGet:
@@ -80,6 +100,7 @@ probes:
     httpGet:
       path: /
       port: http
+
 resources:
   limits:
     cpu: 100m
@@ -87,6 +108,7 @@ resources:
   requests:
     cpu: 80m
     memory: 64Mi
+
 persistence:
   enabled: false
   accessMode: ReadWriteOnce

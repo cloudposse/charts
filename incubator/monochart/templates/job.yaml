@@ -87,26 +87,20 @@ spec:
 {{- end }}
       volumes:
       - name: storage
-      {{- if .Values.persistence.Enabled }}
+      {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.ExistingClaim | default (include "common.fullname" .) }}
+          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
       {{- end }}
-      - name: config
+      {{- if .Values.configMap.enabled }}
+      - name: configMap
         configMap:
-          # Provide the name of the ConfigMap containing the files you want
-          # to add to the container
           name: {{ include "common.fullname" . }}
-          items:
-          - key: special.level
-            path: keys
-
+      {{- end }}
+      {{- if .Values.secret.enabled }}
       - name: secret
         secret:
           secretName: {{ include "common.fullname" . }}
-          defaultMode: 256
-          items:
-          - key: username
-            path: my-group/my-username
+      {{- end }}
 {{- end -}}
