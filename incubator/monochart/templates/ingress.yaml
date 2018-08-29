@@ -9,15 +9,15 @@ metadata:
   annotations:
 {{ toYaml .annotations | indent 4 }}
   labels:
-{{- if .labels }}
-{{ toYaml .labels | indent 4 }}
+{{- with .labels }}
+{{ toYaml . | indent 4 }}
 {{- end }}
 {{ include "common.labels.standard" $root | indent 4 }}
     ingressName: {{ .name }}
   name: {{ include "common.fullname" $root }}-{{ .name }}
 spec:
   rules:
-  {{- range $host, $path := .hosts }}
+{{- range $host, $path := .hosts }}
     - host: {{ $host }}
       http:
         paths:
@@ -25,9 +25,9 @@ spec:
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
-  {{- end -}}
-  {{- if .tls }}
+{{- end -}}
+{{- with .tls }}
   tls:
-{{ toYaml .tls | indent 4 }}
-  {{- end -}}
+{{ toYaml . | indent 4 }}
+{{- end -}}
 {{- end -}}
