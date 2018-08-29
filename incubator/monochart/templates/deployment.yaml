@@ -75,11 +75,11 @@ spec:
       {{- if .Values.configMap.enabled }}
       - name: configMap
         configMap:
-          name: {{ include "common.fullname" . }}
+          name: {{ include "monochart.files.fullname" . }}
       {{- end }}
       {{- if .Values.secret.enabled }}
       - name: secret
         secret:
-          secretName: {{ include "common.fullname" . }}
+          secretName: {{ include "monochart.files.fullname" . }}
       {{- end }}
 {{- end -}}

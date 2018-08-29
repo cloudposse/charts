@@ -1,8 +1,10 @@
 {{- if .Values.configMap.enabled -}}
+
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "common.fullname" . }}
+  name: {{ include "monochart.env.fullname" . }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 data:
@@ -10,7 +12,16 @@ data:
 {{ toYaml . | indent 2 }}
 {{- end }}
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monochart.files.fullname" . }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+data:
 {{- with .Values.configMap.files }}
 {{ toYaml . | indent 2 }}
 {{- end }}
+
 {{- end -}}
