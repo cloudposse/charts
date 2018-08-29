@@ -1,0 +1,157 @@
+replicaCount: 1
+
+image:
+  repository: scratch
+  tag: latest
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - "docker-secret-1"
+  #   - "docker-secret-2"
+
+configMap:
+  enabled: false
+  # env:
+  #   ENV_NAME: ENV_VALUE
+  # files:
+  #    "/etc/ssl/test.crt": |-
+  #       ...
+
+secret:
+  enabled: false
+  # env:
+  #   ENV_NAME: ENV_VALUE
+  # files:
+  #    "/etc/ssl/test.crt": |-
+  #       ...
+
+# Inline environment
+env:
+  # ENV_NAME: ENV_VALUE
+
+deployment:
+  enabled: false
+  ## Deployment pods replace strategy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # strategy: {}    
+  revisionHistoryLimit: 10
+  ## Deployment annotations
+  annotations: {}
+    # name: value
+  pod:
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+
+statefulset:
+  enabled: false
+  ## StatefulSet pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
+  # strategy: {}    
+  revisionHistoryLimit: 10
+  ## Statefulset annotations
+  annotations: {}
+    # name: value
+  pod:
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+
+daemonset:
+  enabled: false
+  ## DaemonSet pods replace strategy
+  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
+  # strategy: {}    
+  revisionHistoryLimit: 10
+  ## Deamonset annotations
+  annotations: {}
+    # name: value
+  pod:
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+
+job:
+  enabled: false
+  ## Job annotations
+  annotations: {}
+    # name: value
+  pod:
+    ## Pod annotations
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+
+service:
+  enabled: false
+  type: ClusterIP
+  port: 80
+  annotations: {}
+  #   foo.io/bar: "true"
+
+probes:
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 80m
+    memory: 64Mi
+
+persistence:
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+
+## Ingress for load balancer
+# ingress:
+# - name: "default"
+## Ingress labels
+##
+#   labels:
+#     dns: "route53"
+
+## Ingress annotations
+##
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     kubernetes.io/tls-acme: "true"
+
+## Ingress hostnames
+## Must be provided if Ingress is enabled
+##
+#   hosts:
+#     "domain.com": /
+#     "www.domain.com": /
+
+## Ingress TLS configuration
+## Secrets must be manually created in the namespace
+##
+#   tls:
+#   - secretName: server-tls
+#     hosts:
+#     - domain.com

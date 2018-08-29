@@ -1,0 +1,82 @@
+{{- if .Values.daemonset.enabled -}}
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ include "common.fullname" . }}
+{{- with .Values.daemonset.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "common.name" . }}
+      release: {{ .Release.Name }}
+{{- with .Values.daemonset.strategy }}
+  updateStrategy:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  revisionHistoryLimit: {{ .Values.daemonset.revisionHistoryLimit }}
+  template:
+    metadata:
+      name: {{ include "common.fullname" . }}
+{{- with .Values.daemonset.pod.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      labels:
+        app: {{ include "common.name" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include "monochart.env" . | indent 8 }}
+        args: {}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        volumeMounts:
+        - mountPath: /data
+          name: storage
+        - mountPath: /config
+          name: config
+        - mountPath: /secret
+          name: secret
+          readOnly: true
+{{- with .Values.probes }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.resources }}
+          resources:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range . }}
+        - name: {{ . }}
+      {{- end }}
+{{- end }}
+      volumes:
+      - name: storage
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      {{- if .Values.configMap.enabled }}
+      - name: configMap
+        configMap:
+          name: {{ include "monochart.files.fullname" . }}
+      {{- end }}
+      {{- if .Values.secret.enabled }}
+      - name: secret
+        secret:
+          secretName: {{ include "monochart.files.fullname" . }}
+      {{- end }}
+{{- end -}}
