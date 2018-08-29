@@ -6,5 +6,11 @@ metadata:
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 data:
-{{ toYaml (merge (merge (dict) .Values.configMap.env) .Values.configMap.files) | indent 2 }}
+{{- with .Values.configMap.env }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+
+{{- with .Values.configMap.files }}
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- end -}}
