@@ -1,41 +1,27 @@
-{{- if .Values.configMap.enabled -}}
-
+{{- $root := . -}}
+{{- $name, $config = range .Values.configMaps }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "monochart.env.fullname" . }}
-{{- with .Values.configMap.annotations }}
-  annotations:
-{{ toYaml .| indent 4 }}
-{{- end }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
-{{- with .Values.configMap.labels }}
-{{ toYaml .| indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- if not ( empty $config.labels) }}
+{{ toYaml $config.labels | indent 4 }}
 {{- end }}
 data:
-{{- with .Values.configMap.env }}
+{{- with $config.env }}
 {{ toYaml . | indent 2 }}
 {{- end }}
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "monochart.files.fullname" . }}
-{{- with .Values.configMap.annotations }}
-  annotations:
-{{ toYaml .| indent 4 }}
-{{- end }}
-  labels:
-{{ include "common.labels.standard" . | indent 4 }}
-{{- with .Values.configMap.labels }}
-{{ toYaml .| indent 4 }}
-{{- end }}
-data:
-{{- with .Values.configMap.files }}
+{{- with $config.files }}
 {{ toYaml . | indent 2 }}
+{{- end }}
+
+{{- range $key, $value := $conifg.files_yaml }}
+  {{ $key }}: |
+{{ regexReplaceAll "(\\s+\\w+:\\s+)\\\\(\\!\\w+)" ( toYaml $value ) "${1}${2}" | indent 4 }}
 {{- end }}
 
 {{- end -}}

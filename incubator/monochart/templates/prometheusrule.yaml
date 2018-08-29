@@ -1,0 +1,16 @@
+{{- $root := . -}}
+{{- range $name, $rules := .Values.prometheusRules }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- if not ( empty $rules.labels) }}
+{{ toYaml $rules.labels | indent 4 }}
+{{- end }}
+spec:
+  groups:
+{{ toYaml $rules.groups | indent 4 }}
+{{- end }}

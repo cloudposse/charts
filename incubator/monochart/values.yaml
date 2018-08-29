@@ -17,18 +17,20 @@ image:
   #   - "docker-secret-1"
   #   - "docker-secret-2"
 
-configMap:
-  enabled: false
-  mountPath: /config
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  # env:
-  #   ENV_NAME: ENV_VALUE
-  # files:
-  #    "/etc/ssl/test.crt": |-
-  #       ...
+configMaps:
+  # default:
+  #   labels:
+  #     name: value
+  #   env:
+  #     ENV_NAME: ENV_VALUE
+  #   files:
+  #     "/etc/ssl/test.crt": |-
+  #         ...
+  #   files_yaml:
+  #     "test.yaml":
+  #         group:
+  #           key: value
+  #         ...
 
 secret:
   enabled: false
