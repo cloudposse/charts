@@ -9,7 +9,7 @@ image:
   #   - "docker-secret-2"
 
 configMap:
-  enabled: true
+  enabled: false
   # env:
   #   ENV_NAME: ENV_VALUE
   # files:
@@ -17,7 +17,7 @@ configMap:
   #       ...
 
 secret:
-  enabled: true
+  enabled: false
   # env:
   #   ENV_NAME: ENV_VALUE
   # files:
@@ -29,7 +29,7 @@ env:
   # ENV_NAME: ENV_VALUE
 
 deployment:
-  enabled: true
+  enabled: false
   ## Deployment pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}    
@@ -44,7 +44,7 @@ deployment:
     #  iam.amazonaws.com/role: role-arn
 
 statefulset:
-  enabled: true
+  enabled: false
   ## StatefulSet pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
   # strategy: {}    
@@ -59,7 +59,7 @@ statefulset:
     #  iam.amazonaws.com/role: role-arn
 
 daemonset:
-  enabled: true
+  enabled: false
   ## DaemonSet pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
   # strategy: {}    
@@ -74,7 +74,7 @@ daemonset:
     #  iam.amazonaws.com/role: role-arn
 
 job:
-  enabled: true
+  enabled: false
   ## Job annotations
   annotations: {}
     # name: value
@@ -85,7 +85,7 @@ job:
     #  iam.amazonaws.com/role: role-arn
 
 service:
-  enabled: true
+  enabled: false
   type: ClusterIP
   port: 80
   annotations: {}
