@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- $name, $config = range .Values.configMaps }}
+{{- range $name, $config := .Values.configMaps }}
 ---
 apiVersion: v1
 kind: ConfigMap
