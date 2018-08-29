@@ -10,6 +10,10 @@ metadata:
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ include "common.name" . }}
+      release: {{ .Release.Name }}
 {{- with .Values.daemonset.strategy }}
   updateStrategy:
 {{ toYaml . | indent 4 }}
