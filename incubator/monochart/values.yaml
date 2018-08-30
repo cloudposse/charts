@@ -123,6 +123,21 @@ service:
   # annotations:
   #   name: value
 
+serviceMonitors:
+  name:
+    serviceMonitorSelectorLabels:
+      prometheus: kube-prometheus
+    selector:
+      matchLabels:
+        app: nginx-ingress
+        component: controller
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    endpoints:
+    - port: "metrics"
+      interval: 15s
+
 probes:
   livenessProbe:
     httpGet:
