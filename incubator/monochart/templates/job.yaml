@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.job.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   activeDeadlineSeconds: {{ default 300 .Values.job.activeDeadlineSeconds }}
   template:
@@ -21,6 +24,9 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.job.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}

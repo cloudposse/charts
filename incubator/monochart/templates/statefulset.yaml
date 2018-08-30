@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.statefulset.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:
@@ -31,6 +34,9 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.statefulset.pod.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:

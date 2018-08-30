@@ -5,10 +5,13 @@ metadata:
   name: {{ include "common.fullname" . }}
 {{- with .Values.deployment.annotations }}
   annotations:
-{{ toYaml .Values.deployment.annotations | indent 4 }}
+{{ toYaml . | indent 4 }}
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.deployment.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -32,6 +35,9 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.deployment.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}

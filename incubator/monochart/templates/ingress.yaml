@@ -6,8 +6,10 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+{{- with .annotations }}
   annotations:
-{{ toYaml .annotations | indent 4 }}
+{{ toYaml . | indent 4 }}
+{{- end }}
   labels:
 {{- with .labels }}
 {{ toYaml . | indent 4 }}

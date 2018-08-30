@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.daemonset.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:
@@ -29,6 +32,9 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.daemonset.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}

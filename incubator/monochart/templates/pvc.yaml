@@ -2,12 +2,16 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "common.fullname" . }}
+  name: {{ include "common.fullname" . }}
+{{- with .Values.persistence.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
   labels:
-    app: {{ template "common.name" . }}
-    chart: {{ template "common.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.persistence.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
