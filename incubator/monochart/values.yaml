@@ -1,9 +1,18 @@
 replicaCount: 1
 
+dockercfg:
+  enabled: false
+  # image:
+  #   pullSecret:
+  #     registry: r.cfcr.io
+  #     username: example
+  #     password: password
+
 image:
   repository: scratch
   tag: latest
   pullPolicy: IfNotPresent
+  ## Additional docker pull secrets
   # pullSecrets:
   #   - "docker-secret-1"
   #   - "docker-secret-2"

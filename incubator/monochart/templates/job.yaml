@@ -53,8 +53,11 @@ spec:
           resources:
 {{ toYaml . | indent 12 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
       imagePullSecrets:
+{{- if .Values.dockercfg.enabled }}
+        - name: {{ include "common.fullname" . }}
+{{- end }}
+{{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
