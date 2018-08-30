@@ -41,7 +41,7 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        args: {}
+        args: {{ .Values.daemonset.pod.args }}
         ports:
           - name: http
             containerPort: {{ .Values.service.internalPort }}
@@ -49,10 +49,10 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: storage
-        - mountPath: /config
-          name: config
-        - mountPath: /secret
-          name: secret
+        - mountPath: {{ .Values.configMap.mountPath }}
+          name: {{ .Values.configMap.volumeName }}
+        - mountPath: {{ .Values.secret.mountPath }}
+          name: {{ .Values.secret.volumeName }}
           readOnly: true
 {{- with .Values.probes }}
 {{ toYaml . | indent 10 }}
@@ -79,12 +79,12 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- if .Values.configMap.enabled }}
-      - name: configMap
+      - name: {{ .Values.configMap.volumeName }}
         configMap:
           name: {{ include "monochart.files.fullname" . }}
       {{- end }}
       {{- if .Values.secret.enabled }}
-      - name: secret
+      - name: {{ .Values.secret.volumeName }}
         secret:
           secretName: {{ include "monochart.files.fullname" . }}
       {{- end }}
