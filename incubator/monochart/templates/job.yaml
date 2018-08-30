@@ -36,7 +36,7 @@ spec:
         args: {}
         ports:
           - name: http
-            containerPort: 8080
+            containerPort: {{ .Values.service.internalPort }}
             protocol: TCP
         volumeMounts:
         - mountPath: /data
