@@ -1,15 +1,28 @@
 replicaCount: 1
 
+dockercfg:
+  enabled: false
+  # image:
+  #   pullSecret:
+  #     registry: r.cfcr.io
+  #     username: example
+  #     password: password
+
 image:
   repository: scratch
   tag: latest
   pullPolicy: IfNotPresent
+  ## Additional docker pull secrets
   # pullSecrets:
   #   - "docker-secret-1"
   #   - "docker-secret-2"
 
 configMap:
   enabled: false
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
   # env:
   #   ENV_NAME: ENV_VALUE
   # files:
@@ -18,6 +31,10 @@ configMap:
 
 secret:
   enabled: false
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
   # env:
   #   ENV_NAME: ENV_VALUE
   # files:
@@ -30,66 +47,73 @@ env:
 
 deployment:
   enabled: false
-  ## Deployment pods replace strategy
+  ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}    
   revisionHistoryLimit: 10
-  ## Deployment annotations
-  annotations: {}
-    # name: value
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
   pod:
-    ## Pod annotations
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+    labels: {}
 
 statefulset:
   enabled: false
-  ## StatefulSet pods replace strategy
+  ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
   # strategy: {}    
   revisionHistoryLimit: 10
-  ## Statefulset annotations
-  annotations: {}
-    # name: value
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
   pod:
-    ## Pod annotations
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+    labels: {}
 
 daemonset:
   enabled: false
-  ## DaemonSet pods replace strategy
+  ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
   # strategy: {}    
   revisionHistoryLimit: 10
-  ## Deamonset annotations
-  annotations: {}
-    # name: value
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
   pod:
-    ## Pod annotations
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+    labels: {}
 
 job:
   enabled: false
-  ## Job annotations
-  annotations: {}
-    # name: value
+  # labels:
+  #   name: value
+  # annotations:
+  #   name: value
   pod:
-    ## Pod annotations
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
+    labels: {}
 
 service:
   enabled: false
   type: ClusterIP
-  port: 80
-  annotations: {}
-  #   foo.io/bar: "true"
+  internalPort: 8080
+  externalPort: 80
+  # labels:
+  #   name: value
+  # annotations:
+  #   name: value
 
 probes:
   livenessProbe:
@@ -113,6 +137,11 @@ persistence:
   enabled: false
   accessMode: ReadWriteOnce
   size: 8Gi
+  # annotations:
+  #   name: value
+  # labels:
+  #   name: value
+
   ## A manually managed Persistent Volume and Claim
   ## Requires Persistence.Enabled: true
   ## If defined, PVC must be created manually before volume will be bound

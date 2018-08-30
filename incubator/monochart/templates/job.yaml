@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.job.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   activeDeadlineSeconds: {{ default 300 .Values.job.activeDeadlineSeconds }}
   template:
@@ -21,6 +24,9 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.job.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -30,7 +36,7 @@ spec:
         args: {}
         ports:
           - name: http
-            containerPort: 8080
+            containerPort: {{ .Values.service.internalPort }}
             protocol: TCP
         volumeMounts:
         - mountPath: /data
@@ -47,8 +53,11 @@ spec:
           resources:
 {{ toYaml . | indent 12 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
       imagePullSecrets:
+{{- if .Values.dockercfg.enabled }}
+        - name: {{ include "common.fullname" . }}
+{{- end }}
+{{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
