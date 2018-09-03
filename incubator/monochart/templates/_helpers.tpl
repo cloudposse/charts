@@ -11,26 +11,61 @@
 {{- end -}}
 
 {{- define "monochart.env" -}}
-{{- if and .Values.configMaps .Values.secrets }}
+{{- $root := . -}}
+{{- if and .Values.configMaps $root.Values.secrets }}
 envFrom:
-{{- range $name, $config := .Values.configMaps -}}
+{{- range $name, $config := $root.Values.configMaps -}}
 {{- if $config.enabled }}
 - configMapRef:
-    name: {{ include "monochart.env.fullname" (list . $name) }}
+    name: {{ include "monochart.env.fullname" (list $root $name) }}
 {{- end }}
 {{- end }}
-{{- range $name, $secret := .Values.secrets -}}
-{{- if .Values.secret.enabled }}
+{{- range $name, $secret := $root.Values.secrets -}}
+{{- if $secret.enabled }}
 - secretRef:
-    name: {{ include "monochart.env.fullname" (list . $name) }}
+    name: {{ include "monochart.env.fullname" (list $root $name) }}
 {{- end }}
 {{- end }}
 {{- end }}
-{{- with .Values.env }}
+{{- with $root.Values.env }}
 env:
 {{- range $name, $value := . }}
   - name: {{ $name }}
     value: {{ default "" $value | quote }}
 {{- end }}
 {{- end }}
+{{- end -}}
+
+{{- define "monochart.files.volumes" -}}
+{{- $root := . -}}
+{{- range $name, $config := $root.Values.configMaps -}}
+{{- if $config.enabled }}
+- name: config-{{ $name }}-files
+  configMap:
+    name: {{ include "monochart.files.fullname" (list $root $name) }}
+{{- end }}
+{{- end -}}
+{{- range $name, $secret := $root.Values.secrets -}}
+{{- if $secret.enabled }}
+- name: secret-{{ $name }}-files
+  secret:
+    secretName: {{ include "monochart.files.fullname" (list $root $name) }}
+{{- end }}
+{{- end -}}
+{{- end -}}
+
+{{- define "monochart.files.volumeMounts" -}}
+{{- range $name, $config := .Values.configMaps -}}
+{{- if $config.enabled }}
+- mountPath: {{ $config.mountPath }}
+  name: config-{{ $name }}-files
+{{- end }}
+{{- end -}}
+{{- range $name, $secret := .Values.secrets -}}
+{{- if $secret.enabled }}
+- mountPath: {{ $secret.mountPath }}
+  name: secret-{{ $name }}-files
+  readOnly: true
+{{- end }}
+{{- end -}}
 {{- end -}}
