@@ -2,67 +2,64 @@ replicaCount: 1
 
 dockercfg:
   enabled: false
-  # image:
-  #   pullSecret:
-  #     registry: r.cfcr.io
-  #     username: example
-  #     password: password
+  image:
+    pullSecret:
+      registry: https://index.docker.io/v1/
+      username: example
+      password: password
 
 image:
-  repository: scratch
-  tag: latest
+  repository: nginx
+  tag: 1.15.3
   pullPolicy: IfNotPresent
   ## Additional docker pull secrets
-  # pullSecrets:
-  #   - "docker-secret-1"
-  #   - "docker-secret-2"
+  pullSecrets:
+    - "docker-secret-1"
+    - "docker-secret-2"
 
 configMap:
-  enabled: false
-  mountPath: /config
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  # env:
-  #   ENV_NAME: ENV_VALUE
-  # files:
-  #    "/etc/ssl/test.crt": |-
-  #       ...
+  enabled: true
+  annotations:
+    test.annotation: value
+  labels:
+    test_label: value
+  env:
+    CONFIG_ENV_NAME: ENV_VALUE
+  files:
+    config.test.txt: |-
+      some text
 
 secret:
-  enabled: false
-  mountPath: /secret
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  # env:
-  #   ENV_NAME: ENV_VALUE
-  # files:
-  #    "/etc/ssl/test.crt": |-
-  #       ...
+  enabled: true
+  annotations:
+    test.secret.annotation: value
+  labels:
+    test_label: value
+  env:
+    SECRET_ENV_NAME: ENV_VALUE
+  files:
+    secret.test.txt: |-
+      some text
 
 # Inline environment
 env:
-  # ENV_NAME: ENV_VALUE
+  INLINE_ENV_NAME: ENV_VALUE
 
 deployment:
-  enabled: false
+  enabled: true
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}    
   revisionHistoryLimit: 10
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
+  annotations:
+    nginx.version: 1.15.3
+  labels:
+    component: nginx
   pod:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
 
 statefulset:
   enabled: false
@@ -79,7 +76,6 @@ statefulset:
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
 
 daemonset:
   enabled: false
@@ -96,7 +92,6 @@ daemonset:
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
 
 job:
   enabled: false
@@ -109,12 +104,11 @@ job:
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
 
 service:
-  enabled: false
-  type: ClusterIP
-  internalPort: 8080
+  enabled: true
+  type: LoadBalancer
+  internalPort: 80
   externalPort: 80
   # labels:
   #   name: value
