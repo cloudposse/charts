@@ -20,7 +20,24 @@ image:
 configMaps:
   # default:
   #   enabled: false
-  #   mountPath: /secret
+  #   mountPath: /config-default
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
+  #   env:
+  #     ENV_NAME: ENV_VALUE
+  #   files:
+  #     "test.txt": |-
+  #         ...
+  #     "test.yaml":
+  #         group:
+  #           key: value
+
+secrets:
+  # default:
+  #   enabled: false
+  #   mountPath: /secret-default
   #   annotations:
   #     name: value
   #   labels:
@@ -33,19 +50,6 @@ configMaps:
   #     "test.yaml":
   #         group:
   #           key: value
-
-secret:
-  enabled: false
-  mountPath: /secret
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  # env:
-  #   ENV_NAME: ENV_VALUE
-  # files:
-  #    "/etc/ssl/test.crt": |-
-  #       ...
 
 # Inline environment
 env:
