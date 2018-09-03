@@ -42,9 +42,9 @@ spec:
         - mountPath: /data
           name: storage
         - mountPath: {{ .Values.configMap.mountPath }}
-          name: {{ .Values.configMap.volumeName }}
+          name: config-files
         - mountPath: {{ .Values.secret.mountPath }}
-          name: {{ .Values.secret.volumeName }}
+          name: secret-files
           readOnly: true
 {{- with .Values.probes }}
 {{ toYaml . | indent 10 }}
@@ -71,12 +71,12 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- if .Values.configMap.enabled }}
-      - name: {{ .Values.configMap.volumeName }}
+      - name: config-files
         configMap:
           name: {{ include "monochart.files.fullname" . }}
       {{- end }}
       {{- if .Values.secret.enabled }}
-      - name: {{ .Values.secret.volumeName }}
+      - name: secret-files
         secret:
           secretName: {{ include "monochart.files.fullname" . }}
       {{- end }}

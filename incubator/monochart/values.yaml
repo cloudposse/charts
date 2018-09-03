@@ -19,7 +19,6 @@ image:
 
 configMap:
   enabled: false
-  volumeName: config
   mountPath: /config
   # annotations:
   #   name: value
@@ -33,7 +32,6 @@ configMap:
 
 secret:
   enabled: false
-  volumeName: secret
   mountPath: /secret
   # annotations:
   #   name: value
