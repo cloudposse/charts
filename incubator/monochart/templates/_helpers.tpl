@@ -1,15 +1,26 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+Fullname of configMap/secret that contains environment vaiables.
+*/}}
 {{- define "monochart.env.fullname" -}}
 {{- $root := index . 0 -}}
 {{- $postfix := index . 1 -}}
 {{- printf "%s-%s-%s" (include "common.fullname" $root) "env" $postfix -}}
 {{- end -}}
 
+{{/*
+Fullname of configMap/secret that contains files.
+*/}}
 {{- define "monochart.files.fullname" -}}
 {{- $root := index . 0 -}}
 {{- $postfix := index . 1 -}}
 {{- printf "%s-%s-%s" (include "common.fullname" $root) "files" $postfix -}}
 {{- end -}}
 
+{{/*
+Environment template block for deployable resources
+*/}}
 {{- define "monochart.env" -}}
 {{- $root := . -}}
 {{- if and .Values.configMaps $root.Values.secrets }}
@@ -36,6 +47,10 @@ env:
 {{- end }}
 {{- end -}}
 
+
+{{/*
+Volumes template block for deployable resources
+*/}}
 {{- define "monochart.files.volumes" -}}
 {{- $root := . -}}
 {{- range $name, $config := $root.Values.configMaps -}}
@@ -54,6 +69,9 @@ env:
 {{- end -}}
 {{- end -}}
 
+{{/*
+VolumeMounts template block for deployable resources
+*/}}
 {{- define "monochart.files.volumeMounts" -}}
 {{- range $name, $config := .Values.configMaps -}}
 {{- if $config.enabled }}
