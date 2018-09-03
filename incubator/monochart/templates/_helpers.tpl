@@ -75,13 +75,13 @@ VolumeMounts template block for deployable resources
 {{- define "monochart.files.volumeMounts" -}}
 {{- range $name, $config := .Values.configMaps -}}
 {{- if $config.enabled }}
-- mountPath: {{ $config.mountPath }}
+- mountPath: {{ default (printf "/%s" $name) $config.mountPath }}
   name: config-{{ $name }}-files
 {{- end }}
 {{- end -}}
 {{- range $name, $secret := .Values.secrets -}}
 {{- if $secret.enabled }}
-- mountPath: {{ $secret.mountPath }}
+- mountPath: {{ default (printf "/%s" $name) $secret.mountPath }}
   name: secret-{{ $name }}-files
   readOnly: true
 {{- end }}
