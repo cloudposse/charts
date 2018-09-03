@@ -1,27 +1,33 @@
 {{- $root := . -}}
-{{- range $name, $config := .Values.configMaps }}
+{{- range $name, $config := .Values.configMaps -}}
+{{- if $config.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "common.fullname" $root }}-{{ $name }}
+{{- with $config.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
   labels:
 {{ include "common.labels.standard" $root | indent 4 }}
-{{- if not ( empty $config.labels) }}
-{{ toYaml $config.labels | indent 4 }}
+{{- with $config.labels }}
+{{ toYaml .| indent 4 }}
 {{- end }}
 data:
 {{- with $config.env }}
 {{ toYaml . | indent 2 }}
 {{- end }}
 
-{{- with $config.files }}
-{{ toYaml . | indent 2 }}
-{{- end }}
-
-{{- range $key, $value := $config.files_yaml }}
-  {{ $key }}: |
+{{- range $key, $value := $config.files }}
+  {{ $key  }}: |
+{{- if kindIs "map" $value }}
 {{ regexReplaceAll "(\\s+\\w+:\\s+)\\\\(\\!\\w+)" ( toYaml $value ) "${1}${2}" | indent 4 }}
+{{- else }}
+{{ $value | indent 4 }}
+{{- end }}
 {{- end }}
 
+{{- end }}
 {{- end -}}
