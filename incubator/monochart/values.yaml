@@ -125,6 +125,7 @@ service:
 
 ## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
 ##
 serviceMonitors:
 #  ## Name of the ServiceMonitor to create
@@ -209,6 +210,7 @@ serviceMonitors:
 #          ##
 #          # serverName: ""
 
+## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusrulespec
 prometheusRules:
 #  name:
 #    labels:
