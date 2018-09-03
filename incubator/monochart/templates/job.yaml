@@ -9,6 +9,9 @@ metadata:
 {{- end }}
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.job.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
 spec:
   activeDeadlineSeconds: {{ default 300 .Values.job.activeDeadlineSeconds }}
   template:
@@ -21,24 +24,27 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- with .Values.job.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        args: {}
+        args: {{ .Values.job.pod.args }}
         ports:
           - name: http
-            containerPort: 8080
+            containerPort: {{ .Values.service.internalPort }}
             protocol: TCP
         volumeMounts:
         - mountPath: /data
           name: storage
-        - mountPath: /config
-          name: config
-        - mountPath: /secret
-          name: secret
+        - mountPath: {{ .Values.configMap.mountPath }}
+          name: config-files
+        - mountPath: {{ .Values.secret.mountPath }}
+          name: secret-files
           readOnly: true
 {{- with .Values.probes }}
 {{ toYaml . | indent 10 }}
@@ -47,8 +53,11 @@ spec:
           resources:
 {{ toYaml . | indent 12 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
       imagePullSecrets:
+{{- if .Values.dockercfg.enabled }}
+        - name: {{ include "common.fullname" . }}
+{{- end }}
+{{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
@@ -62,12 +71,12 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- if .Values.configMap.enabled }}
-      - name: configMap
+      - name: config-files
         configMap:
           name: {{ include "monochart.files.fullname" . }}
       {{- end }}
       {{- if .Values.secret.enabled }}
-      - name: secret
+      - name: secret-files
         secret:
           secretName: {{ include "monochart.files.fullname" . }}
       {{- end }}
