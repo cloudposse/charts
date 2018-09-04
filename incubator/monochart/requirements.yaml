@@ -1,0 +1,8 @@
+dependencies:
+- name: common
+  version: 0.0.4
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com/
+- name: dockercfg
+  version: 0.1.0
+  repository: https://charts.cloudposse.com/incubator/
+  condition: dockercfg.enabled
