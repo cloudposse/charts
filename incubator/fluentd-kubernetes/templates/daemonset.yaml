@@ -24,6 +24,10 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
 {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range $pullSecret := .Values.image.pullSecrets }}
@@ -68,12 +72,10 @@ spec:
         volumeMounts:
         - name: varlog
           mountPath: /var/log
-          readOnly: true
         - name: varlogpos
           mountPath: /mnt/pos
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/
-          readOnly: true
         - name: config-volume-{{ template "fluentd_kubernetes.fullname" . }}
           mountPath: {{ .Values.configDir }}
       volumes:

@@ -1,0 +1,41 @@
+{{- if .Values.configMap.enabled -}}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monochart.env.fullname" . }}
+{{- with .Values.configMap.annotations }}
+  annotations:
+{{ toYaml .| indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.configMap.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+data:
+{{- with .Values.configMap.env }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monochart.files.fullname" . }}
+{{- with .Values.configMap.annotations }}
+  annotations:
+{{ toYaml .| indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.configMap.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+data:
+{{- with .Values.configMap.files }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+
+{{- end -}}

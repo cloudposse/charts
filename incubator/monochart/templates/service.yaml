@@ -1,0 +1,25 @@
+{{- if .Values.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.fullname" . }}
+{{- with .Values.service.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.service.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.externalPort }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "common.name" . }}
+    release: {{ .Release.Name }}
+{{- end -}}
