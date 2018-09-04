@@ -28,6 +28,10 @@ spec:
   - host: {{ $root.Values.config.basehost | quote }}
     http:
       paths:
+      - path: /oauth2
+        backend:
+          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
+          servicePort: {{ $root.Values.oauth2.externalPort }}
       - path: /
         backend:
           serviceName: {{ $serviceName }}
