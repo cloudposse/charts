@@ -17,29 +17,33 @@ image:
     - "docker-secret-1"
     - "docker-secret-2"
 
-configMap:
-  enabled: true
-  annotations:
-    test.annotation: value
-  labels:
-    test_label: value
-  env:
-    CONFIG_ENV_NAME: ENV_VALUE
-  files:
-    config.test.txt: |-
-      some text
+configMaps:
+  default:
+    enabled: true
+    mountPath: /config-default
+    annotations:
+      test.annotation: value
+    labels:
+      test_label: value
+    env:
+      CONFIG_ENV_NAME: ENV_VALUE
+    files:
+      config.test.txt: |-
+        some text
 
-secret:
-  enabled: true
-  annotations:
-    test.secret.annotation: value
-  labels:
-    test_label: value
-  env:
-    SECRET_ENV_NAME: ENV_VALUE
-  files:
-    secret.test.txt: |-
-      some text
+secrets:
+  default:
+    enabled: true
+    mountPath: /secret-default
+    annotations:
+      test.secret.annotation: value
+    labels:
+      test_label: value
+    env:
+      SECRET_ENV_NAME: ENV_VALUE
+    files:
+      secret.test.txt: |-
+        some text
 
 # Inline environment
 env:
@@ -60,127 +64,3 @@ deployment:
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-
-statefulset:
-  enabled: false
-  ## Pods replace strategy
-  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
-  # strategy: {}    
-  revisionHistoryLimit: 10
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  pod:
-    annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #  iam.amazonaws.com/role: role-arn
-    labels: {}
-
-daemonset:
-  enabled: false
-  ## Pods replace strategy
-  ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
-  # strategy: {}    
-  revisionHistoryLimit: 10
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-  pod:
-    annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #  iam.amazonaws.com/role: role-arn
-    labels: {}
-
-job:
-  enabled: false
-  # labels:
-  #   name: value
-  # annotations:
-  #   name: value
-  pod:
-    annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #  iam.amazonaws.com/role: role-arn
-    labels: {}
-
-service:
-  enabled: true
-  type: LoadBalancer
-  internalPort: 80
-  externalPort: 80
-  # labels:
-  #   name: value
-  # annotations:
-  #   name: value
-
-probes:
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http
-
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 80m
-    memory: 64Mi
-
-persistence:
-  enabled: false
-  accessMode: ReadWriteOnce
-  size: 8Gi
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
-
-  ## A manually managed Persistent Volume and Claim
-  ## Requires Persistence.Enabled: true
-  ## If defined, PVC must be created manually before volume will be bound
-  # existingClaim:
-
-  ## Data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
-
-## Ingress for load balancer
-# ingress:
-# - name: "default"
-## Ingress labels
-##
-#   labels:
-#     dns: "route53"
-
-## Ingress annotations
-##
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     kubernetes.io/tls-acme: "true"
-
-## Ingress hostnames
-## Must be provided if Ingress is enabled
-##
-#   hosts:
-#     "domain.com": /
-#     "www.domain.com": /
-
-## Ingress TLS configuration
-## Secrets must be manually created in the namespace
-##
-#   tls:
-#   - secretName: server-tls
-#     hosts:
-#     - domain.com
