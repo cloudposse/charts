@@ -55,7 +55,7 @@ spec:
   - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
     http:
       paths:
-      - path: /
+      - path: ^/
         backend:
 {{ if $value.externalName }}
           serviceName: {{ include "common.fullname" $root }}-{{ $name }}
