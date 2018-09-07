@@ -43,7 +43,7 @@ data:
   {{ $url := $value.endpoint }}
                 <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
 {{ else }}
-  {{ $url := ( printf (cat "%s://" $hostnameFormat "%s" | nospace) $scheme $name $basehost "/" ) }}
+  {{ $url := ( printf (cat "%s://" $hostnameFormat "%s" | nospace) $scheme $name $basehost ($value.path | default "/") ) }}
                 <a class="nav-link" id="{{ $name }}-link" href="{{ $url }}" data-toggle="collapse" data-target="#{{ $name }}" aria-expanded="false" aria-controls="{{ $name }}">{{ $value.name }}</a>
 {{ end }}
               </li>
@@ -58,7 +58,7 @@ data:
   {{ $url := $value.endpoint }}
           <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
 {{ else }}
-  {{ $url := ( printf (cat "%s://" $hostnameFormat "%s" | nospace) $scheme $name $basehost "/" ) }}
+  {{ $url := ( printf (cat "%s://" $hostnameFormat "%s" | nospace) $scheme $name $basehost ($value.path | default "/") ) }}
           <iframe class="embed-responsive-item collapse" aria-labelledby="{{ $name }}-link" data-parent="#accordion" id="{{ $name }}" data-src="{{ $url }}" allowfullscreen></iframe>
 {{ end }}
 {{ end }}
