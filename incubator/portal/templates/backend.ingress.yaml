@@ -31,7 +31,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" $root }}
     nginx.ingress.kubernetes.io/auth-request-redirect: {{ template "portal.auth-request-redirect" $root }}
 {{ if $value.path }}
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: {{ $value.path | quote }}
 {{ end }}
 {{ if $value.tls }}
     nginx.ingress.kubernetes.io/secure-backends: "true"
@@ -55,7 +55,7 @@ spec:
   - host: {{ printf $root.Values.config.hostnameFormat $name $basehost  | quote }}
     http:
       paths:
-      - path: {{ $value.path | default "/" }}
+      - path: /
         backend:
 {{ if $value.externalName }}
           serviceName: {{ include "common.fullname" $root }}-{{ $name }}
