@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart that provides a Portal with OAuth2 to expose internal cluster services
 name: portal
-version: 0.2.2
+version: 0.2.3
