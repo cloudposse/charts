@@ -1,37 +1,27 @@
 {{- if .Values.ingress.enabled -}}
 {{- $root := . -}}
-{{- $servicePort := .Values.dashboard.service.externalPort -}}
 {{- $serviceName := include "common.fullname" . -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "common.fullname" $root }}
+  name: {{ include "common.fullname" $root }}-oauth2
   annotations:
     kubernetes.io/tls-acme: {{ $root.Values.ingress.tls.enabled | quote }}
-    nginx.ingress.kubernetes.io/auth-signin: {{ template "portal.auth-signin" . }}
-    nginx.ingress.kubernetes.io/auth-url: {{ template "portal.auth-url" . }}
 
 {{- if $root.Values.ingress.annotations }}
 {{ toYaml $root.Values.ingress.annotations | indent 4 }}
 {{- end }}
 
-  labels:
-    ingressName: "portal"
-{{ include "common.labels.standard" $root | indent 4 }}
-
-{{- if $root.Values.ingress.labels }}
-{{ toYaml $root.Values.ingress.labels | indent 4 }}
-{{- end }}
 spec:
   rules:
   - host: {{ $root.Values.config.basehost | quote }}
     http:
       paths:
-      - path: /
+      - path: /oauth2
         backend:
-          serviceName: {{ $serviceName }}
-          servicePort: {{ $servicePort }}
+          serviceName: {{ template "portal.oauth2-proxy.fullname" $root }}
+          servicePort: {{ $root.Values.oauth2.externalPort }}
 
 {{- if $root.Values.ingress.tls.enabled }}
   tls:
@@ -39,5 +29,4 @@ spec:
     hosts:
     - {{ $root.Values.config.basehost | quote }}
 {{- end -}}
-
 {{- end -}}
