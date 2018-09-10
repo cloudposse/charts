@@ -64,6 +64,7 @@ oauth2-proxy:
     backends:
       - file:///dev/null
 
+  # Possible values `github`, `gitlab` etc..
     provider: "github"
 
   # Common oauth configs
