@@ -43,6 +43,8 @@ data:
       ## when disabled the upstream Host is used as the Host Header
       pass_host_header = {{ .Values.app.passHostHeader }}
 
+      set_xauthrequest = {{ .Values.app.setXAuthRequest }}
+
       ## Email Domains to allow authentication for (this authorizes any email on this domain)
       ## for more granular authorization use `authenticated_emails_file`
       ## To authorize any email addresses use "*"
