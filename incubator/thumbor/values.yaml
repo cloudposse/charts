@@ -34,7 +34,7 @@ annotations:
 #   hosts:
 #     - "thumbor.example.com"
 #     - "example.com"
-#
+#   path: /
 #
 #
 
