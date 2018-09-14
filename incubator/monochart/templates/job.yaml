@@ -1,3 +1,4 @@
+{{- if .Values.job -}}
 {{- if .Values.job.enabled -}}
 apiVersion: batch/v1
 kind: Job
@@ -67,4 +68,5 @@ spec:
         emptyDir: {}
       {{- end }}
 {{ include "monochart.files.volumes" . | indent 6 }}
+{{- end -}}
 {{- end -}}

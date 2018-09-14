@@ -1,3 +1,4 @@
+{{- if .Values.daemonset -}}
 {{- if .Values.daemonset.enabled -}}
 apiVersion: extensions/v1beta1
 kind: DaemonSet
@@ -75,4 +76,5 @@ spec:
         emptyDir: {}
       {{- end }}
 {{ include "monochart.files.volumes" . | indent 6 }}
+{{- end -}}
 {{- end -}}
