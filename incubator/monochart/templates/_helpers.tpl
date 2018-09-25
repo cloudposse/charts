@@ -98,7 +98,7 @@ Containers
 {{- range $name, $container := $containers }}
 {{- if $container.enabled }}
 {{- if eq $name "default" }}
-{{- $container := merge $container $values }}
+{{- $container := $values }}
 {{- end }}
 - name: {{ $name }}
   image: {{ required "image.repository is required!" $container.image.repository }}:{{ required "image.tag is required!" $container.image.tag }}
