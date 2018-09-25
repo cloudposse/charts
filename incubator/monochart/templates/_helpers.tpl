@@ -101,7 +101,7 @@ Containers
 {{- $container := $values }}
 {{- end }}
 - name: {{ $name }}
-  image: {{ first $container.image.repository }}:{{ $container.image.tag }}
+  image: {{ $container.image.repository }}:{{ $container.image.tag }}
   imagePullPolicy: {{ $container.image.pullPolicy }}
 {{ include "monochart.env" $values | indent 2 }}
 {{if $container.args }}args: {{ $container.args }}{{- end }}
