@@ -87,3 +87,45 @@ VolumeMounts template block for deployable resources
 {{- end }}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Containers
+*/}}
+{{- define "monochart.containers" -}}
+{{- $containers := first . }}
+{{- $values := last . }}
+{{- range $name, $container := $containers }}
+{{- if $container.enabled }}
+{{- if eq $name "default" }}
+{{- $contaner := merge $container $values }}
+{{- end }}
+- name: {{ $name }}
+  image: {{ required "image.repository is required!" $contaner.image.repository }}:{{ required "image.tag is required!" $contaner.image.tag }}
+  imagePullPolicy: {{ $contaner.image.pullPolicy }}
+{{ include "monochart.env" $values | indent 2 }}
+{{if $contaner.args }}args: {{ $contaner.args }}{{- end }}
+  volumeMounts:
+  - mountPath: /data
+    name: storage
+{{ include "monochart.files.volumeMounts" $values | indent 2 }}
+{{- with $contaner.probes }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- with $contaner.resources }}
+  resources:
+{{ toYaml . | indent 2 }}
+{{- end }}
+  imagePullSecrets:
+{{- if $values.dockercfg.enabled }}
+  - name: {{ include "common.fullname" . }}
+{{- end }}
+{{- with $contaner.image.pullSecrets }}
+{{- range . }}
+  - name: {{ . }}
+{{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+{{- end -}}

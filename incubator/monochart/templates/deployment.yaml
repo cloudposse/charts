@@ -44,6 +44,10 @@ spec:
 {{- end }}
     spec:
       containers:
+{{- $root := . }}
+{{- with .Values.deployment.pod.containers }}
+{{ include "monochart.containers" ( list . $root ) | indent 6 }}
+{{- }}
       - name: {{ .Chart.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}

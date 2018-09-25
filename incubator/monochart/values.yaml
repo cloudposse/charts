@@ -61,16 +61,48 @@ deployment:
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}    
   revisionHistoryLimit: 10
-  # annotations:
-  #   name: value
-  # labels:
-  #   name: value
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  revisionHistoryLimit: 10
+
   pod:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
+    containers:
+      default:
+        enabled: true
+        args: []
+#        image:
+#          repository: nginx
+#          tag: 1.15-alpine
+#          pullPolicy: IfNotPresent
+#        resources:
+#          limits:
+#            cpu: 100m
+#            memory: 128Mi
+#          requests:
+#            cpu: 80m
+#            memory: 64Mi
+#        configMaps:
+#          - nginx
+#        probes:
+#          livenessProbe:
+#            httpGet:
+#              path: /nginx-health
+#              port: 80
+#            initialDelaySeconds: 5
+#            periodSeconds: 10
+#          readinessProbe:
+#            httpGet:
+#              path: /nginx-health
+#              port: 80
+#            initialDelaySeconds: 5
+#            periodSeconds: 10
 
 statefulset:
   enabled: false
