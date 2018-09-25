@@ -47,35 +47,6 @@ spec:
 {{- $root := . }}
 {{- with .Values.deployment.pod.containers }}
 {{ include "monochart.containers" ( list . $root ) | indent 6 }}
-{{- }}
-      - name: {{ .Chart.Name }}
-        image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{ include "monochart.env" . | indent 8 }}
-        {{if .Values.deployment.pod}}args: {{ .Values.deployment.pod.args }}{{- end }}
-        ports:
-          - name: http
-            containerPort: {{ .Values.service.internalPort }}
-            protocol: TCP
-        volumeMounts:
-        - mountPath: /data
-          name: storage
-{{ include "monochart.files.volumeMounts" . | indent 8 }}
-{{- with .Values.probes }}
-{{ toYaml . | indent 10 }}
-{{- end }}
-{{- with .Values.resources }}
-          resources:
-{{ toYaml . | indent 12 }}
-{{- end }}
-      imagePullSecrets:
-{{- if .Values.dockercfg.enabled }}
-        - name: {{ include "common.fullname" . }}
-{{- end }}
-{{- with .Values.image.pullSecrets }}
-      {{- range . }}
-        - name: {{ . }}
-      {{- end }}
 {{- end }}
       volumes:
       - name: storage

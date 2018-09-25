@@ -98,21 +98,21 @@ Containers
 {{- range $name, $container := $containers }}
 {{- if $container.enabled }}
 {{- if eq $name "default" }}
-{{- $contaner := merge $container $values }}
+{{- $container := merge $container $values }}
 {{- end }}
 - name: {{ $name }}
-  image: {{ required "image.repository is required!" $contaner.image.repository }}:{{ required "image.tag is required!" $contaner.image.tag }}
-  imagePullPolicy: {{ $contaner.image.pullPolicy }}
+  image: {{ required "image.repository is required!" $container.image.repository }}:{{ required "image.tag is required!" $container.image.tag }}
+  imagePullPolicy: {{ $container.image.pullPolicy }}
 {{ include "monochart.env" $values | indent 2 }}
-{{if $contaner.args }}args: {{ $contaner.args }}{{- end }}
+{{if $container.args }}args: {{ $container.args }}{{- end }}
   volumeMounts:
   - mountPath: /data
     name: storage
 {{ include "monochart.files.volumeMounts" $values | indent 2 }}
-{{- with $contaner.probes }}
+{{- with $container.probes }}
 {{ toYaml . | indent 2 }}
 {{- end }}
-{{- with $contaner.resources }}
+{{- with $container.resources }}
   resources:
 {{ toYaml . | indent 2 }}
 {{- end }}
@@ -120,7 +120,7 @@ Containers
 {{- if $values.dockercfg.enabled }}
   - name: {{ include "common.fullname" . }}
 {{- end }}
-{{- with $contaner.image.pullSecrets }}
+{{- with $container.image.pullSecrets }}
 {{- range . }}
   - name: {{ . }}
 {{- end }}
