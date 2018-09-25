@@ -97,9 +97,11 @@ Containers
 {{- $values := last . }}
 {{- range $name, $container := $containers }}
 {{- if $container.enabled }}
+{{- if eq $name "default" }}
 {{- $container := $values }}
+{{- end }}
 - name: {{ $name }}
-  image: {{ required "image.repository is required!" $container.image.repository }}:{{ required "image.tag is required!" $container.image.tag }}
+  image: {{ $container.image.repository }}:{{ $container.image.tag }}
   imagePullPolicy: {{ $container.image.pullPolicy }}
 {{ include "monochart.env" $values | indent 2 }}
 {{if $container.args }}args: {{ $container.args }}{{- end }}
