@@ -41,8 +41,8 @@ spec:
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.resources }}
-          resources:
-{{ toYaml . | indent 12 }}
+        resources:
+{{ toYaml . | indent 10 }}
 {{- end }}
       imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
