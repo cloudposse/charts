@@ -45,10 +45,7 @@ spec:
             volumeMounts:
             - mountPath: /data
               name: storage
-{{ include "monochart.files.volumeMounts" . | indent 16 }}
-{{- with .Values.probes }}
-{{ toYaml . | indent 12 }}
-{{- end }}
+{{ include "monochart.files.volumeMounts" . | indent 12 }}
 {{- with .Values.resources }}
             resources:
 {{ toYaml . | indent 14 }}
