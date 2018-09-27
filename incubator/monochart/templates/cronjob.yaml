@@ -20,7 +20,7 @@ spec:
   schedule: '{{ required "Schedule required!" .Values.cronjob.schedule }}'
   jobTemplate:
     spec:
-      activeDeadlineSeconds:
+      activeDeadlineSeconds: {{ default 300 .Values.cronjob.activeDeadlineSeconds }}
       template:
         metadata:
           name: {{ include "common.fullname" . }}
