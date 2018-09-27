@@ -20,58 +20,56 @@ spec:
   schedule: '{{ required "Schedule required!" .Values.cronjob.schedule }}'
   jobTemplate:
     spec:
+      activeDeadlineSeconds:
       template:
-        spec:
-          activeDeadlineSeconds:
-          template:
-            metadata:
-              name: {{ include "common.fullname" . }}
+        metadata:
+          name: {{ include "common.fullname" . }}
 {{- with .Values.cronjob.pod.annotations }}
-              annotations:
-{{ toYaml . | indent 16 }}
+          annotations:
+{{ toYaml . | indent 12 }}
 {{- end }}
-              labels:
-                app: {{ include "common.name" . }}
-                release: {{ .Release.Name | quote }}
+          labels:
+            app: {{ include "common.name" . }}
+            release: {{ .Release.Name | quote }}
 {{- with .Values.cronjob.pod.labels }}
-{{ toYaml .| indent 16 }}
+{{ toYaml .| indent 12 }}
 {{- end }}
-            spec:
-              restartPolicy: '{{ default "Never" .Values.cronjob.restartPolicy }}'
-              containers:
-              - name: {{ .Chart.Name }}
-                image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
-                imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{ include "monochart.env" . | indent 16 }}
-                args: {{ .Values.cronjob.pod.args }}
-                volumeMounts:
-                - mountPath: /data
-                  name: storage
+        spec:
+          restartPolicy: '{{ default "Never" .Values.cronjob.restartPolicy }}'
+          containers:
+          - name: {{ .Chart.Name }}
+            image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include "monochart.env" . | indent 12 }}
+            args: {{ .Values.cronjob.pod.args }}
+            volumeMounts:
+            - mountPath: /data
+              name: storage
 {{ include "monochart.files.volumeMounts" . | indent 16 }}
 {{- with .Values.probes }}
-{{ toYaml . | indent 16 }}
+{{ toYaml . | indent 12 }}
 {{- end }}
 {{- with .Values.resources }}
-                resources:
- {{ toYaml . | indent 18 }}
- {{- end }}
-              imagePullSecrets:
+            resources:
+{{ toYaml . | indent 14 }}
+{{- end }}
+          imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
-                - name: {{ include "common.fullname" . }}
+            - name: {{ include "common.fullname" . }}
 {{- end }}
 {{- with .Values.image.pullSecrets }}
 {{- range . }}
-                - name: {{ . }}
+            - name: {{ . }}
 {{- end }}
 {{- end }}
-              volumes:
-              - name: storage
+          volumes:
+          - name: storage
 {{- if .Values.persistence.enabled }}
-                persistentVolumeClaim:
-                  claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+            persistentVolumeClaim:
+              claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
 {{- else }}
-                emptyDir: {}
+            emptyDir: {}
 {{- end }}
-{{ include "monochart.files.volumes" . | indent 14 }}
+{{ include "monochart.files.volumes" . | indent 10 }}
 {{- end -}}
 {{- end -}}
