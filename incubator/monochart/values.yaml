@@ -254,14 +254,14 @@ prometheusRules:
 #          summary: Reloading Promehteus' configuration failed
 
 probes:
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http
+#  livenessProbe:
+#    httpGet:
+#      path: /
+#      port: http
+#  readinessProbe:
+#    httpGet:
+#      path: /
+#      port: http
 
 resources:
   limits:
