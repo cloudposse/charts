@@ -58,7 +58,7 @@ spec:
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
-{{ toYaml . | indent 10 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
 {{- with .Values.resources }}
         resources:
