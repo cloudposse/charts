@@ -61,8 +61,8 @@ spec:
 {{ toYaml . | indent 10 }}
 {{- end }}
 {{- with .Values.resources }}
-          resources:
-{{ toYaml . | indent 12 }}
+        resources:
+{{ toYaml . | indent 10 }}
 {{- end }}
       imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
