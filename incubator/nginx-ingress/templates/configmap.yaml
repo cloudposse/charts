@@ -17,3 +17,4 @@ data:
       {{ if $index }},{{ end }}{{ $element }}
     {{- end -}}
   "
+{{ toYaml .Values.configMap.options | indent 2 }}

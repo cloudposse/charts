@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller"
-  tag: "0.11.0"
+  tag: "0.15.0"
   pullPolicy: "IfNotPresent"
 
 service:
@@ -17,8 +17,15 @@ service:
   internalHttpPort: 80
   internalHttpsPort: 443
   internalHealthzPort: 18080
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+  httpTargetPort: http
+  httpsTargetPort: https
+  httpIngressEnabled: true
+  httpsIngressEnabled: true
+## If you have custom annotations they go here, for example:
+#  annotations:
+#    service.beta.kubernetes.io/aws-load-balancer-extra-security-groups: "sg-1234567890"
+#    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+#    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
 
 resources:
   limits:
@@ -39,6 +46,12 @@ customHttpErrors:
     - "502"
     - "503"
     - "504"
+
+## If you are using any additional nginx configmap customization, those values go here
+configMap:
+  options:
+    ## This is a default value and accepts a CIDR range, if you have multiple values they should be comma separated
+    nginx-status-ipv4-whitelist: "127.0.0.1"
 
 nginx-default-backend:
   replicaCount: 1

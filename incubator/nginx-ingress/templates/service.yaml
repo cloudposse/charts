@@ -6,19 +6,29 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     k8s-addon: ingress-nginx.addons.k8s.io
     role: entrypoint
+{{- if or .Values.useProxyProtocol .Values.service.annotations }}
   annotations:
+  {{- if .Values.useProxyProtocol }}
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+  {{- end }}
+  {{- if .Values.service.annotations }}
 {{ toYaml .Values.service.annotations | indent 4 }}
+  {{- end }}
+{{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
+  {{- if .Values.service.httpIngressEnabled }}
   - name: http
-    targetPort: http
+    targetPort: {{ .Values.service.httpTargetPort }}
     port: {{ .Values.service.externalHttpPort }}
     protocol: TCP
-    
+  {{- end }}
+  {{- if .Values.service.httpsIngressEnabled }}
   - name: https
-    targetPort: https
+    targetPort: {{ .Values.service.httpsTargetPort }}
     port: {{ .Values.service.externalHttpsPort }}
     protocol: TCP
+  {{- end }}
   selector:
     app: {{ template "fullname" . }}
