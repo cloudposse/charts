@@ -21,7 +21,7 @@ service:
   httpsTargetPort: https
   httpIngressEnabled: true
   httpsIngressEnabled: true
-## If you have custom annotations go here, for example:
+## If you have custom annotations they go here, for example:
 #  annotations:
 #    service.beta.kubernetes.io/aws-load-balancer-extra-security-groups: "sg-1234567890"
 #    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
