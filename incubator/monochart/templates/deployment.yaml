@@ -29,14 +29,18 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- if .Values.deployment.pod}}
 {{- with .Values.deployment.pod.annotations }}
 {{ toYaml . | indent 8 }}
+{{- end }}
 {{- end }}
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+{{- if .Values.deployment.pod}}
 {{- with .Values.deployment.pod.labels }}
 {{ toYaml .| indent 8 }}
+{{- end }}
 {{- end }}
     spec:
       containers:
@@ -44,7 +48,7 @@ spec:
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        args: {{ .Values.deployment.pod.args }}
+        {{if .Values.deployment.pod}}args: {{ .Values.deployment.pod.args }}{{- end }}
         ports:
           - name: http
             containerPort: {{ .Values.service.internalPort }}
@@ -54,11 +58,11 @@ spec:
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
-{{ toYaml . | indent 10 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
 {{- with .Values.resources }}
-          resources:
-{{ toYaml . | indent 12 }}
+        resources:
+{{ toYaml . | indent 10 }}
 {{- end }}
       imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
@@ -71,11 +75,13 @@ spec:
 {{- end }}
       volumes:
       - name: storage
+      {{- if .Values.persistence }}
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
       {{- else }}
         emptyDir: {}
+      {{- end }}
       {{- end }}
 {{ include "monochart.files.volumes" . | indent 6 }}
 {{- end -}}

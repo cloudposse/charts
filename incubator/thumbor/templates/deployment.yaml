@@ -28,7 +28,8 @@ spec:
         args:
           - "thumbor"
         ports:
-        - containerPort: {{ .Values.service.internalPort }}
+        - name: http
+          containerPort: {{ .Values.service.internalPort }}
         env:
         - name: ENGINE
           value: "opencv_engine"
@@ -86,3 +87,7 @@ spec:
           readOnly: false
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+        livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 10 }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}

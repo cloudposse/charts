@@ -112,6 +112,26 @@ job:
   #   name: value
   # annotations:
   #   name: value
+  restartPolicy: Never
+  pod:
+    annotations: {}
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+    labels: {}
+    args: []
+
+cronjob:
+  enabled: false
+  # labels:
+  #   name: value
+  # annotations:
+  #   name: value
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  schedule: "* * */15 * *"
+  activeDeadlineSeconds: 300
+  restartPolicy: Never
   pod:
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
@@ -234,14 +254,14 @@ prometheusRules:
 #          summary: Reloading Promehteus' configuration failed
 
 probes:
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http
+#  livenessProbe:
+#    httpGet:
+#      path: /
+#      port: http
+#  readinessProbe:
+#    httpGet:
+#      path: /
+#      port: http
 
 resources:
   limits:

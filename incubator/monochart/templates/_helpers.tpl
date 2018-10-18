@@ -23,7 +23,7 @@ Environment template block for deployable resources
 */}}
 {{- define "monochart.env" -}}
 {{- $root := . -}}
-{{- if and .Values.configMaps $root.Values.secrets }}
+{{- if or .Values.configMaps $root.Values.secrets }}
 envFrom:
 {{- range $name, $config := $root.Values.configMaps -}}
 {{- if $config.enabled }}

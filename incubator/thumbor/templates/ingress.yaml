@@ -27,11 +27,12 @@ spec:
     secretName: {{ template "fullname" $root }}-{{ .name }}-ssl
 {{- end }}
   rules:
+  {{- $ingress := . -}}
   {{- range .hosts }}
     - host: {{ . }}
       http:
         paths:
-          - path: /
+          - path: {{ $ingress.path | default "/" }}
             backend:
               serviceName: {{ template "fullname" $root }}
               servicePort: {{ $root.Values.service.externalPort }}

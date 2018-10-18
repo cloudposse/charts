@@ -33,8 +33,8 @@ Deploy your own [OpenVPN](https://openvpn.net) server running in Kubernetes to a
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
-$ helm install --set host={host} incubator/openvpn
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
+$ helm install --set host={host} cloudposse-incubator/openvpn
 ```
 
 ## Introduction
@@ -60,7 +60,7 @@ Add charts repo
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
 ```
 
 We recommend to install into kube-system namespace.
@@ -68,7 +68,7 @@ We recommend to install into kube-system namespace.
 To install the chart:
 
 ```console
-$ helm install --namespace kube-system --name vpn incubator/openvpn
+$ helm install --namespace kube-system --name vpn cloudposse-incubator/openvpn
 ```
 
 The command deploys OpenVPN on the Kubernetes cluster in the default configuration.

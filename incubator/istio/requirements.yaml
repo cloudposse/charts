@@ -1,0 +1,53 @@
+dependencies:
+  - name: sidecarInjectorWebhook
+    version: 1.1.0
+    condition: sidecarInjectorWebhook.enabled
+    repository: 'file://_charts/sidecarInjectorWebhook'
+  - name: security
+    version: 1.1.0
+    condition: security.enabled
+    repository: 'file://_charts/security'
+  - name: ingress
+    version: 1.1.0
+    condition: ingress.enabled
+    repository: 'file://_charts/ingress'
+  - name: gateways
+    version: 1.1.0
+    condition: gateways.enabled
+    repository: 'file://_charts/gateways'
+  - name: mixer
+    version: 1.1.0
+    condition: mixer.enabled
+    repository: 'file://_charts/mixer'
+  - name: pilot
+    version: 1.1.0
+    condition: pilot.enabled
+    repository: 'file://_charts/pilot'
+  - name: grafana
+    version: 1.1.0
+    condition: grafana.enabled
+    repository: 'file://_charts/grafana'
+  - name: prometheus
+    version: 1.1.0
+    condition: prometheus.enabled
+    repository: 'file://_charts/prometheus'
+  - name: servicegraph
+    version: 1.1.0
+    condition: servicegraph.enabled
+    repository: 'file://_charts/servicegraph'
+  - name: tracing
+    version: 1.1.0
+    condition: tracing.enabled
+    repository: 'file://_charts/tracing'
+  - name: galley
+    version: 1.1.0
+    condition: galley.enabled
+    repository: 'file://_charts/galley'
+  - name: kiali
+    version: 1.1.0
+    condition: kiali.enabled
+    repository: 'file://_charts/kiali'
+  - name: certmanager
+    version: 1.1.0
+    condition: certmanager.enabled
+    repository: 'file://_charts/certmanager'

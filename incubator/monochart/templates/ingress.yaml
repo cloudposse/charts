@@ -1,6 +1,6 @@
 {{- $root := . -}}
 {{- $servicePort := .Values.service.externalPort -}}
-{{- $serviceName := include "common.labels.standard" . -}}
+{{- $serviceName := include "common.fullname" . -}}
 {{- range .Values.ingress }}
 ---
 apiVersion: extensions/v1beta1

@@ -32,8 +32,8 @@ It is based on [route53-kubernetes](https://github.com/cloudposse/route53-kubern
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
-$ helm install incubator/route53-kubernetes
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
+$ helm install cloudposse-incubator/route53-kubernetes
 ```
 
 ## Introduction
@@ -51,7 +51,7 @@ Add charts repo
 
 ```console
 $ helm repo rm cloudposse-incubator 2>/dev/null
-$ helm repo add cloudposse-incubator http://charts.cloudposse.com/incubator/packages/
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
 ```
 
 We recommend to install into `kube-system` namespace.
@@ -59,7 +59,7 @@ We recommend to install into `kube-system` namespace.
 To install the chart:
 
 ```console
-$ helm install --namespace kube-system --name route53 incubator/route53-kubernetes
+$ helm install --namespace kube-system --name route53 cloudposse-incubator/route53-kubernetes
 ```
 
 The command deploys route53-kubernetes on the Kubernetes cluster in the default configuration.

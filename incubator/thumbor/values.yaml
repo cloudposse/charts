@@ -34,7 +34,7 @@ annotations:
 #   hosts:
 #     - "thumbor.example.com"
 #     - "example.com"
-#
+#   path: /
 #
 #
 
@@ -96,4 +96,23 @@ remotecv:
       cpu: 100m
       memory: 128Mi
 
-
+## Configure extra options for liveness and readiness probes
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
+livenessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  # initialDelaySeconds: 120
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 6
+  # successThreshold: 1
+readinessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  # initialDelaySeconds: 30
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 6
+  # successThreshold: 1

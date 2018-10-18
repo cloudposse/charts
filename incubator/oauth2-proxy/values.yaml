@@ -51,6 +51,7 @@ app:
   passAccessToken: false
   passBasicAuth: true
   passHostHeader: true
+  setXAuthRequest: true
   customTemplatesDir:
   proxyPrefix:
   skipAuthRegex:
