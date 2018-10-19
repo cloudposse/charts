@@ -38,7 +38,7 @@ spec:
 {{- end }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ include "common.name" . }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}

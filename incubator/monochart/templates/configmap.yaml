@@ -1,6 +1,8 @@
 {{- $root := . -}}
 {{- range $name, $config := .Values.configMaps -}}
 {{- if $config.enabled }}
+
+{{- if not (empty $config.env) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -20,7 +22,9 @@ data:
 {{- with $config.env }}
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- end }}
 
+{{- if not (empty $config.files) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -43,6 +47,7 @@ data:
 {{ regexReplaceAll "(\\s+\\w+:\\s+)\\\\(\\!\\w+)" ( toYaml $value ) "${1}${2}" | indent 4 }}
 {{- else }}
 {{ $value | indent 4 }}
+{{- end }}
 {{- end }}
 {{- end }}
 
