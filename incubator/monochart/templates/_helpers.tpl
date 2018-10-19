@@ -68,7 +68,7 @@ Volumes template block for deployable resources
 {{- end -}}
 {{- range $name, $secret := $root.Values.secrets -}}
 {{- if $secret.enabled }}
-{{- if not ( empty $secrets.files ) }}
+{{- if not ( empty $secret.files ) }}
 - name: secret-{{ $name }}-files
   secret:
     secretName: {{ include "monochart.files.fullname" (list $root $name) }}
