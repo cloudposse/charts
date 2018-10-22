@@ -27,14 +27,18 @@ Environment template block for deployable resources
 envFrom:
 {{- range $name, $config := $root.Values.configMaps -}}
 {{- if $config.enabled }}
+{{- if not ( empty $config.env ) }}
 - configMapRef:
     name: {{ include "monochart.env.fullname" (list $root $name) }}
 {{- end }}
 {{- end }}
+{{- end }}
 {{- range $name, $secret := $root.Values.secrets -}}
 {{- if $secret.enabled }}
+{{- if not ( empty $secret.env ) }}
 - secretRef:
     name: {{ include "monochart.env.fullname" (list $root $name) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -55,16 +59,20 @@ Volumes template block for deployable resources
 {{- $root := . -}}
 {{- range $name, $config := $root.Values.configMaps -}}
 {{- if $config.enabled }}
+{{- if not ( empty $config.files ) }}
 - name: config-{{ $name }}-files
   configMap:
     name: {{ include "monochart.files.fullname" (list $root $name) }}
 {{- end }}
+{{- end }}
 {{- end -}}
 {{- range $name, $secret := $root.Values.secrets -}}
 {{- if $secret.enabled }}
+{{- if not ( empty $secret.files ) }}
 - name: secret-{{ $name }}-files
   secret:
     secretName: {{ include "monochart.files.fullname" (list $root $name) }}
+{{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}
@@ -75,15 +83,19 @@ VolumeMounts template block for deployable resources
 {{- define "monochart.files.volumeMounts" -}}
 {{- range $name, $config := .Values.configMaps -}}
 {{- if $config.enabled }}
+{{- if not ( empty $config.files ) }}
 - mountPath: {{ default (printf "/%s" $name) $config.mountPath }}
   name: config-{{ $name }}-files
+{{- end }}
 {{- end }}
 {{- end -}}
 {{- range $name, $secret := .Values.secrets -}}
 {{- if $secret.enabled }}
+{{- if not ( empty $secret.files ) }}
 - mountPath: {{ default (printf "/%s" $name) $secret.mountPath }}
   name: secret-{{ $name }}-files
   readOnly: true
+{{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}

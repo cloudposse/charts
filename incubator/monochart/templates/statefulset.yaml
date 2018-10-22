@@ -41,7 +41,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ include "common.name" . }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
