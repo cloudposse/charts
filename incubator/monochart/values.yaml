@@ -145,7 +145,7 @@ service:
   enabled: false
   type: ClusterIP
   ports:
-    http:
+    default:
       internal: 8080
       external: 80
   # labels:
