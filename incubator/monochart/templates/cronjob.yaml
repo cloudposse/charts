@@ -1,72 +1,74 @@
-{{- if .Values.cronjob -}}
-{{- if .Values.cronjob.enabled -}}
+{{- $root := . -}}
+{{- range $name, $cron := .Values.cronjob -}}
+{{- if $cron.enabled }}
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "common.fullname" . }}
-{{- with .Values.cronjob.annotations }}
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- with $cron.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
-{{- with .Values.cronjob.labels }}
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $cron.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}
 spec:
-  successfulJobsHistoryLimit: {{ default 1 .Values.cronjob.successfulJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ default 1 .Values.cronjob.failedJobsHistoryLimit }}
-  concurrencyPolicy: {{ default "Forbid" .Values.cronjob.concurrencyPolicy }}
-  schedule: '{{ required "Schedule required!" .Values.cronjob.schedule }}'
+  successfulJobsHistoryLimit: {{ default 1 $cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 1 $cron.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ default "Forbid" $cron.concurrencyPolicy }}
+  schedule: '{{ required "Schedule required!" $cron.schedule }}'
   jobTemplate:
     spec:
-      activeDeadlineSeconds: {{ default 300 .Values.cronjob.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
       template:
         metadata:
-          name: {{ include "common.fullname" . }}
-{{- with .Values.cronjob.pod.annotations }}
+          name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- with $cron.pod.annotations }}
           annotations:
 {{ toYaml . | indent 12 }}
 {{- end }}
           labels:
-            app: {{ include "common.name" . }}
-            release: {{ .Release.Name | quote }}
-{{- with .Values.cronjob.pod.labels }}
+            app: {{ include "common.name" $root }}
+            release: {{ $root.Release.Name | quote }}
+{{- with $cron.pod.labels }}
 {{ toYaml .| indent 12 }}
 {{- end }}
         spec:
-          restartPolicy: '{{ default "Never" .Values.cronjob.restartPolicy }}'
+          restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
           containers:
-          - name: {{ .Chart.Name }}
-            image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
-            imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{ include "monochart.env" . | indent 12 }}
-            args: {{ .Values.cronjob.pod.args }}
+          - name: {{ include "common.name" $root }}
+            image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
+            imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+{{ include "monochart.env" $root | indent 12 }}
+            args: {{ $cron.pod.args }}
             volumeMounts:
             - mountPath: /data
               name: storage
-{{ include "monochart.files.volumeMounts" . | indent 12 }}
-{{- with .Values.resources }}
+{{ include "monochart.files.volumeMounts" $root | indent 12 }}
+{{- with $root.Values.resources }}
             resources:
 {{ toYaml . | indent 14 }}
 {{- end }}
           imagePullSecrets:
-{{- if .Values.dockercfg.enabled }}
-            - name: {{ include "common.fullname" . }}
+{{- if $root.Values.dockercfg.enabled }}
+            - name: {{ include "common.fullname" $root }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
+{{- with $root.Values.image.pullSecrets }}
 {{- range . }}
             - name: {{ . }}
 {{- end }}
 {{- end }}
           volumes:
           - name: storage
-{{- if .Values.persistence.enabled }}
+{{- if $root.Values.persistence.enabled }}
             persistentVolumeClaim:
-              claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+              claimName: {{ $root.Values.persistence.existingClaim | default (include "common.fullname" $root) }}
 {{- else }}
             emptyDir: {}
 {{- end }}
-{{ include "monochart.files.volumes" . | indent 10 }}
+{{ include "monochart.files.volumes" $root | indent 10 }}
 {{- end -}}
 {{- end -}}

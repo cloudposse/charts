@@ -107,43 +107,47 @@ daemonset:
     args: []
 
 job:
-  enabled: false
-  # labels:
-  #   name: value
-  # annotations:
-  #   name: value
-  restartPolicy: Never
-  pod:
-    annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #  iam.amazonaws.com/role: role-arn
-    labels: {}
-    args: []
+  default:
+    enabled: false
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+    restartPolicy: Never
+    pod:
+      annotations: {}
+      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      #  iam.amazonaws.com/role: role-arn
+      labels: {}
+      args: []
 
 cronjob:
-  enabled: false
-  # labels:
-  #   name: value
-  # annotations:
-  #   name: value
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
-  concurrencyPolicy: Forbid
-  schedule: "* * */15 * *"
-  activeDeadlineSeconds: 300
-  restartPolicy: Never
-  pod:
-    annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
-    #  iam.amazonaws.com/role: role-arn
-    labels: {}
-    args: []
+  default:
+    enabled: false
+    # labels:
+    #   name: value
+    # annotations:
+    #   name: value
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 1
+    concurrencyPolicy: Forbid
+    schedule: "* * */15 * *"
+    activeDeadlineSeconds: 300
+    restartPolicy: Never
+    pod:
+      annotations: {}
+      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      #  iam.amazonaws.com/role: role-arn
+      labels: {}
+      args: []
 
 service:
   enabled: false
   type: ClusterIP
-  internalPort: 8080
-  externalPort: 80
+  ports:
+    default:
+      internal: 8080
+      external: 80
   # labels:
   #   name: value
   # annotations:
@@ -294,31 +298,19 @@ persistence:
   ##
   # storageClass: "-"
 
-## Ingress for load balancer
-# ingress:
-# - name: "default"
-## Ingress labels
-##
-#   labels:
-#     dns: "route53"
-
-## Ingress annotations
-##
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     kubernetes.io/tls-acme: "true"
-
-## Ingress hostnames
-## Must be provided if Ingress is enabled
-##
-#   hosts:
-#     "domain.com": /
-#     "www.domain.com": /
-
-## Ingress TLS configuration
-## Secrets must be manually created in the namespace
-##
-#   tls:
-#   - secretName: server-tls
-#     hosts:
-#     - domain.com
+# Ingress for load balancer
+ingress:
+  default:
+    enabled: false
+#    labels:
+#      dns: "route53"
+#    annotations:
+#      kubernetes.io/ingress.class: nginx
+#      kubernetes.io/tls-acme: "true"
+#    hosts:
+#      "domain.com": /
+#      "www.domain.com": /
+#    tls:
+#    - secretName: server-tls
+#      hosts:
+#      - domain.com

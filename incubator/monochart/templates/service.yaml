@@ -15,11 +15,14 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.externalPort }}
-      targetPort: http
-      protocol: TCP
-      name: http
+{{- range $name, $port := .Values.service.ports }}
+  - port: {{ $port.external }}
+    targetPort: {{ $name }}
+    protocol: {{ default "TCP" $port.protocol  }}
+    name: {{ $name }}
+{{- end }}
   selector:
     app: {{ include "common.name" . }}
     release: {{ .Release.Name }}
+    serve: "true"
 {{- end -}}

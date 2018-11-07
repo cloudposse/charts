@@ -37,6 +37,7 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+        serve: "true"
 {{- if .Values.deployment.pod}}
 {{- with .Values.deployment.pod.labels }}
 {{ toYaml .| indent 8 }}
@@ -50,9 +51,11 @@ spec:
 {{ include "monochart.env" . | indent 8 }}
         {{if .Values.deployment.pod}}args: {{ .Values.deployment.pod.args }}{{- end }}
         ports:
-          - name: http
-            containerPort: {{ .Values.service.internalPort }}
-            protocol: TCP
+{{- range $name, $port := .Values.service.ports }}
+          - name: {{ $name }}
+            containerPort: {{ $port.internal }}
+            protocol: {{ default "TCP" $port.protocol  }}
+{{- end }}
         volumeMounts:
         - mountPath: /data
           name: storage
