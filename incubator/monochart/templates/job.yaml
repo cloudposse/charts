@@ -5,7 +5,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "common.fullname" $root }}-{{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
 {{- with $job.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
@@ -19,7 +19,7 @@ spec:
   activeDeadlineSeconds: {{ default 300 $job.activeDeadlineSeconds }}
   template:
     metadata:
-      name: {{ include "common.fullname" $root }}-{{ $name }}
+      name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
 {{- with $job.pod.annotations }}
       annotations:
 {{ toYaml . | indent 8 }}

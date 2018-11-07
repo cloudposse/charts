@@ -5,7 +5,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "common.fullname" $root }}-{{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
 {{- with $cron.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
@@ -25,7 +25,7 @@ spec:
       activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
       template:
         metadata:
-          name: {{ include "common.fullname" $root }}-{{ $name }}
+          name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
 {{- with $cron.pod.annotations }}
           annotations:
 {{ toYaml . | indent 12 }}
