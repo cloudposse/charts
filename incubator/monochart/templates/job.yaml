@@ -1,66 +1,67 @@
-{{- if .Values.job -}}
-{{- if .Values.job.enabled -}}
+{{- $root := . -}}
+{{- $name,$job := range .Values.job }}
+{{- if $job.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "common.fullname" . }}
-{{- with .Values.job.annotations }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+{{- with $job.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{ include "common.labels.standard" . | indent 4 }}
-{{- with .Values.job.labels }}
-{{ toYaml .| indent 4 }}
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $job.labels }}
+{{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  activeDeadlineSeconds: {{ default 300 .Values.job.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ default 300 $job.activeDeadlineSeconds }}
   template:
     metadata:
-      name: {{ include "common.fullname" . }}
-{{- with .Values.job.pod.annotations }}
+      name: {{ include "common.fullname" $root }}-{{ $name }}
+{{- with $job.pod.annotations }}
       annotations:
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
-        app: {{ include "common.name" . }}
-        release: {{ .Release.Name | quote }}
-{{- with .Values.job.pod.labels }}
+        app: {{ include "common.name" $root }}
+        release: {{ $root.Release.Name | quote }}
+{{- with $job.pod.labels }}
 {{ toYaml .| indent 8 }}
 {{- end }}
     spec:
-      restartPolicy: '{{ default "Never" .Values.job.restartPolicy }}'
+      restartPolicy: '{{ default "Never" $job.restartPolicy }}'
       containers:
-      - name: {{ include "common.name" . }}
-        image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{ include "monochart.env" . | indent 8 }}
-        args: {{ .Values.job.pod.args }}
+      - name: {{ include "common.name" $root }}
+        image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
+        imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+{{ include "monochart.env" $root | indent 8 }}
+        args: {{ $job.pod.args }}
         volumeMounts:
         - mountPath: /data
           name: storage
-{{ include "monochart.files.volumeMounts" . | indent 8 }}
-{{- with .Values.resources }}
+{{ include "monochart.files.volumeMounts" $root | indent 8 }}
+{{- with $root.Values.resources }}
         resources:
 {{ toYaml . | indent 10 }}
 {{- end }}
       imagePullSecrets:
-{{- if .Values.dockercfg.enabled }}
-        - name: {{ include "common.fullname" . }}
+{{- if $root.Values.dockercfg.enabled }}
+        - name: {{ include "common.fullname" $root }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
+{{- with $root.Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
 {{- end }}
       volumes:
       - name: storage
-      {{- if .Values.persistence.enabled }}
+      {{- if $root.Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+          claimName: {{ $root.Values.persistence.existingClaim | default (include "common.fullname" $root) }}
       {{- else }}
         emptyDir: {}
       {{- end }}
-{{ include "monochart.files.volumes" . | indent 6 }}
+{{ include "monochart.files.volumes" $root | indent 6 }}
 {{- end -}}
 {{- end -}}
