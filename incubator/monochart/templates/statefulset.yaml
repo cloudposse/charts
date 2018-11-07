@@ -35,6 +35,7 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+        serve: true
 {{- with .Values.statefulset.pod.labels }}
 {{ toYaml .| indent 4 }}
 {{- end }}

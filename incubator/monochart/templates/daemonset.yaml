@@ -33,6 +33,7 @@ spec:
       labels:
         app: {{ include "common.name" . }}
         release: {{ .Release.Name | quote }}
+        serve: true
 {{- with .Values.daemonset.pod.labels }}
 {{ toYaml .| indent 8 }}
 {{- end }}

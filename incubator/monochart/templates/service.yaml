@@ -22,4 +22,5 @@ spec:
   selector:
     app: {{ include "common.name" . }}
     release: {{ .Release.Name }}
+    serve: true
 {{- end -}}
