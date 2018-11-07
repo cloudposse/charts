@@ -45,9 +45,11 @@ spec:
 {{ include "monochart.env" . | indent 8 }}
         args: {{ .Values.daemonset.pod.args }}
         ports:
-          - name: http
-            containerPort: {{ .Values.service.internalPort }}
-            protocol: TCP
+{{- range $name, $port := .Values.service.ports }}
+        - name: {{ $name }}
+          containerPort: {{ $port.internal }}
+          protocol: {{ default "TCP" $port.protocol  }}
+{{- end }}
         volumeMounts:
         - mountPath: /data
           name: storage

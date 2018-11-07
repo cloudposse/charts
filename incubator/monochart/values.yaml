@@ -144,8 +144,10 @@ cronjob:
 service:
   enabled: false
   type: ClusterIP
-  internalPort: 8080
-  externalPort: 80
+  ports:
+    http:
+      internal: 8080
+      external: 80
   # labels:
   #   name: value
   # annotations:
