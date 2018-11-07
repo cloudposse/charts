@@ -1,6 +1,6 @@
 {{- $root := . -}}
 {{- range $name, $job := .Values.job -}}
-{{- if $job.enabled -}}
+{{- if $job.enabled }}
 ---
 apiVersion: batch/v1
 kind: Job

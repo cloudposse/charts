@@ -2,7 +2,7 @@
 {{- $servicePort := .Values.service.externalPort -}}
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
-{{- if $ingress.enabled -}}
+{{- if $ingress.enabled }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
