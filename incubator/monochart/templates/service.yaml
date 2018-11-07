@@ -16,13 +16,13 @@ spec:
   type: {{ .Values.service.type }}
   ports:
 {{- range $name, $port := .Values.service.ports }}
-    - port: {{ $port.external }}
-      targetPort: {{ $name }}
-      protocol: {{ default "TCP" $port.protocol  }}
-      name: {{ $name }}
+  - port: {{ $port.external }}
+    targetPort: {{ $name }}
+    protocol: {{ default "TCP" $port.protocol  }}
+    name: {{ $name }}
 {{- end }}
   selector:
     app: {{ include "common.name" . }}
     release: {{ .Release.Name }}
-    serve: true
+    serve: "true"
 {{- end -}}
