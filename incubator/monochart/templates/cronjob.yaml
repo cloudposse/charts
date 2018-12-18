@@ -44,17 +44,17 @@ spec:
             imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 12 }}
 {{- with $cron.pod.commands }}
-          commands:
+            commands:
 {{- range $command := . }}
-          - |-
-{{- tpl $command $root | indent 12 -}}
+            - |- 
+{{- tpl $command $root | indent 14 -}}
 {{- end }}
 {{- end }}
 {{- with $cron.pod.args }}
-          args:
+            args:
 {{- range $arg := . }}
-          - |-
-{{- tpl $arg $root | indent 12 -}}
+            - |-
+{{- tpl $arg $root | indent 14 -}}
 {{- end }}
 {{- end }}
             volumeMounts:
