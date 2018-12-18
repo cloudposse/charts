@@ -99,3 +99,14 @@ VolumeMounts template block for deployable resources
 {{- end }}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Image template block
+*/}}
+{{- define "monochart.image" -}}
+{{- $root := index . 0 -}}
+{{- $override := index . 1 -}}
+image: {{ default (required "image.repository is required!" $root.Values.image.repository) $override.image.repository  }}:{{ default (required "image.tag is required!" $root.Values.image.tag) $override.image.tag }}
+imagePullPolicy: {{ default $root.Values.image.pullPolicy $override.image.pullPolicy }}
+{{- end -}}
