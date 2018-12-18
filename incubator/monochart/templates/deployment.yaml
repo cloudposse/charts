@@ -46,9 +46,10 @@ spec:
     spec:
       containers:
       - name: {{ include "common.name" . }}
-{{ include "monochart.image" (list . .Values.deployment) | indent 8 }}
+{{ include "monochart.pod.image" (list . .Values.deployment) | indent 8 }}
 {{ include "monochart.env" . | indent 8 }}
-        {{if .Values.deployment.pod}}args: {{ .Values.deployment.pod.args }}{{- end }}
+{{ include "monochart.pod.cmd" (list . "commands" .Values.deployment.pod.commands) | indent 8 }}
+{{ include "monochart.pod.cmd" (list . "args" .Values.deployment.pod.args) | indent 8 }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
           - name: {{ $name }}

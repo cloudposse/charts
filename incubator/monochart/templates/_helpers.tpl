@@ -104,9 +104,26 @@ VolumeMounts template block for deployable resources
 {{/*
 Image template block
 */}}
-{{- define "monochart.image" -}}
+{{- define "monochart.pod.image" -}}
 {{- $root := index . 0 -}}
 {{- $override := index . 1 -}}
 image: {{ default (required "image.repository is required!" $root.Values.image.repository) $override.image.repository  }}:{{ default (required "image.tag is required!" $root.Values.image.tag) $override.image.tag }}
 imagePullPolicy: {{ default $root.Values.image.pullPolicy $override.image.pullPolicy }}
+{{- end -}}
+
+
+{{/*
+Template block for Pod's commands/args
+*/}}
+{{- define "monochart.pod.cmd" -}}
+{{- $root := index . 0 -}}
+{{- $propName := index . 1 -}}
+{{- $arr := index . 2 -}}
+{{- with $arr }}
+{{ $propName }}:
+{{- range $arg := . }}
+  - |-
+{{- tpl $arg $root | indent 4 -}}
+{{- end }}
+{{- end }}
 {{- end -}}

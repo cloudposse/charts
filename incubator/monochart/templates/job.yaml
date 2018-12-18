@@ -34,23 +34,10 @@ spec:
       restartPolicy: '{{ default "Never" $job.restartPolicy }}'
       containers:
       - name: {{ include "common.name" $root }}
-{{ include "monochart.image" (list $root $job) | indent 8 }}
+{{ include "monochart.pod.image" (list $root $job) | indent 8 }}
 {{ include "monochart.env" $root | indent 8 }}
-{{- with $job.pod.commands }}
-        commands:
-{{- range $command := . }}
-        - |-
-          
-{{- tpl $command $root | indent 10 -}}
-{{- end }}
-{{- end }}
-{{- with $job.pod.args }}
-        args:
-{{- range $arg := . }}
-        - |-
-{{- tpl $arg $root | indent 10 -}}
-{{- end }}
-{{- end }}
+{{ include "monochart.pod.cmd" (list $root "commands" $job.pod.commands) | indent 8 }}
+{{ include "monochart.pod.cmd" (list $root "args" $job.pod.args) | indent 8 }}
         volumeMounts:
         - mountPath: /data
           name: storage

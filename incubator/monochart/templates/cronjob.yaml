@@ -40,22 +40,10 @@ spec:
           restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
           containers:
           - name: {{ include "common.name" $root }}
-{{ include "monochart.image" (list $root $cron) | indent 12 }}
+{{ include "monochart.pod.image" (list $root $cron) | indent 12 }}
 {{ include "monochart.env" $root | indent 12 }}
-{{- with $cron.pod.commands }}
-            commands:
-{{- range $command := . }}
-            - |- 
-{{- tpl $command $root | indent 14 -}}
-{{- end }}
-{{- end }}
-{{- with $cron.pod.args }}
-            args:
-{{- range $arg := . }}
-            - |-
-{{- tpl $arg $root | indent 14 -}}
-{{- end }}
-{{- end }}
+{{ include "monochart.pod.cmd" (list $root "commands" $cron.pod.commands) | indent 12 }}
+{{ include "monochart.pod.cmd" (list $root "args" $cron.pod.args) | indent 12 }}
             volumeMounts:
             - mountPath: /data
               name: storage

@@ -40,9 +40,10 @@ spec:
     spec:
       containers:
       - name: {{ include "common.name" . }}
-{{ include "monochart.image" (list . .Values.daemonset) | indent 8 }}
+{{ include "monochart.pod.image" (list . .Values.daemonset) | indent 8 }}
 {{ include "monochart.env" . | indent 8 }}
-        args: {{ .Values.daemonset.pod.args }}
+{{ include "monochart.pod.cmd" (list . "commands" .Values.daemonset.pod.commands) | indent 8 }}
+{{ include "monochart.pod.cmd" (list . "args" .Values.daemonset.pod.args) | indent 8 }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}
