@@ -107,8 +107,9 @@ Image template block
 {{- define "monochart.pod.image" -}}
 {{- $root := index . 0 -}}
 {{- $override := index . 1 -}}
-image: {{ default (required "image.repository is required!" $root.Values.image.repository) $override.image.repository  }}:{{ default (required "image.tag is required!" $root.Values.image.tag) $override.image.tag }}
-imagePullPolicy: {{ default $root.Values.image.pullPolicy $override.image.pullPolicy }}
+{{- $image := default $root.Values.image $override.image -}}
+image: {{ required "image.repository is required!" $image.repository }}:{{ required "image.tag is required!" $image.tag }}
+imagePullPolicy: {{ default $image.pullPolicy $image.pullPolicy }}
 {{- end -}}
 
 
