@@ -109,7 +109,7 @@ Image template block
 {{- $override := index . 1 -}}
 {{- $image := default $root.Values.image $override.image -}}
 image: {{ required "image.repository is required!" $image.repository }}:{{ required "image.tag is required!" $image.tag }}
-imagePullPolicy: {{ default $image.pullPolicy $image.pullPolicy }}
+imagePullPolicy: {{ default "IfNotPresent" $image.pullPolicy }}
 {{- end -}}
 
 
