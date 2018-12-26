@@ -123,8 +123,7 @@ Template block for Pod's commands/args
 {{- with $arr }}
 {{ $propName }}:
 {{- range $arg := . }}
-  - |-
-{{- tpl $arg $root | indent 4 -}}
+  - {{ tpl $arg $root | quote }}
 {{- end }}
 {{- end }}
 {{- end -}}
