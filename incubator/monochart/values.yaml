@@ -90,6 +90,29 @@ statefulset:
     labels: {}
     commands: []
     args: []
+  ## Configure volumeClaimTemplates block
+  # persistence:
+  #   enabled: false
+  #   accessMode: ReadWriteOnce
+  #   size: 8Gi
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
+  ## Data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  #   storageClass: "-"
+  ## Volume selector
+  ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
+  #   selector:
+  ## Volume name (could be templated)
+  #   volumeName:
+
 
 daemonset:
   enabled: false
