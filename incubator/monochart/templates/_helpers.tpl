@@ -105,9 +105,9 @@ VolumeMounts template block for deployable resources
 Image template block
 */}}
 {{- define "monochart.pod.image" -}}
-{{- $root := index . 0 -}}
-{{- $override := index . 1 -}}
-{{- $image := default $root.Values.image $override.image -}}
+{{- $global := (index . 0).Values.image | default dict -}}
+{{- $override := (index . 1).image | default dict -}}
+{{- $image := merge $override $global -}}
 image: {{ required "image.repository is required!" $image.repository }}:{{ required "image.tag is required!" $image.tag }}
 imagePullPolicy: {{ default "IfNotPresent" $image.pullPolicy }}
 {{- end -}}
