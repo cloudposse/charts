@@ -64,3 +64,28 @@ deployment:
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
+
+gateway:
+  enabled: true
+  selector:
+    istio: istio-gateway
+  servers:
+  - hosts:
+    - '*.domain.com'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - '*.domain.com'
+    port:
+      name: http-tls
+      number: 443
+      protocol: HTTP
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+    

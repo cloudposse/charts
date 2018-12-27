@@ -1,0 +1,37 @@
+{{- if .Values.gateway -}}
+{{- if .Values.gateway.enabled -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "common.fullname" . }}
+{{- with .Values.gateway.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.gateway.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  selector:
+{{- with .Values.gateway.selector }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+  servers:
+{{- range $server := .Values.gateway.servers }}
+  - hosts:
+{{- range $host := $server.hosts }}
+    - {{ $host }}
+{{- end -}}
+{{- with $server.port }}
+    port:
+{{ toYaml . | indent 6 }}
+{{- end -}}
+{{- with $server.tls }}
+    tls:
+{{ toYaml . | indent 6 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
