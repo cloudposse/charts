@@ -43,6 +43,9 @@ spec:
             image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
             imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 12 }}
+            {{- if $cron.pod.command }}
+            command: {{ $cron.pod.command }}
+            {{- end }}
             args: {{ $cron.pod.args }}
             volumeMounts:
             - mountPath: /data
