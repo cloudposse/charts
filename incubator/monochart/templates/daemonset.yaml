@@ -43,6 +43,9 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
+        {{- if .Values.daemonset.pod.command }}
+        command: {{ .Values.daemonset.pod.command }}
+        {{- end }}
         args: {{ .Values.daemonset.pod.args }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
