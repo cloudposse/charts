@@ -47,9 +47,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
         {{- if .Values.statefulset.pod.command }}
-        command: {{ .Values.statefulset.pod.command }}
+        command: {{ toYaml .Values.statefulset.pod.command }}
         {{- end }}
-        args: {{ .Values.statefulset.pod.args }}
+        args: {{ toYaml .Values.statefulset.pod.args }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}

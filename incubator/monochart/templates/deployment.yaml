@@ -50,10 +50,10 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
         {{- if .Values.deployment.pod.command }}
-        command: {{ .Values.deployment.pod.command }}
+        command: {{ toYaml .Values.deployment.pod.command }}
         {{- end }}
         {{- if .Values.deployment.pod.args }}
-        args: {{ .Values.deployment.pod.args }}
+        args: {{ toYaml .Values.deployment.pod.args }}
         {{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
