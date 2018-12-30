@@ -39,10 +39,10 @@ spec:
 {{ include "monochart.env" $root | indent 8 }}
         {{- if $job.pod.command }}
         command:
-          {{ toYaml $job.pod.command }}
+{{ toYaml $job.pod.command | indent 8}}
         {{- end }}
         args:
-          {{ toYaml $job.pod.args }}
+{{ toYaml $job.pod.args | indent 8 }}
         volumeMounts:
         - mountPath: /data
           name: storage
