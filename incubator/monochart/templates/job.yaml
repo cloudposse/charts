@@ -38,9 +38,11 @@ spec:
         imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 8 }}
         {{- if $job.pod.command }}
-        command: {{ toYaml $job.pod.command }}
+        command:
+          {{ toYaml $job.pod.command }}
         {{- end }}
-        args: {{ toYaml $job.pod.args }}
+        args:
+          {{ toYaml $job.pod.args }}
         volumeMounts:
         - mountPath: /data
           name: storage
