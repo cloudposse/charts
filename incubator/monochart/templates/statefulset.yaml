@@ -50,6 +50,10 @@ spec:
         command: {{ toYaml .Values.statefulset.pod.command }}
         {{- end }}
         args: {{ toYaml .Values.statefulset.pod.args }}
+{{- with .Values.daemonset.pod.securityContext }}
+        securityContext:
+{{ toYaml . | indent 10 }}
+{{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}

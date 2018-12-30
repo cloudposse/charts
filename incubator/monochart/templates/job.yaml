@@ -43,6 +43,10 @@ spec:
         {{- end }}
         args:
 {{ toYaml $job.pod.args | indent 8 }}
+{{- with $job.pod.securityContext }}
+        securityContext:
+{{ toYaml . | indent 10 }}
+{{- end }}
         volumeMounts:
         - mountPath: {{ $root.Values.persistence.mountPath | quote }}
           name: storage

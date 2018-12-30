@@ -47,6 +47,10 @@ spec:
             command: {{ toYaml $cron.pod.command }}
             {{- end }}
             args: {{ toYaml $cron.pod.args }}
+{{- with $cron.pod.securityContext }}
+            securityContext:
+{{ toYaml . | indent 14 }}
+{{- end }}
             volumeMounts:
             - mountPath: {{ $root.Values.persistence.mountPath | quote }}
               name: storage
