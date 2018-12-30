@@ -282,6 +282,7 @@ resources:
 
 persistence:
   enabled: false
+  mountPath: /data
   accessMode: ReadWriteOnce
   size: 8Gi
   # annotations:

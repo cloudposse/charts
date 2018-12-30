@@ -57,7 +57,7 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
-        - mountPath: /data
+        - mountPath: {{ $root.Values.persistence.mountPath | quote }}
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
