@@ -46,6 +46,9 @@ spec:
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
+        {{- if .Values.statefulset.pod.command }}
+        command: {{ .Values.statefulset.pod.command }}
+        {{- end }}
         args: {{ .Values.statefulset.pod.args }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
