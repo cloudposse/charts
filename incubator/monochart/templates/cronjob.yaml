@@ -48,7 +48,7 @@ spec:
             {{- end }}
             args: {{ $cron.pod.args }}
             volumeMounts:
-            - mountPath: /data
+            - mountPath: {{ default "/data" .Values.persistence.mountPath }}
               name: storage
 {{ include "monochart.files.volumeMounts" $root | indent 12 }}
 {{- with $root.Values.resources }}

@@ -42,7 +42,7 @@ spec:
         {{- end }}
         args: {{ $job.pod.args }}
         volumeMounts:
-        - mountPath: /data
+        - mountPath: {{ default "/data" .Values.persistence.mountPath }}
           name: storage
 {{ include "monochart.files.volumeMounts" $root | indent 8 }}
 {{- with $root.Values.resources }}
