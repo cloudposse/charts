@@ -57,7 +57,7 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
-        - mountPath: /data
+        - mountPath: {{ default "/data" (default .Values.persistence.mountPath .Values.statefulset.persistence.mountPath) }}
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
@@ -77,13 +77,49 @@ spec:
       {{- end }}
 {{- end }}
       volumes:
+{{ include "monochart.files.volumes" . | indent 6 }}
+{{- if not (or .Values.persistence.enabled .Values.statefulset.persistence.enabled) }}
       - name: storage
-      {{- if .Values.persistence.enabled }}
+        emptyDir: {}
+{{- else }}
+  {{- if not .Values.statefulset.persistence.enabled }}
+      - name: storage
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
+  {{- else if .Values.statefulset.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "common.fullname" . }}-storage
+{{- with .Values.statefulset.persistence.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      labels:
+{{ include "common.labels.standard" . | indent 8 }}
+{{- with .Values.statefulset.persistence.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
+    spec:
+      accessModes:
+        - {{ .Values.statefulset.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{.Values.statefulset.persistence.size | quote }}
+    {{- if .Values.statefulset.persistence.storageClass }}
+      {{- if (eq "-" .Values.statefulset.persistence.storageClass) }}
+      storageClassName: ""
       {{- else }}
-        emptyDir: {}
+      storageClassName: "{{ .Values.statefulset.persistence.storageClass }}"
       {{- end }}
-{{ include "monochart.files.volumes" . | indent 6 }}
+    {{- end }}
+    {{- with .Values.statefulset.persistence.selector }}
+      selector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.statefulset.persistence.volumeName }}
+    volumeName: {{ tpl .Values.statefulset.persistence.volumeName . }}
+    {{- end }}
+  {{- end }}
+{{- end }}
 {{- end -}}
 {{- end -}}
