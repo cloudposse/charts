@@ -40,8 +40,7 @@ spec:
     spec:
       containers:
       - name: {{ include "common.name" . }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include "monochart.pod.image" (list . .Values.daemonset) | indent 8 }}
 {{ include "monochart.env" . | indent 8 }}
         {{- if .Values.daemonset.pod.command }}
         command: {{ .Values.daemonset.pod.command }}

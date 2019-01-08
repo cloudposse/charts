@@ -46,8 +46,7 @@ spec:
     spec:
       containers:
       - name: {{ include "common.name" . }}
-        image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include "monochart.pod.image" (list . .Values.deployment) | indent 8 }}
 {{ include "monochart.env" . | indent 8 }}
         {{- if .Values.deployment.pod.command }}
         command: {{ .Values.deployment.pod.command }}
