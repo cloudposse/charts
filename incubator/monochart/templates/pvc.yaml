@@ -25,6 +25,13 @@ spec:
   {{- else }}
   storageClassName: {{ .Values.persistence.storageClass | quote }}
   {{- end }}
+  {{- with .Values.statefulset.persistence.selector }}
+  selector:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- if .Values.statefulset.persistence.volumeName }}
+  volumeName: {{ tpl .Values.statefulset.persistence.volumeName . }}
+  {{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}
