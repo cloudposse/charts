@@ -19,8 +19,10 @@ metadata:
 {{ toYaml .| indent 4 }}
 {{- end }}
 data:
-{{- with $config.env }}
-{{ toYaml . | indent 2 }}
+{{- range $key, $value := $config.env) }}
+{{- if not (empty $value) }}
+  {{ $key }}: {{ tpl $value $root }}
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -45,8 +47,8 @@ data:
   {{ $key  }}: |
 {{- if kindIs "map" $value }}
 {{ regexReplaceAll "(\\s+\\w+:\\s+)\\\\(\\!\\w+)" ( toYaml $value ) "${1}${2}" | indent 4 }}
-{{- else }}
-{{ $value | indent 4 }}
+{{- else if kindIs "string" $value }}
+{{ tpl $value $root | indent 4 }}
 {{- end }}
 {{- end }}
 {{- end }}
