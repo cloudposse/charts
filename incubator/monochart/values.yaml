@@ -66,6 +66,7 @@ deployment:
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
@@ -84,6 +85,7 @@ statefulset:
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
@@ -127,6 +129,7 @@ daemonset:
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
@@ -143,6 +146,7 @@ job:
     #   name: value
     restartPolicy: Never
     pod:
+      # securityContext: {}
       annotations: {}
       ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
@@ -164,6 +168,7 @@ cronjob:
     activeDeadlineSeconds: 300
     restartPolicy: Never
     pod:
+      # securityContext: {}
       annotations: {}
       ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
@@ -307,6 +312,7 @@ resources:
 
 persistence:
   enabled: false
+  mountPath: /data
   accessMode: ReadWriteOnce
   size: 8Gi
   mountPath: /data
