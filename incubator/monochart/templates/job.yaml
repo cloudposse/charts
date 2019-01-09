@@ -48,7 +48,7 @@ spec:
 {{ toYaml . | indent 10 }}
 {{- end }}
         volumeMounts:
-        - mountPath: {{ default "/data" .Values.persistence.mountPath | quote }}
+        - mountPath: {{ default "/data" $root.Values.persistence.mountPath | quote }}
           name: storage
 {{ include "monochart.files.volumeMounts" $root | indent 8 }}
 {{- with $root.Values.resources }}
