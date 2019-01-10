@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for nginx-default-backend to be used by nginx-ingress controller
 name: nginx-default-backend
-version: 0.2.2
+version: 0.3.0
