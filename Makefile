@@ -13,4 +13,3 @@ init:
 ## Clean build-harness
 clean:
 	@rm -rf $(BUILD_HARNESS_PATH)
-
