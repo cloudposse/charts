@@ -50,8 +50,8 @@ quickstart: |-
   After enabling the repositories mentioned above, just run `helm install cloudposse-incubator/$chart`.
 
   Currently, most of the charts are located in the `incubator/` directory until they reach greater maturity.
-    
-  
+
+
 include:
   - "docs/layout.md"
 
@@ -63,3 +63,7 @@ contributors:
     github: "goruha"
   - name: "Michal Matyjek"
     github: "mkj28"
+  - name: "Alexander Babai"
+    github: "alebabai"
+  - name: "Andriy Knysh"
+    github: "aknysh"
