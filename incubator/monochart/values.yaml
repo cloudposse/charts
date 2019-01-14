@@ -57,6 +57,10 @@ env:
 
 deployment:
   enabled: false
+  # image:
+  #   repository: scratch
+  #   tag: latest
+  #   pullPolicy: IfNotPresent
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   # strategy: {}
@@ -76,6 +80,10 @@ deployment:
 
 statefulset:
   enabled: false
+  # image:
+  #   repository: scratch
+  #   tag: latest
+  #   pullPolicy: IfNotPresent
   ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
   # strategy: {}
@@ -95,6 +103,10 @@ statefulset:
 
 daemonset:
   enabled: false
+  # image:
+  #   repository: scratch
+  #   tag: latest
+  #   pullPolicy: IfNotPresent
   ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
   # strategy: {}
@@ -115,6 +127,10 @@ daemonset:
 job:
   default:
     enabled: false
+    # image:
+    #   repository: scratch
+    #   tag: latest
+    #   pullPolicy: IfNotPresent
     # labels:
     #   name: value
     # annotations:
@@ -132,6 +148,10 @@ job:
 cronjob:
   default:
     enabled: false
+    # image:
+    #   repository: scratch
+    #   tag: latest
+    #   pullPolicy: IfNotPresent
     # labels:
     #   name: value
     # annotations:
