@@ -61,7 +61,11 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
-        - mountPath: {{ default "/data" (default .Values.persistence.mountPath .Values.statefulset.persistence.mountPath) | quote }}
+        {{- if .Values.statefulset.persistence.enabled }}
+        - mountPath: {{ .Values.statefulset.persistence.mountPath | quote }}
+        {{- else }}
+        - mountPath: {{ .Values.persistence.mountPath | quote }}
+        {{- end }}
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}

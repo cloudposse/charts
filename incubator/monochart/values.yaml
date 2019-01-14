@@ -93,11 +93,11 @@ statefulset:
     # command:
     args: []
   ## Configure volumeClaimTemplate block
-  # persistence:
-  #   enabled: false
-  #   accessMode: ReadWriteOnce
-  #   size: 8Gi
-  #   mountPath: /data
+  persistence:
+    enabled: false
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    mountPath: /data
   #   annotations:
   #     name: value
   #   labels:
