@@ -27,9 +27,12 @@ configMaps:
   #     name: value
   #   env:
   #     ENV_NAME: ENV_VALUE
+  #     TEMPLATED_ENV: "{{ $.Release.Name }}"
   #   files:
   #     "test.txt": |-
   #         ...
+  #     "templated_file.sh": |-
+  #         echo "{{ $.Release.Name }}"
   #     "test.yaml":
   #         group:
   #           key: value
@@ -44,9 +47,12 @@ secrets:
   #     name: value
   #   env:
   #     ENV_NAME: ENV_VALUE
+  #     TEMPLATED_ENV: "{{ $.Release.Name }}"
   #   files:
   #     "test.crt": |-
   #         ...
+  #     "templated_file.crt": |-
+  #         "{{ $.Release.Name }}"
   #     "test.yaml":
   #         group:
   #           key: value
@@ -54,6 +60,7 @@ secrets:
 # Inline environment
 env:
   # ENV_NAME: ENV_VALUE
+  # TEMPLATED_ENV: "{{ $.Release.Name }}"
 
 deployment:
   enabled: false
