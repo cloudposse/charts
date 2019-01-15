@@ -1,0 +1,32 @@
+## Trusted Cluster Configuration for Teleport Auth
+## See https://gravitational.com/teleport/docs/admin-guide/#trusted-clusters
+{{- if eq (env "TELEPORT_JOIN_TRUSTED_CLUSTER" | default "true" ) "true" }}
+{{- $trustedcluster := "example.com" }}
+bootstrap:
+  resources:
+    ## trusted cluster config file
+    trusted-cluster.yaml: |-
+      kind: trusted_cluster
+      version: v2
+      metadata:
+        # the trusted cluster name MUST match the 'cluster_name' setting of the
+        # cluster being joined
+        name: "{{- $trustedcluster }}"
+      spec:
+        # this field allows to create tunnels that are disabled, but can be enabled later.
+        enabled: true
+        # The token the cluster being joined expects. Set it to the value of tokens.trustedCluster
+        token: "{{ exec "./get-config.sh" (list "cluster_token") | trim }}"
+        # the address in 'host:port' form of the reverse tunnel listening port on the
+        # primary proxy server:
+        tunnel_addr: "portal.{{- $trustedcluster }}:3024"
+        # the address in 'host:port' form of the web listening port on the
+        # primary proxy server:
+        web_proxy_addr: "portal.{{- $trustedcluster }}:3080"
+        # This needs to be kept in sync with the roles
+        role_map:
+          - remote: admin
+            local: [auditor]
+          - remote: oce
+            local: [auditor]
+{{- end }}

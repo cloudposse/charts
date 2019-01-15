@@ -1,0 +1,20 @@
+## SAML Configuration for Teleport Auth
+## See https://gravitational.com/teleport/docs/ssh_okta/
+bootstrap:
+  resources:
+    ## Connector config
+    saml-connector.yaml: |-
+      kind: saml
+      version: v2
+      metadata:
+        name: SAML
+      spec:
+        # display allows to set the caption of the "login" button in the Web interface
+        display: "Login via Okta"
+        # map Okta groups to Teleport roles
+        attributes_to_roles:
+          - {name: "groups", value: "SSH Admin", roles: ["admin"]}
+          - {name: "groups", value: "SSH User", roles: ["oce"]}
+        acs: "https://portal.{{ requiredEnv "CLUSTER" }}/v1/webapi/saml/acs"
+        entity_descriptor: |-
+{{ exec "./get-config.sh" (list "saml_entity_descriptor") | trim | indent 10 }}

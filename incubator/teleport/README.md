@@ -1,88 +1,45 @@
 # Teleport
 
-[Gravitational Teleport](https://github.com/gravitational/teleport) is a modern SSH/Kubernetes API proxy server for remotely accessing clusters of Linux containers and servers via SSH, HTTPS, or Kubernetes API.
+Helm charts to install Teleport services under Kubernetes
 
-## Introduction
+Teleport Admin Guide: https://gravitational.com/teleport/docs/admin-guide
 
-This chart deploys Teleport components to your cluster via a Kubernetes `Deployment`.
+## Configuration
 
-By default this chart is configured as follows:
+The Teleport charts depend on secrets being available in SSM Parameter Store. Use the the [set-config.sh](set-config.sh) script to store the values.
 
-- 1 replica
-- Record ssh/k8s exec and attach session to the `emptyDir` of the Teleport pod
-- The assumed externally accessible hostname of Teleport is `teleport.example.com`
-- Teleport is accessible only from within your cluster. You need `kubectl port-forward` for external access.
-- TLS is enabled by default on the Proxy
+### Tokens
 
-See the comments in the default `values.yaml` and also the Teleport documentation for more options.
+The Teleport Proxy and Node services rely on a static token to authenticate with the Teleport Auth service. Installation of the chart requires these tokens be available in Parameter Store.
 
-## Prerequisites
 
-- Kubernetes 1.10+
-- A Teleport license file stored as a Kubernetes Secret object(See below)
-
-### Prepare the license file
-
-Download the `license.pem` from the Teleport dashboard, and then rename it to the filename that this chart expects:
+Use `set-config.sh` to store the tokens as follows:
 
 ```
-cp ~/Downloads/license.pem license-enterprise.pem
+set-config.sh "auth_token" "`pwgen -1 32 1`"
+set-config.sh "proxy_token" "`pwgen -1 32 1`"
+set-config.sh "node_token" "`pwgen -1 32 1`"
 ```
 
-Store it as a Kubernetes secret:
-
-```console
-kubectl create secret generic license --from-file=license-enterprise.pem
-```
-
-## Installing the chart
-
-To install the chart with the release name `teleport`, run:
+Teleport also needs a `cluster_token` which allows this cluster to federate with another. Obtain the token and store it:
 
 ```
-$ helm install --name teleport ./
+set-config.sh "cluster_token" "CLUSTER_TOKEN"
 ```
 
-Teleport proxy generates a TLS key and a cert of its own by default.
-In order to instruct the proxy to use the TLS assets brought by you, prepare the following files:
+### License
 
-- Your CA cert named `ca.pem`
-- Your proxy server cert named `proxy-server.pem`
-- Your proxy server key named `proxy-server-key.pem`
-
-Then run:
+Teleport Auth requires a license file to start. Obtain this from our Teleport account and store it;
 
 ```
-$ kubectl create secret tls tls-web --cert=proxy-server.pem --key=proxy-server-key.pem
-$ kubectl create configmap ca-certs --from-file=ca.pem
-$ helm upgrade --install --name teleport ./
+set-config.sh "license" "<multi-line license>"
 ```
 
-## Running locally on minikube
+### Okta/SAML Config
 
-Grab the test setup from the community project [teleport-on-minikube](http://github.com/mumoshu/teleport-on-minikube) and run:
-
-```
-path/to/teleport-on-minikube//scripts/install-on-minikube
-```
-
-Type your desired password, capture the barcode with your MFA device like Google Authenticator, type the OTP.
-
-Now, you can run various `tsh` commands against your local Teleport installation via `teleport.example.com`:
+Enabling the Okta integration requires obtaining the Okta IDP Metadata XML from Okta and storing it in Parameter Store.
 
 ```
-$ tsh login --auth=local --user=$USER login
-```
-
-## Contributing
-
-### Building the cli yourself
-
-```console
-$ git clone git@github.com:gravitational/teleport.git ~/go/src/github.com/gravitational/teleport
-cd $_
-
-$ make full
-
-$ build/tsh --proxy=teleport.example.com --auth=local --user=admin login
+# Note: Use single quotes ' arounds the xml document to preserve nested quotations
+set-config.sh "saml_entity_descriptor" '<okta IDP metadata xml>'
 ```

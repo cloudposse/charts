@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "teleport-auth.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-auth.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+      app.kubernetes.io/component: "{{ .Values.name }}"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+        app.kubernetes.io/component: "{{ .Values.name }}"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ toYaml .Values.config | sha256sum }}
+        checksum/bootstrap: {{ toYaml .Values.bootstrap | sha256sum }}
+{{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      {{- if .Values.bootstrap.enabled }}
+      ## sidecar that imports resources into the auth server
+      - name: {{ template "teleport-auth.name" . }}-bootstrap
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["bash"]
+        args: ["/etc/teleport/resources/bootstrap-resources.sh"]
+        volumeMounts:
+        # Mount resources that should be imported
+        - mountPath: /etc/teleport/resources
+          name: resources
+          readOnly: true
+        # Allow tctl to be used in both containers
+        - mountPath: /var/lib/teleport
+          name: storage
+      {{- end }}  
+      - name: {{ template "teleport-auth.name" . }}-service
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+          - --roles=auth
+          {{- if .Values.diagnostics.enabled }}
+          - --diag-addr=0.0.0.0:{{ .Values.diagnostics.port | default 3000 }}
+          {{- end }}
+          {{- range $key, $value := .Values.extraArgs }}
+          {{- if $value }}
+          - --{{ $key }}={{ $value }}
+          {{- else }}
+          - --{{ $key }}
+          {{- end }}
+        {{- end }}
+        env:
+        {{- range $key, $value := .Values.extraEnv }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+        # See https://gravitational.com/teleport/docs/admin-guide/#ports
+        ports:
+        - name: auth
+          containerPort: 3025
+          protocol: TCP
+        {{- if .Values.diagnostics.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.diagnostics.port | default 3000 }}
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: {{ .Values.diagnostics.port | default 3000 }}
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - mountPath: /etc/teleport
+          name: config
+          readOnly: true
+        - mountPath: /var/lib/teleport
+          name: storage
+{{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 8 }}
+{{- end }}
+      volumes:
+      - name: config
+        secret:
+          secretName: "{{ include "teleport-auth.fullname" . }}"
+      {{- if .Values.bootstrap.enabled }}
+      - name: resources
+        secret:
+          secretName: "{{ include "teleport-auth.fullname" . }}-resources"
+      {{- end }}
+      - name: storage
+        emptyDir: {}
+{{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 6 }}
+{{- end }}
+{{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.image.pullSecrets | indent 6 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+{{- end }}
+      serviceAccountName: {{ template "teleport-auth.serviceAccountName" . }}

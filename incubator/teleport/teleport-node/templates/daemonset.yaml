@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "teleport-node.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-node.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-node.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "teleport-node.name" . }}
+      app.kubernetes.io/component: "{{ .Values.name }}"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "teleport-node.name" . }}
+        app.kubernetes.io/component: "{{ .Values.name }}"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+{{- if .Values.annotations }}
+{{ toYaml .Values.annotations | indent 8 }}
+{{- end }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      # Allow container to access systemd on CoreOS
+      hostPID: true
+      containers:
+        - name: {{ .Chart.Name }}
+          image:  "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          securityContext:
+            privileged: true
+{{- if eq .Values.uninstallOnShutdown true }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/bin/teleport.sh","stop"]
+{{- end }}
+          args:
+          {{- range $key, $value := .Values.extraArgs }}
+            {{- if $value }}
+            - --{{ $key }}={{ $value }}
+            {{- else }}
+            - --{{ $key }}
+            {{- end }}
+          {{- end }}
+          env:
+          {{- range $key, $value := .Values.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          livenessProbe:
+            exec:
+              command: ["chroot","/host","systemctl","status","teleport-node","-n","2"]
+            initialDelaySeconds: 10
+            periodSeconds: 300
+          volumeMounts:
+            - name: teleport-node-host-volume
+              mountPath: /host
+            - mountPath: /etc/teleport
+              name: config
+              readOnly: true
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: teleport-node-host-volume
+          hostPath:
+            path: /
+        - name: config
+          secret:
+            secretName: "{{ include "teleport-node.fullname" . }}"

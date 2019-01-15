@@ -1,0 +1,66 @@
+## Teleport Node chart configuration
+
+{{- $authurl := (print "auth.portal." (requiredEnv "CLUSTER")) }}
+
+## Configuration to be copied into Teleport container
+## Each entry must be an inline file that will be written to /etc/teleport
+config:
+  ## See https://gravitational.com/teleport/docs/admin-guide/#configuration-file
+  teleport.yaml: |-
+    # This section of the configuration file applies to all teleport services
+    teleport:
+      # nodename allows to assign an alternative name this node can be reached by
+      # by default it's equal to hostname
+      # nodename: 
+
+      # Data directory where Teleport keeps its data, like keys/users for
+      # authentication (if using the default BoltDB back-end)
+      data_dir: /var/lib/teleport
+
+      # one-time invitation token used to join a cluster. it is not used on
+      # subsequent starts
+      auth_token: "{{ exec "./get-config.sh" (list "node_token") | trim }}"
+
+      # when running in multi-homed or NATed environments Teleport nodes need
+      # to know which IP it will be reachable at by other nodes
+      # advertise_ip: 
+
+      # list of auth servers in a cluster. you will have more than one auth server
+      # if you configure teleport auth to run in HA configuration
+      auth_servers:
+        - {{ $authurl }}:3025
+
+      # Teleport throttles all connections to avoid abuse. These settings allow
+      # you to adjust the default limits
+      connection_limits:
+        # Number of max. simultaneous connections from an IP
+        max_connections: 100
+        # Number of max. simultaneous connected users/logins
+        max_users: 10
+
+      # Logging configuration. Possible output values are 'stdout', 'stderr' and
+      # 'syslog'. Possible severity values are INFO, WARN and ERROR (default).
+      log:
+        output: stdout
+        severity: INFO
+
+    # This section configures the 'node service':
+    ssh_service:
+      # Turns 'ssh' role on. Default is 'yes'
+      enabled: yes
+
+      # IP and the port for SSH service to bind to.
+      listen_addr: 0.0.0.0:3022
+
+      # Static labels
+      labels:
+        cluster: {{ requiredEnv "CLUSTER" }}
+
+      # List of the commands to periodically execute. Their output will be used as node labels.
+      commands:
+      - name: role
+        command: [/opt/bin/gomplate,--left-delim,"<<",--right-delim,">>",-i, '<< aws.EC2Tag "Role" >>']
+        period: 0h15m0s
+      # enables reading ~/.tsh/environment before creating a session. by default
+      # set to false, can be set true here or as a command line flag.
+      permit_user_env: false
