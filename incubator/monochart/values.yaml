@@ -327,7 +327,7 @@ ingress:
 #      - domain.com
 
 # Istio gateway
-gateway:
+istio_gateway:
   enabled: false
 #  selector:
 #    istio: istio-gateway
