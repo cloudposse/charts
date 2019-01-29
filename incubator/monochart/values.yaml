@@ -68,7 +68,8 @@ deployment:
   pod:
     # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -87,7 +88,8 @@ statefulset:
   pod:
     # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -106,7 +108,8 @@ daemonset:
   pod:
     # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -123,7 +126,8 @@ job:
     pod:
       # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
       # command:
@@ -145,7 +149,8 @@ cronjob:
     pod:
       # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
       # command:
@@ -287,6 +292,7 @@ resources:
 
 persistence:
   enabled: false
+  storageName: storage
   mountPath: /data
   accessMode: ReadWriteOnce
   size: 8Gi

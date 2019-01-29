@@ -61,8 +61,10 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
+        {{- if .Values.persistence.enabled }}
         - mountPath: {{ .Values.persistence.mountPath | quote }}
-          name: storage
+          name: {{ .Values.persistence.storageName | default (include "common.fullname" .) }}
+        {{- end }}
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
@@ -81,13 +83,18 @@ spec:
       {{- end }}
 {{- end }}
       volumes:
-      - name: storage
-      {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
-      {{- else }}
-        emptyDir: {}
-      {{- end }}
 {{ include "monochart.files.volumes" . | indent 6 }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.persistence.storageName | default (include "common.fullname" .) }}
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size }}
+      storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
 {{- end -}}
 {{- end -}}

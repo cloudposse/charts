@@ -53,7 +53,7 @@ deployment:
   enabled: true
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-  # strategy: {}    
+  # strategy: {}
   revisionHistoryLimit: 10
   annotations:
     nginx.version: 1.15.3
@@ -61,6 +61,7 @@ deployment:
     component: nginx
   pod:
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
