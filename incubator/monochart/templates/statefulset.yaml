@@ -19,7 +19,7 @@ spec:
       app: {{ include "common.name" . }}
       release: {{ .Release.Name }}
   serviceName: {{ include "common.fullname" . }}
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
 {{- with .Values.statefulset.strategy }}
   updateStrategy:
 {{ toYaml . | indent 4 }}
