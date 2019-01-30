@@ -88,12 +88,20 @@ statefulset:
   pod:
     # securityContext: {}
     annotations: {}
-    ## https://github.com/uswitch/kiam
-    ## https://github.com/jtblin/kube2iam
+    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
-    args: []
+    # args:
+  ## Configure volumeClaimTemplate block
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    mountPath: /data
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
 
 daemonset:
   enabled: false
