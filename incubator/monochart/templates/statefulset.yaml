@@ -86,6 +86,12 @@ spec:
 {{- end }}
       volumes:
 {{ include "monochart.files.volumes" . | indent 6 }}
+{{- if not .Values.statefulset.persistence.useVolumeClaimTemplates }}
+      - name: {{ (include "common.fullname" . ) }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.statefulset.persistence.existingClaim | default (include "common.fullname" . ) }}
+{{- end }}
+{{- if .Values.statefulset.persistence.useVolumeClaimTemplates }}
   volumeClaimTemplates:
   - metadata:
       name: {{ include "common.fullname" . }}
@@ -109,6 +115,7 @@ spec:
       storageClassName: ""
 {{- else }}
       storageClassName: {{ .Values.statefulset.persistence.storageClass | quote }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}

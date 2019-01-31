@@ -95,9 +95,11 @@ statefulset:
     # args:
   ## Configure volumeClaimTemplate block
   persistence:
+    useVolumeClaimTemplates: true
     accessMode: ReadWriteOnce
     size: 8Gi
     mountPath: /data
+    # storageClass: gp2
   #   annotations:
   #     name: value
   #   labels:
@@ -318,8 +320,8 @@ persistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
+  ## set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ## GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
 
