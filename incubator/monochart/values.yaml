@@ -68,7 +68,8 @@ deployment:
   pod:
     # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -91,7 +92,18 @@ statefulset:
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
-    args: []
+    # args:
+  ## Configure volumeClaimTemplate block
+  persistence:
+    useVolumeClaimTemplates: true
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    mountPath: /data
+    # storageClass: gp2
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
 
 daemonset:
   enabled: false
@@ -106,7 +118,8 @@ daemonset:
   pod:
     # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
     # command:
@@ -123,7 +136,8 @@ job:
     pod:
       # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
       # command:
@@ -145,7 +159,8 @@ cronjob:
     pod:
       # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
       # command:
@@ -287,6 +302,7 @@ resources:
 
 persistence:
   enabled: false
+  storageName: storage
   mountPath: /data
   accessMode: ReadWriteOnce
   size: 8Gi
@@ -304,8 +320,8 @@ persistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
+  ## set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ## GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
 

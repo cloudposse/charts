@@ -11,7 +11,7 @@ metadata:
   labels:
 {{ include "common.labels.standard" . | indent 4 }}
 {{- with .Values.statefulset.labels }}
-{{ toYaml .| indent 4 }}
+{{ toYaml . | indent 4 }}
 {{- end }}
 spec:
   selector:
@@ -19,7 +19,7 @@ spec:
       app: {{ include "common.name" . }}
       release: {{ .Release.Name }}
   serviceName: {{ include "common.fullname" . }}
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
 {{- with .Values.statefulset.strategy }}
   updateStrategy:
 {{ toYaml . | indent 4 }}
@@ -37,7 +37,7 @@ spec:
         release: {{ .Release.Name | quote }}
         serve: "true"
 {{- with .Values.statefulset.pod.labels }}
-{{ toYaml .| indent 4 }}
+{{ toYaml . | indent 4 }}
 {{- end }}
     spec:
       terminationGracePeriodSeconds: 0
@@ -46,10 +46,14 @@ spec:
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        {{- if .Values.statefulset.pod.command }}
-        command: {{ toYaml .Values.statefulset.pod.command }}
-        {{- end }}
-        args: {{ toYaml .Values.statefulset.pod.args }}
+{{- with .Values.statefulset.pod.command }}
+        command:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.statefulset.pod.args }}
+        args:
+{{ toYaml . | indent 10 }}
+{{- end }}
 {{- with .Values.statefulset.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
@@ -61,8 +65,8 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
-        - mountPath: {{ .Values.persistence.mountPath | quote }}
-          name: storage
+        - mountPath: {{ .Values.statefulset.persistence.mountPath | quote }}
+          name: {{ include "common.fullname" . }}
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
@@ -81,13 +85,38 @@ spec:
       {{- end }}
 {{- end }}
       volumes:
-      - name: storage
-      {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
-      {{- else }}
-        emptyDir: {}
-      {{- end }}
 {{ include "monochart.files.volumes" . | indent 6 }}
+{{- if not .Values.statefulset.persistence.useVolumeClaimTemplates }}
+      - name: {{ (include "common.fullname" . ) }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.statefulset.persistence.existingClaim | default (include "common.fullname" . ) }}
+{{- end }}
+{{- if .Values.statefulset.persistence.useVolumeClaimTemplates }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "common.fullname" . }}
+{{- with .Values.statefulset.persistence.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      labels:
+{{ include "common.labels.standard" . | indent 8 }}
+{{- with .Values.statefulset.persistence.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      accessModes:
+        - {{ .Values.statefulset.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.statefulset.persistence.size | quote }}
+{{- if .Values.statefulset.persistence.storageClass }}
+{{- if (eq "-" .Values.statefulset.persistence.storageClass) }}
+      storageClassName: ""
+{{- else }}
+      storageClassName: {{ .Values.statefulset.persistence.storageClass | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- end -}}
 {{- end -}}

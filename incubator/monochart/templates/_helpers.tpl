@@ -1,7 +1,7 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
-Fullname of configMap/secret that contains environment vaiables.
+Fullname of configMap/secret that contains environment vaiables
 */}}
 {{- define "monochart.env.fullname" -}}
 {{- $root := index . 0 -}}
@@ -10,7 +10,7 @@ Fullname of configMap/secret that contains environment vaiables.
 {{- end -}}
 
 {{/*
-Fullname of configMap/secret that contains files.
+Fullname of configMap/secret that contains files
 */}}
 {{- define "monochart.files.fullname" -}}
 {{- $root := index . 0 -}}
