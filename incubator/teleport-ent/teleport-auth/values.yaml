@@ -58,16 +58,22 @@ bootstrap:
   script: |-
     #!/bin/bash
     set -e -o pipefail
+    # Log script output to /var/log/
+    exec >  >(tee -ia /var/log/teleport-bootstrap.log)
+    exec 2> >(tee -ia /var/log/teleport-bootstrap.log >&2)
+    echo "INFO: starting teleport bootsrap.sh"
     until tctl status; do
       echo "WARN: Waiting for Auth server to become available..." 1>&2
       sleep 1
     done
+    echo "INFO: server available, starting to import resources"
     for resource in /etc/teleport/resources/*.yaml; do
       [ -e "${resource}" ] || continue
       echo "INFO: Importing resource '${resource}'"
       tctl create -f "${resource}"
     done
-    sleep infinity
+    echo "INFO: teleport bootsrap.sh finished"
+    # end of script, ensure newline after previous command line
 
 ## Enable Teleport proxy diagnostics port
 ## This is required for liveness/readiness probes

@@ -34,22 +34,6 @@ spec:
     spec:
       terminationGracePeriodSeconds: 30
       containers:
-      {{- if .Values.bootstrap.enabled }}
-      ## sidecar that imports resources into the auth server
-      - name: {{ template "teleport-auth.name" . }}-bootstrap
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["bash"]
-        args: ["/etc/teleport/resources/bootstrap-resources.sh"]
-        volumeMounts:
-        # Mount resources that should be imported
-        - mountPath: /etc/teleport/resources
-          name: resources
-          readOnly: true
-        # Allow tctl to be used in both containers
-        - mountPath: /var/lib/teleport
-          name: storage
-      {{- end }}  
       - name: {{ template "teleport-auth.name" . }}-service
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -100,6 +84,18 @@ spec:
           readOnly: true
         - mountPath: /var/lib/teleport
           name: storage
+{{- if .Values.bootstrap.enabled }}
+        - mountPath: /etc/teleport/resources
+          name: resources
+          readOnly: true
+{{- end }}
+{{- if .Values.bootstrap.enabled }}
+        lifecycle:
+          postStart:
+            exec:
+              ## sidecar that imports resources into the auth server
+              command: ["/bin/bash", "/etc/teleport/resources/bootstrap-resources.sh"]
+{{- end }}
 {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 8 }}
 {{- end }}

@@ -33,6 +33,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - --roles=proxy
+            {{- if eq .Values.diagnostics.debugging true }}
+            - -d
+            {{- end }}
             {{- if .Values.diagnostics.enabled }}
             - --diag-addr=0.0.0.0:{{ .Values.diagnostics.port | default 3000 }}
             {{- end }}
