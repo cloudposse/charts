@@ -28,7 +28,7 @@ spec:
         runAsUser: {{ .Values.securityContext.runAsUser }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "teleport-proxy.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

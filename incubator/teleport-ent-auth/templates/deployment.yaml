@@ -34,7 +34,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 30
       containers:
-      - name: {{ template "teleport-auth.name" . }}-service
+      - name: {{ include "teleport-auth.name" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:

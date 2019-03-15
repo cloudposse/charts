@@ -4,6 +4,7 @@ image:
   pullPolicy: "Always"
 
 name: proxy
+nameOverride: teleport-proxy
 
 replicaCount: 2
 

@@ -5,6 +5,7 @@ image:
 
 ## Teleport deployment name
 name: auth
+nameOverride: teleport-auth
 
 ## Teleport service replicas
 ## See https://gravitational.com/teleport/docs/admin-guide/#auth-server-ha
