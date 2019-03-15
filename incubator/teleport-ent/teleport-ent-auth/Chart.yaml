@@ -1,5 +1,5 @@
 apiVersion: v1
 appVersion: "3.1.2"
 description: A Helm chart for Teleport Auth service
-name: teleport-auth
+name: teleport-ent-auth
 version: 0.1.0

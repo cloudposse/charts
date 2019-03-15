@@ -1,6 +1,0 @@
-name: teleport-ent
-version: 0.1.0
-description: Teleport Enterprise
-keywords:
-  - Teleport Enterprise
-tillerVersion: ">=2.11.0"
