@@ -82,6 +82,7 @@ bootstrap:
 diagnostics:
   enabled: true
   port: 3000
+  debugging: false
 
 ## Additional command line arguments to pass to Teleport
 extraArgs:

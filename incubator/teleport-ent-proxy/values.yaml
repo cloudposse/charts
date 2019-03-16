@@ -50,6 +50,7 @@ service:
 diagnostics:
   enabled: true
   port: 3000
+  debugging: false
 
 ## Pod Security Context
 securityContext:
