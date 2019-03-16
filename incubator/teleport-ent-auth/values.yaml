@@ -1,6 +1,5 @@
 image:
   repository: quay.io/gravitational/teleport-ent
-  tag: "latest"
   pullPolicy: "IfNotPresent"
 
 ## Teleport deployment name
