@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "teleport-auth.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-auth.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+{{- if eq .Values.service.type "LoadBalancer" }}
+{{- end }}
+{{- if .Values.service.annotations }}
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3025
+      targetPort: auth
+      protocol: TCP
+      name: auth
+  selector:
+    app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: "{{ .Values.name }}"

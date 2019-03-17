@@ -1,0 +1,128 @@
+image:
+  repository: quay.io/gravitational/teleport-ent
+  pullPolicy: "IfNotPresent"
+
+## Teleport deployment name
+name: auth
+nameOverride: teleport-auth
+
+## Teleport service replicas
+## See https://gravitational.com/teleport/docs/admin-guide/#auth-server-ha
+replicaCount: 1
+
+rbac:
+  create: true
+
+## Create a service account
+## Required to enable Kubernetes integration
+serviceAccount:
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+service:
+  ## Deploy a private load balancer with a public dns to hosts to resolve and connect to auth service
+  type: LoadBalancer
+  annotations:
+    # Configure as internal load balancer
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "60"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    # Limit to TLS >= 1.2
+    service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: "ELBSecurityPolicy-TLS-1-2-2017-01"
+
+## Configuration to be copied into Teleport container
+## Each entry must be an inline file that will be written to /etc/teleport
+config:
+  ## See https://gravitational.com/teleport/docs/admin-guide/#configuration-file
+  teleport.yaml: |-
+
+  ## Teleport License file
+  # license.pem: |-
+
+## Bootstrap Teleport by installing resources
+## See https://gravitational.com/teleport/docs/admin-guide/#resources
+## If enabled, a sidecar is deployed that will import any resource files defined
+bootstrap:
+  enabled: false
+  ## Additional resources to be imported
+  ## See https://gravitational.com/teleport/docs/admin-guide/#resources
+  resources: {} 
+    ## connector-config.yaml: |-
+    ## my-role.yaml: |-
+  ## Script used to install resources when auth service is launched
+  script: |-
+    #!/bin/bash
+    set -e -o pipefail
+    # Log script output to /var/log/
+    exec >  >(tee -ia /var/log/teleport-bootstrap.log)
+    exec 2> >(tee -ia /var/log/teleport-bootstrap.log >&2)
+    echo "INFO: starting teleport bootsrap.sh"
+    until tctl status; do
+      echo "WARN: Waiting for Auth server to become available..." 1>&2
+      sleep 1
+    done
+    echo "INFO: server available, starting to import resources"
+    for resource in /etc/teleport/resources/*.yaml; do
+      [ -e "${resource}" ] || continue
+      echo "INFO: Importing resource '${resource}'"
+      tctl create -f "${resource}"
+    done
+    echo "INFO: teleport bootsrap.sh finished"
+    # end of script, ensure newline after previous command line
+
+## Enable Teleport proxy diagnostics port
+## This is required for liveness/readiness probes
+## See https://gravitational.com/teleport/docs/admin-guide/#troubleshooting
+diagnostics:
+  enabled: true
+  port: 3000
+  debugging: false
+
+## Additional command line arguments to pass to Teleport
+extraArgs:
+  ## Enable debug logs
+  # debug:
+
+# A map of additional environment variables to pass to Teleport
+extraEnv: {}
+  # Provide the path to your own CA cert if you would like to use to
+  # validate the certificate chain presented by the proxy
+  # SSL_CERT_FILE: "/var/lib/ca-certs/ca.pem"
+
+## Additional deployment annotations
+podAnnotations: {}
+
+## Affinity for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+# Tolerations for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+
+# Add additional volumes and mounts, for example to read other log files on the host
+extraVolumes: []
+  # - name: ca-certs
+  #   configMap:
+  #     name: ca-certs
+extraVolumeMounts: []
+  # - name: ca-certs
+  #   mountPath: /var/lib/ca-certs
+  #   readOnly: true
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 200Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 100Mi

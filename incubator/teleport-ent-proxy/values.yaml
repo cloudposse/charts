@@ -1,0 +1,80 @@
+image:
+  repository: quay.io/gravitational/teleport-ent
+  pullPolicy: "Always"
+
+name: proxy
+nameOverride: teleport-proxy
+
+replicaCount: 2
+
+## Configuration to be copied into Teleport container
+## Each entry must be an inline file that will be written to /etc/teleport
+config:
+  ## See https://gravitational.com/teleport/docs/admin-guide/#configuration-file
+  teleport.yaml: |-
+
+tls:
+  ## Enable mounting of TLS certificates from a secret
+  ## If disabled, teleport proxy will generate self signed certs on launch
+  enabled: yes
+
+  ## Ingress to perform tls certification verifications through
+  ## See http://docs.cert-manager.io/en/latest/tutorials/acme/http-validation.html
+  ingressClass: secondary
+
+  ## Issue to use for tls certificates
+  issuer:
+    # name: letsencrypt-staging
+    name: letsencrypt-production
+    type: ClusterIssuer
+
+  ## Domain the certificate will be for
+  # commonName: portal.{{ requiredEnv "CLUSTER" }}
+
+  ## Name of the Kubernetes secret containing the TLS certificates
+  ## Defaults to '$release-tls'
+  # secretName: 
+
+service:
+  type: LoadBalancer
+  ## See https://kubernetes.io/docs/tutorials/services/source-ip
+  externalTrafficPolicy: "Local"
+  annotations:
+    # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    # external-dns.alpha.kubernetes.io/hostname: portal.{{ requiredEnv "CLUSTER" }}
+
+## Enable Teleport proxy diagnostics port
+## This is required for liveness/readiness probes
+## See https://gravitational.com/teleport/docs/admin-guide/#troubleshooting
+diagnostics:
+  enabled: true
+  port: 3000
+  debugging: false
+
+## Pod Security Context
+securityContext:
+  enabled: true
+  fsGroup: 1000
+  runAsUser: 1000
+
+resources: {}
+#   limits:
+#    cpu: 100m
+#    memory: 128Mi
+#   requests:
+#    cpu: 10m
+#    memory:16MiB
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Additional command line arguments to pass to Teleport
+extraArgs:
+  ## Enable debug logs
+  # debug:
+
+# A map of additional environment variables to pass to Teleport
+extraEnv: {}

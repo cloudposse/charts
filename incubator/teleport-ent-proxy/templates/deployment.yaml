@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "teleport-proxy.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-proxy.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+      app.kubernetes.io/component: "{{ .Values.name }}"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+        app.kubernetes.io/component: "{{ .Values.name }}"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+      {{- end }}
+      containers:
+        - name: {{ include "teleport-proxy.name" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --roles=proxy
+            {{- if eq .Values.diagnostics.debugging true }}
+            - -d
+            {{- end }}
+            {{- if .Values.diagnostics.enabled }}
+            - --diag-addr=0.0.0.0:{{ .Values.diagnostics.port | default 3000 }}
+            {{- end }}
+            {{- if not .Values.tls.enabled }}
+            - --insecure-no-tls
+            {{- end }}
+            {{- range $key, $value := .Values.extraArgs }}
+            {{- if $value }}
+            - --{{ $key }}={{ $value }}
+            {{- else }}
+            - --{{ $key }}
+            {{- end }}
+            {{- end }}
+          env:
+          {{- range $key, $value := .Values.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+          {{- end }}
+          # See https://gravitational.com/teleport/docs/admin-guide/#ports
+          ports:
+            - name: ssh
+              containerPort: 3023
+              protocol: TCP
+            - name: tunnels
+              containerPort: 3024
+              protocol: TCP
+            - name: kubernetes
+              containerPort: 3026
+              protocol: TCP
+            - name: console
+              containerPort: 3080
+              protocol: TCP
+          {{- if .Values.diagnostics.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.diagnostics.port | default 3000 }}
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: {{ .Values.diagnostics.port | default 3000 }}
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+          {{- end }}
+          volumeMounts:
+            - name: storage
+              mountPath: "/var/lib/teleport"
+            - mountPath: /etc/teleport
+              name: config
+              readOnly: true
+          {{- if .Values.tls.enabled }}
+            - mountPath: /etc/teleport/certs
+              name: certificates
+              readOnly: true
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: storage
+          emptyDir: {}
+        - name: config
+          secret:
+            secretName: "{{ include "teleport-proxy.fullname" . }}"
+        {{- if .Values.tls.enabled }}
+        - name: certificates
+          secret:
+            secretName: "{{ include "teleport-proxy.tlsSecret" . }}"
+        {{- end }}
