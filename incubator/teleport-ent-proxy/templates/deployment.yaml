@@ -88,7 +88,7 @@ spec:
             - mountPath: /etc/teleport
               name: config
               readOnly: true
-          {{- if .Values.tls.enabled }}
+          {{- if and .Values.tls.enabled (not .Values.tls.useSelfSignedCert) }}
             - mountPath: /etc/teleport/certs
               name: certificates
               readOnly: true
@@ -113,7 +113,7 @@ spec:
         - name: config
           secret:
             secretName: "{{ include "teleport-proxy.fullname" . }}"
-        {{- if .Values.tls.enabled }}
+        {{- if and .Values.tls.enabled (not .Values.tls.useSelfSignedCert) }}
         - name: certificates
           secret:
             secretName: "{{ include "teleport-proxy.tlsSecret" . }}"

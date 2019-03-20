@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "3.1.8"
 description: A Helm chart for Teleport Proxy service
 name: teleport-ent-proxy
-version: 0.1.0
+version: 0.2.0
