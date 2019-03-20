@@ -16,7 +16,8 @@ config:
 tls:
   ## Enable mounting of TLS certificates from a secret
   ## If disabled, teleport proxy will generate self signed certs on launch
-  enabled: yes
+  enabled: true
+  useSelfSignedCert: false
 
   ## Ingress to perform tls certification verifications through
   ## See http://docs.cert-manager.io/en/latest/tutorials/acme/http-validation.html

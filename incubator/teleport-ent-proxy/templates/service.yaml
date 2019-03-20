@@ -13,8 +13,10 @@ metadata:
 {{ toYaml .Values.service.annotations | indent 4 }}
 {{- end }}
 spec:
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Cluster" }}
   type: {{ .Values.service.type }}
+{{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Cluster" }}
+{{- end }}
   ports:
     - port: 443
       targetPort: 3080
