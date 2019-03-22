@@ -65,7 +65,7 @@ deployment:
     #  iam.amazonaws.com/role: role-arn
     labels: {}
 
-gateway:
+istio_gateway:
   enabled: true
   selector:
     istio: istio-gateway
