@@ -22,7 +22,7 @@ clusterrole:
       resources: ["ingresses"]
       verbs: ["get", "list"]
     - apiGroups: [""]
-      resources: ["namespace"]
+      resources: ["namespaces"]
       verbs: ["get", "list", "update", "patch"]
     - apiGroups: ["storage.k8s.io"]
       resources: ["storageclasses"]
