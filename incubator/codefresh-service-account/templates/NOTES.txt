@@ -1,6 +1,7 @@
 Thank you for installing {{ .Chart.Name }}.
 
 To get credentials to connect your Kubernetes cluster to the Codefresh dashboard
+Read more https://codefresh.io/docs/docs/deploy-to-kubernetes/add-kubernetes-cluster/#get-cluster-configuration-manually 
 
 export CURRENT_CONTEXT=$(kubectl config current-context)
 export CURRENT_CLUSTER=$(kubectl config view -o jsonpath="{@.contexts[?(@.name=='${CURRENT_CONTEXT}')].context.cluster}")
