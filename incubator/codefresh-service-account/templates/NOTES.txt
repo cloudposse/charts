@@ -17,7 +17,7 @@ echo $(kubectl -n {{ .Release.Namespace }} get secret -o jsonpath='{@.data.ca\.c
 Get Token:
 echo $(kubectl -n {{ .Release.Namespace }} get secret -o jsonpath='{@.data.token}' ${CODEFRESH_SECRET})
 
-OR if you use Geodesic >= 0.84.0 you can run
+OR if you use Geodesic >= 0.84.0 you can run in it
 
 NAMESPACE={{ .Release.Namespace }} CODEFRESH_SA={{ include "common.fullname" . }} codefresh-settings
 
