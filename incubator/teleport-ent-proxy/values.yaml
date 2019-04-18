@@ -1,6 +1,6 @@
 image:
   repository: quay.io/gravitational/teleport-ent
-  pullPolicy: "Always"
+  pullPolicy: "IfNotPresent"
 
 name: proxy
 nameOverride: teleport-proxy
@@ -12,6 +12,20 @@ replicaCount: 2
 config:
   ## See https://gravitational.com/teleport/docs/admin-guide/#configuration-file
   teleport.yaml: |-
+
+## set create: true to create kubernetes roles and bindings.
+## Required to enable Kubernetes integration starting with Teleport version 3.2.0
+rbac:
+  create: true
+
+## Create a service account
+## Required to enable Kubernetes integration starting with Teleport version 3.2.0
+serviceAccount:
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
 
 tls:
   ## Enable mounting of TLS certificates from a secret
