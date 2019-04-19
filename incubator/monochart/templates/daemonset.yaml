@@ -43,7 +43,14 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        args: {{ .Values.daemonset.pod.args }}
+        {{- if .Values.daemonset.pod.command }}
+        command: {{ toYaml .Values.daemonset.pod.command }}
+        {{- end }}
+        args: {{ toYaml .Values.daemonset.pod.args }}
+{{- with .Values.daemonset.pod.securityContext }}
+        securityContext:
+{{ toYaml . | indent 10 }}
+{{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}
@@ -51,7 +58,7 @@ spec:
           protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
         volumeMounts:
-        - mountPath: /data
+        - mountPath: {{ .Values.persistence.mountPath | quote }}
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}

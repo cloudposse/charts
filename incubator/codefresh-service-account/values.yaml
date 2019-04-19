@@ -1,0 +1,32 @@
+#annotations:
+#  name: value
+
+#labels:
+#  name: value
+
+clusterrole:
+  rules:
+    - apiGroups: ["batch"]
+      resources: ["jobs", "cronjobs"]
+      verbs: ["*"]
+    - apiGroups: [""]
+      resources: ["*"]
+      verbs: ["list", "watch", "get"]
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["delete"]
+    - apiGroups: ["extensions", "apps"]
+      resources: ["deployments", "replicasets"]
+      verbs: ["*"]
+    - apiGroups: ["extensions"]
+      resources: ["ingresses"]
+      verbs: ["get", "list"]
+    - apiGroups: [""]
+      resources: ["namespaces"]
+      verbs: ["get", "list", "update", "patch"]
+    - apiGroups: ["storage.k8s.io"]
+      resources: ["storageclasses"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: [""]
+      resources: ["pods/portforward"]
+      verbs: ["create"]

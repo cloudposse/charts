@@ -1,0 +1,24 @@
+Thank you for installing {{ .Chart.Name }}.
+
+To get credentials to connect your Kubernetes cluster to the Codefresh dashboard
+Read more https://codefresh.io/docs/docs/deploy-to-kubernetes/add-kubernetes-cluster/#get-cluster-configuration-manually 
+
+export CURRENT_CONTEXT=$(kubectl config current-context)
+export CURRENT_CLUSTER=$(kubectl config view -o jsonpath="{@.contexts[?(@.name=='${CURRENT_CONTEXT}')].context.cluster}")
+
+export CODEFRESH_SECRET=$(kubectl -n {{ .Release.Namespace }} get sa {{ include "common.fullname" . }} -o jsonpath='{@.secrets[].name}')
+
+Get API Host:
+echo $(kubectl config view -o jsonpath="{@.clusters[?(@.name=='${CURRENT_CLUSTER}')].cluster.server}")
+
+Get CA Certificate:
+echo $(kubectl -n {{ .Release.Namespace }} get secret -o jsonpath='{@.data.ca\.crt}' ${CODEFRESH_SECRET})
+
+Get Token:
+echo $(kubectl -n {{ .Release.Namespace }} get secret -o jsonpath='{@.data.token}' ${CODEFRESH_SECRET})
+
+OR if you use Geodesic >= 0.84.0 you can run in it
+
+NAMESPACE={{ .Release.Namespace }} CODEFRESH_SA={{ include "common.fullname" . }} codefresh-settings
+
+

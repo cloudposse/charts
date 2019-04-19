@@ -43,9 +43,16 @@ spec:
             image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
             imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 12 }}
-            args: {{ $cron.pod.args }}
+            {{- if $cron.pod.command }}
+            command: {{ toYaml $cron.pod.command }}
+            {{- end }}
+            args: {{ toYaml $cron.pod.args }}
+{{- with $cron.pod.securityContext }}
+            securityContext:
+{{ toYaml . | indent 14 }}
+{{- end }}
             volumeMounts:
-            - mountPath: /data
+            - mountPath: {{ $root.Values.persistence.mountPath | quote }}
               name: storage
 {{ include "monochart.files.volumeMounts" $root | indent 12 }}
 {{- with $root.Values.resources }}

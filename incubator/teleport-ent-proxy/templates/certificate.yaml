@@ -1,0 +1,25 @@
+{{- if and .Values.tls.enabled (not .Values.tls.useSelfSignedCert) }}
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ include "teleport-proxy.fullname" . }}
+  namespace: teleport
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-proxy.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secretName: "{{ include "teleport-proxy.tlsSecret" . }}"
+  issuerRef:
+    name: {{ .Values.tls.issuer.name }}
+    kind: {{ .Values.tls.issuer.type }}
+  commonName: '{{ .Values.tls.commonName }}'
+  acme:
+    config:
+    - http01:
+        ingressClass: {{ .Values.tls.ingressClass }}
+      domains:
+      - '{{ .Values.tls.commonName }}'
+{{- end }}

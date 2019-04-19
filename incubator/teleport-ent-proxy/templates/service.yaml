@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "teleport-proxy.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-proxy.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+{{- if .Values.service.annotations }}
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+{{- if or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Cluster" }}
+{{- end }}
+  ports:
+    - port: 443
+      targetPort: 3080
+      protocol: TCP
+      name: portal
+    - port: 3080
+      targetPort: 3080
+      protocol: TCP
+      name: console
+    - port: 3023
+      targetPort: 3023
+      protocol: TCP
+      name: ssh
+    - port: 3024
+      targetPort: 3024
+      protocol: TCP
+      name: tunnels
+    - port: 3026
+      targetPort: 3026
+      protocol: TCP
+      name: kubernetes
+  selector:
+    app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: "{{ .Values.name }}"

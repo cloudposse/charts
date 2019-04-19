@@ -59,51 +59,70 @@ deployment:
   enabled: false
   ## Pods replace strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-  # strategy: {}    
+  # strategy: {}
   revisionHistoryLimit: 10
   # annotations:
   #   name: value
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
+    # command:
     args: []
 
 statefulset:
   enabled: false
   ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
-  # strategy: {}    
+  # strategy: {}
   revisionHistoryLimit: 10
   # annotations:
   #   name: value
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
     ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    args: []
+    # command:
+    # args:
+  ## Configure volumeClaimTemplate block
+  persistence:
+    useVolumeClaimTemplates: true
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    mountPath: /data
+    # storageClass: gp2
+  #   annotations:
+  #     name: value
+  #   labels:
+  #     name: value
 
 daemonset:
   enabled: false
   ## Pods replace strategy
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#daemonsetupdatestrategy-v1-apps
-  # strategy: {}    
+  # strategy: {}
   revisionHistoryLimit: 10
   # annotations:
   #   name: value
   # labels:
   #   name: value
   pod:
+    # securityContext: {}
     annotations: {}
-    ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
+    # command:
     args: []
 
 job:
@@ -115,10 +134,13 @@ job:
     #   name: value
     restartPolicy: Never
     pod:
+      # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
+      # command:
       args: []
 
 cronjob:
@@ -135,10 +157,13 @@ cronjob:
     activeDeadlineSeconds: 300
     restartPolicy: Never
     pod:
+      # securityContext: {}
       annotations: {}
-      ## Read more about kube2iam to provide access to s3 https://github.com/jtblin/kube2iam
+      ## https://github.com/uswitch/kiam
+      ## https://github.com/jtblin/kube2iam
       #  iam.amazonaws.com/role: role-arn
       labels: {}
+      # command:
       args: []
 
 service:
@@ -277,6 +302,8 @@ resources:
 
 persistence:
   enabled: false
+  storageName: storage
+  mountPath: /data
   accessMode: ReadWriteOnce
   size: 8Gi
   # annotations:
@@ -293,8 +320,8 @@ persistence:
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
+  ## set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ## GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
 
