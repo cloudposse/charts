@@ -16,6 +16,9 @@ data:
       tls_cert_file = ""
       tls_key_file = ""
     {{- end }}
+    {{- if .Values.app.insecureSSL }}
+      ssl_insecure_skip_verify = true
+    {{- end }}
 
       ## the http url(s) of the upstream endpoint. If multiple, routing is based on path
       upstreams = [
