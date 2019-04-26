@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for Kubernetes
-name: oauth2-unlimited-staging-proxy
+name: xxxxxx # oauth2-unlimited-staging-proxy
 version: 0.0.1

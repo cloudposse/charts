@@ -9,7 +9,7 @@ data:
 
       ## <addr>:<port> to listen on for HTTP/HTTPS clients
       http_address = "http://0.0.0.0:{{ .Values.oauth.service.http.internalPort }}"
-      https_address = ":{{ .Values.oauth.service.https.internalPort }}"
+      https_address = ":9999" # value required but port is not used
 
     {{- if .Values.app.useSSL }}
       ## TLS Settings

@@ -2,8 +2,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "fullname_oauth" . }}
   labels:
+    app: {{ template "fullname_oauth" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   replicas: {{ .Values.oauth.replicaCount }}
@@ -12,10 +13,11 @@ spec:
       labels:
         app: {{ template "fullname" . }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/oauth.configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/oauth.secret.yaml") . | sha256sum }}
     spec:
       containers:
+      # Sidecar oauth2_proxy container
       - name: {{ .Chart.Name }}
         image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
         imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
@@ -60,7 +62,6 @@ spec:
               key: cookie_secret
         ports:
         - containerPort: {{ .Values.oauth.service.http.internalPort }}
-        - containerPort: {{ .Values.oauth.service.https.internalPort }}
         volumeMounts:
           - name: config
             mountPath: /usr/share/oauth2_proxy
