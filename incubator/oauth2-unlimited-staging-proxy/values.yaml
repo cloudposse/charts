@@ -1,0 +1,114 @@
+# Default values for oauth2-proxy.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+app:
+  useSSL: false
+  upstreams:
+#	  - example.com
+
+# Enabled provider
+  provider: "github"
+
+# Common oauth configs
+  clientID:
+  clientSecret:
+  scope:
+  redirectUrl:
+
+# Github specific configs
+  githubOrg:
+  githubTeam:
+
+# Github or Gitlab specific configs
+  loginUrl:
+  redeemUrl:
+  validateUrl:
+
+# MS Azure specific configs
+  azureTenant:
+  resource:
+
+# Google specific configs
+  googleGroups:
+#      - "group"
+  googleAdminEmail:
+  googleServiceAccountJson:
+
+# HTTP auth configs
+  basicAuthPassword:
+  displayHtpasswdForm:
+  htpasswdFile:
+
+# Email filters
+  emailDomains:
+    - "*"
+  emails:
+#      - igor@cloudposse.com
+
+# OAuth2 proxy configs
+  approvalPrompt:
+  requestLogging: false
+  passAccessToken: false
+  passBasicAuth: true
+  passHostHeader: true
+  setXAuthRequest: true
+  customTemplatesDir:
+  proxyPrefix:
+  skipAuthRegex:
+#	  - ".*"
+  skipProviderButton:
+  profileUrl:
+  signatureKey:
+
+# OAuth2 proxy session cookie config
+  cookieName:
+  cookieSecret:
+  cookieDomain:
+  cookieExpire:
+  cookieRefresh:
+  cookieSecure: true
+  cookieHttponly: false
+
+## Ingress for load balancer
+#ingress:
+# - name: "default"
+#   tls: "true"
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+#   hosts:
+#     - "oauth2.example.com"
+#     - "example.com"
+
+replicaCount: 1
+image:
+  repository: cloudposse/oauth2-proxy
+  tag: 2.2
+  pullPolicy: Always
+service:
+  name: oauth
+  type: ClusterIP
+#   labels:
+#     dns: "route53"
+#   annotations:
+#     kubernetes.io/tls-acme: "true"
+#     domainName: "foobar.com"
+#     dnsRecordType: "CNAME"
+#     dnsRecordTTL: "300"
+  http:
+    externalPort: 80
+    internalPort: 80
+  https:
+    externalPort: 443
+    internalPort: 443
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
