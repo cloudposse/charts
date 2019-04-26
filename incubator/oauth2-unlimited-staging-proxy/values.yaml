@@ -84,31 +84,32 @@ app:
 #     - "oauth2.example.com"
 #     - "example.com"
 
-replicaCount: 1
-image:
-  repository: cloudposse/oauth2-proxy
-  tag: 2.2
-  pullPolicy: Always
-service:
-  name: oauth
-  type: ClusterIP
-#   labels:
-#     dns: "route53"
-#   annotations:
-#     kubernetes.io/tls-acme: "true"
-#     domainName: "foobar.com"
-#     dnsRecordType: "CNAME"
-#     dnsRecordTTL: "300"
-  http:
-    externalPort: 80
-    internalPort: 80
-  https:
-    externalPort: 443
-    internalPort: 443
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+oauth:
+  replicaCount: 1
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: 2.2
+    pullPolicy: Always
+  service:
+    name: oauth
+    type: ClusterIP
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+    http:
+      externalPort: 80
+      internalPort: 80
+    https:
+      externalPort: 443
+      internalPort: 443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

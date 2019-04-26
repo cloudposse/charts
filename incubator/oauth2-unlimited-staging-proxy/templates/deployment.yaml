@@ -6,7 +6,7 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.oauth.replicaCount }}
   template:
     metadata:
       labels:
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
+        imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
         args:
           - "-config"
           - "/usr/share/oauth2_proxy/config"
@@ -59,17 +59,17 @@ spec:
               name: {{ template "fullname" . }}
               key: cookie_secret
         ports:
-        - containerPort: {{ .Values.service.http.internalPort }}
-        - containerPort: {{ .Values.service.https.internalPort }}
+        - containerPort: {{ .Values.oauth.service.http.internalPort }}
+        - containerPort: {{ .Values.oauth.service.https.internalPort }}
         volumeMounts:
           - name: config
             mountPath: /usr/share/oauth2_proxy
         livenessProbe:
           tcpSocket:
-            port: {{ .Values.service.http.internalPort }}
+            port: {{ .Values.oauth.service.http.internalPort }}
         readinessProbe:
           tcpSocket:
-            port: {{ .Values.service.http.internalPort }}
+            port: {{ .Values.oauth.service.http.internalPort }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:

@@ -4,22 +4,22 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-{{- if .Values.service.labels }}
-{{ toYaml .Values.service.labels | indent 4 }}
+{{- if .Values.oauth.service.labels }}
+{{ toYaml .Values.oauth.service.labels | indent 4 }}
 {{- end }}
-{{- if .Values.service.annotations }}
+{{- if .Values.oauth.service.annotations }}
   annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
+{{ toYaml .Values.oauth.service.annotations | indent 4 }}
 {{- end }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.oauth.service.type }}
   ports:
-  - port: {{ .Values.service.http.externalPort }}
-    targetPort: {{ .Values.service.http.internalPort }}
+  - port: {{ .Values.oauth.service.http.externalPort }}
+    targetPort: {{ .Values.oauth.service.http.internalPort }}
     protocol: TCP
     name: http
-  - port: {{ .Values.service.https.externalPort }}
-    targetPort: {{ .Values.service.https.internalPort }}
+  - port: {{ .Values.oauth.service.https.externalPort }}
+    targetPort: {{ .Values.oauth.service.https.internalPort }}
     protocol: TCP
     name: https
   selector:
