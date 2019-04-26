@@ -1,0 +1,118 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+      annotations:
+        # TODO(tamsky) update when done
+        # checksum/ui-config:    { include (print $.Template.BasePath "/dashboard.configmap.yaml") . | sha256sum }}
+        # checksum/vpn-config:   { include (print $.Template.BasePath "/vpn.configmap.yaml") . | sha256sum }}
+        # checksum/vpn-secret:   { include (print $.Template.BasePath "/vpn.secret.yaml") . | sha256sum }}
+        # checksum/oauth-config: { include (print $.Template.BasePath "/oauth.configmap.yaml") . | sha256sum }}
+        # checksum/oauth-secret: { include (print $.Template.BasePath "/oauth.secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: nginx
+        image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+        ports:
+          - containerPort: 81
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d
+          - name: source
+            mountPath: /usr/share/nginx/html
+        livenessProbe:
+          tcpSocket:
+            port: 81
+        readinessProbe:
+          tcpSocket:
+            port: 81
+        resources:
+{{ toYaml .Values.nginx.resources | indent 12 }}
+      - name: oauth2 # sidecar  127.0.0.1:4601
+        image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
+        imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
+        args:
+          - "-config"
+          - "/usr/share/oauth2_proxy/config"
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_name
+        - name: OAUTH2_PROXY_COOKIE_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_domain
+        - name: OAUTH2_PROXY_COOKIE_EXPIRE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_expire
+        - name: OAUTH2_PROXY_COOKIE_REFRESH
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_refresh
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: cookie_secret
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: oauth-config
+            mountPath: /usr/share/oauth2_proxy
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+        resources:
+{{ toYaml .Values.oauth.resources | indent 12 }}
+    {{ if .Values.ui.ssl.enabled }}
+      - name: "proxy"
+        image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+        imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: proxy-config
+            mountPath: /etc/nginx/conf.d
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+        resources:
+{{ toYaml .Values.proxy.resources | indent 12 }}
+    {{ end }}
+      # volumes:
+      #   - name: config
+      #     configMap:
+      #       name: {{ template "fullname" . }}
