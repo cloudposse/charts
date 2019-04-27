@@ -11,19 +11,19 @@ data:
       http_address = "http://0.0.0.0:{{ .Values.oauth.service.http.internalPort }}"
       https_address = ":9999" # value required but port is not used
 
-    {{- if .Values.app.useSSL }}
+    {{- if .Values.oauth.app.useSSL }}
       ## TLS Settings
       tls_cert_file = ""
       tls_key_file = ""
     {{- end }}
-    {{- if .Values.app.insecureSSL }}
+    {{- if .Values.oauth.app.insecureSSL }}
       ssl_insecure_skip_verify = true
     {{- end }}
 
       ## the http url(s) of the upstream endpoint. If multiple, routing is based on path
       upstreams = [
     {{ block "oauth2_proxy_upstreams" . }}
-      {{- range $value := .Values.app.upstreams }}
+      {{- range $value := .Values.oauth.app.upstreams }}
         {{- if not (empty $value) }}
           {{ $value | quote }},
         {{- end }}
@@ -31,28 +31,28 @@ data:
     {{- end }}
       ]
 
-    {{- if .Values.app.redirectUrl }}
+    {{- if .Values.oauth.app.redirectUrl }}
       ## the OAuth Redirect URL.
       # defaults to the "https://" + requested host header + "/oauth2/callback"
-      redirect_url = {{ .Values.app.redirectUrl | quote }}
+      redirect_url = {{ .Values.oauth.app.redirectUrl | quote }}
     {{- end }}
 
       ## Log requests to stdout
-      request_logging = {{ .Values.app.requestLogging }}
+      request_logging = {{ .Values.oauth.app.requestLogging }}
 
       ## pass HTTP Basic Auth, X-Forwarded-User and X-Forwarded-Email information to upstream
-      pass_basic_auth = {{ .Values.app.passBasicAuth }}
+      pass_basic_auth = {{ .Values.oauth.app.passBasicAuth }}
       ## pass the request Host Header to upstream
       ## when disabled the upstream Host is used as the Host Header
-      pass_host_header = {{ .Values.app.passHostHeader }}
+      pass_host_header = {{ .Values.oauth.app.passHostHeader }}
 
-      set_xauthrequest = {{ .Values.app.setXAuthRequest }}
+      set_xauthrequest = {{ .Values.oauth.app.setXAuthRequest }}
 
       ## Email Domains to allow authentication for (this authorizes any email on this domain)
       ## for more granular authorization use `authenticated_emails_file`
       ## To authorize any email addresses use "*"
       email_domains = [
-    {{- range $value := .Values.app.emailDomains }}
+    {{- range $value := .Values.oauth.app.emailDomains }}
     {{- if not (empty $value) }}
     {{ $value | quote | indent 4 }},
     {{- end }}
@@ -60,7 +60,7 @@ data:
       ]
 
       ## Pass OAuth Access token to upstream via "X-Forwarded-Access-Token"
-      pass_access_token = {{ .Values.app.passAccessToken }}
+      pass_access_token = {{ .Values.oauth.app.passAccessToken }}
 
       ## Authenticated Email Addresses File (one email per line)
       authenticated_emails_file = "/usr/share/oauth2_proxy/emails"
@@ -68,7 +68,7 @@ data:
       ## Htpasswd File (optional)
       ## Additionally authenticate against a htpasswd file. Entries must be created with "htpasswd -s" for SHA encryption
       ## enabling exposes a username/login signin form
-      {{- if not ( empty .Values.app.htpasswdFile) }}
+      {{- if not ( empty .Values.oauth.app.htpasswdFile) }}
       htpasswd_file = "/usr/share/oauth2_proxy/htpasswd"
       {{- end }}
 
@@ -79,91 +79,91 @@ data:
       ## Cookie Settings
       ## Secure   - secure cookies are only sent by the browser of a HTTPS connection (recommended)
       ## HttpOnly - httponly cookies are not readable by javascript (recommended)
-      cookie_secure = {{ .Values.app.cookieSecure }}
-      cookie_httponly = {{ .Values.app.cookieHttponly }}
+      cookie_secure = {{ .Values.oauth.app.cookieSecure }}
+      cookie_httponly = {{ .Values.oauth.app.cookieHttponly }}
 
-    {{- if .Values.app.proxyPrefix }}
-      proxy-prefix = {{ .Values.app.proxyPrefix | quote }}
+    {{- if .Values.oauth.app.proxyPrefix }}
+      proxy-prefix = {{ .Values.oauth.app.proxyPrefix | quote }}
     {{- end }}
 
-    {{- if .Values.app.azureTenant }}
-      azure_tenant = {{ .Values.app.azureTenant | quote }}
+    {{- if .Values.oauth.app.azureTenant }}
+      azure_tenant = {{ .Values.oauth.app.azureTenant | quote }}
     {{- end }}
 
-    {{- if .Values.app.githubOrg }}
-      github_org = {{ .Values.app.githubOrg | quote }}
+    {{- if .Values.oauth.app.githubOrg }}
+      github_org = {{ .Values.oauth.app.githubOrg | quote }}
     {{- end }}
 
-    {{- if .Values.app.githubTeam }}
-      github_team = {{ .Values.app.githubTeam | quote }}
+    {{- if .Values.oauth.app.githubTeam }}
+      github_team = {{ .Values.oauth.app.githubTeam | quote }}
     {{- end }}
 
       google_group = [
-    {{- range $value := .Values.app.googleGroups }}
+    {{- range $value := .Values.oauth.app.googleGroups }}
     {{- if not (empty $value) }}
     {{ $value | quote | indent 4 }},
     {{- end }}
     {{- end }}
       ]
 
-    {{- if .Values.app.googleAdminEmail }}
-      google_admin_email = {{ .Values.app.googleAdminEmail | quote }}
+    {{- if .Values.oauth.app.googleAdminEmail }}
+      google_admin_email = {{ .Values.oauth.app.googleAdminEmail | quote }}
     {{- end }}
 
-    {{- if .Values.app.googleServiceAccountJson }}
-      google_service_account_json = {{ .Values.app.googleServiceAccountJson | quote }}
+    {{- if .Values.oauth.app.googleServiceAccountJson }}
+      google_service_account_json = {{ .Values.oauth.app.googleServiceAccountJson | quote }}
     {{- end }}
 
-    {{- if .Values.app.displayHtpasswdForm }}
-      display_htpasswd_form = {{ .Values.app.displayHtpasswdForm | quote }}
+    {{- if .Values.oauth.app.displayHtpasswdForm }}
+      display_htpasswd_form = {{ .Values.oauth.app.displayHtpasswdForm | quote }}
     {{- end }}
 
-    {{- if .Values.app.basicAuthPassword }}
-      basic_auth_password = {{ .Values.app.basicAuthPassword | quote }}
+    {{- if .Values.oauth.app.basicAuthPassword }}
+      basic_auth_password = {{ .Values.oauth.app.basicAuthPassword | quote }}
     {{- end }}
 
-    {{- if .Values.app.skipProviderButton }}
-      skip_provider_button = {{ .Values.app.skipProviderButton  }}
+    {{- if .Values.oauth.app.skipProviderButton }}
+      skip_provider_button = {{ .Values.oauth.app.skipProviderButton  }}
     {{- end }}
 
-    {{- if .Values.app.provider }}
-      provider = {{ .Values.app.provider | quote }}
+    {{- if .Values.oauth.app.provider }}
+      provider = {{ .Values.oauth.app.provider | quote }}
     {{- end }}
 
-    {{- if .Values.app.loginUrl }}
-      login_url = {{ .Values.app.loginUrl | quote }}
+    {{- if .Values.oauth.app.loginUrl }}
+      login_url = {{ .Values.oauth.app.loginUrl | quote }}
     {{- end }}
 
-    {{- if .Values.app.redeemUrl }}
-      redeem_url = {{ .Values.app.redeemUrl | quote }}
+    {{- if .Values.oauth.app.redeemUrl }}
+      redeem_url = {{ .Values.oauth.app.redeemUrl | quote }}
     {{- end }}
 
-    {{- if .Values.app.profileUrl }}
-      profile_url = {{ .Values.app.profileUrl | quote }}
+    {{- if .Values.oauth.app.profileUrl }}
+      profile_url = {{ .Values.oauth.app.profileUrl | quote }}
     {{- end }}
 
-    {{- if .Values.app.resource }}
-      resource = {{ .Values.app.resource | quote }}
+    {{- if .Values.oauth.app.resource }}
+      resource = {{ .Values.oauth.app.resource | quote }}
     {{- end }}
 
-    {{- if .Values.app.validateUrl }}
-      validate_url = {{ .Values.app.validateUrl | quote }}
+    {{- if .Values.oauth.app.validateUrl }}
+      validate_url = {{ .Values.oauth.app.validateUrl | quote }}
     {{- end }}
 
-    {{- if .Values.app.scope }}
-      scope = {{ .Values.app.scope | quote }}
+    {{- if .Values.oauth.app.scope }}
+      scope = {{ .Values.oauth.app.scope | quote }}
     {{- end }}
 
-    {{- if .Values.app.approvalPrompt }}
-      approval_prompt = {{ .Values.app.approvalPrompt | quote }}
+    {{- if .Values.oauth.app.approvalPrompt }}
+      approval_prompt = {{ .Values.oauth.app.approvalPrompt | quote }}
     {{- end }}
 
-    {{- if .Values.app.signatureKey }}
-      signature_key = {{ .Values.app.signatureKey | quote }}
+    {{- if .Values.oauth.app.signatureKey }}
+      signature_key = {{ .Values.oauth.app.signatureKey | quote }}
     {{- end }}
 
       skip_auth_regex = [
-    {{- range $value := .Values.app.skipAuthRegex }}
+    {{- range $value := .Values.oauth.app.skipAuthRegex }}
     {{- if not (empty $value) }}
     {{ $value | quote | indent 4 }},
     {{- end }}
@@ -172,14 +172,14 @@ data:
 
 
   emails: |-
-    {{- range $value := .Values.app.emails }}
+    {{- range $value := .Values.oauth.app.emails }}
     {{- if not (empty $value) }}
     {{ $value }}
     {{- end }}
     {{- end }}
 
   htpasswd: |-
-    {{- range $value := .Values.app.htpasswdFile }}
+    {{- range $value := .Values.oauth.app.htpasswdFile }}
     {{- if not (empty $value) }}
     {{ $value }}
     {{- end }}
