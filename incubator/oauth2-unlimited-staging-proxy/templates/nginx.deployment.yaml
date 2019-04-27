@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname_proxy" . }}
+  name: {{ template "fullname" . }}
   labels:
-    app: {{ template "fullname_proxy" . }}
+    app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -18,13 +18,15 @@ spec:
         # checksum/vpn-secret:   { include (print $.Template.BasePath "/vpn.secret.yaml") . | sha256sum }}
         # checksum/oauth-config: { include (print $.Template.BasePath "/oauth.configmap.yaml") . | sha256sum }}
         # checksum/oauth-secret: { include (print $.Template.BasePath "/oauth.secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/oauth.configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/oauth.secret.yaml") . | sha256sum }}
     spec:
       containers:
       - name: nginx
         image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
         imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
         ports:
-          - containerPort: 80
+          - containerPort: {{ .Values.nginx.service.http.internalPort }}
         volumeMounts:
           - name: nginx-config
             mountPath: /etc/nginx/conf.d
@@ -32,13 +34,74 @@ spec:
           #   mountPath: /usr/share/nginx/html
         livenessProbe:
           tcpSocket:
-            port: 80
+            port: {{ .Values.nginx.service.http.internalPort }}
         readinessProbe:
           tcpSocket:
-            port: 80
+            port: {{ .Values.nginx.service.http.internalPort }}
         resources:
 {{ toYaml .Values.nginx.resources | indent 12 }}
+
+      # Sidecar oauth2_proxy container
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
+        imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
+        args:
+          - "-config"
+          - "/usr/share/oauth2_proxy/config"
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_name
+        - name: OAUTH2_PROXY_COOKIE_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_domain
+        - name: OAUTH2_PROXY_COOKIE_EXPIRE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_expire
+        - name: OAUTH2_PROXY_COOKIE_REFRESH
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_refresh
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: cookie_secret
+        ports:
+        - containerPort: {{ .Values.oauth.service.http.internalPort }}
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/oauth2_proxy
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.oauth.service.http.internalPort }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.oauth.service.http.internalPort }}
+        resources:
+{{ toYaml .Values.oauth.resources | indent 12 }}
+
       volumes:
         - name: nginx-config
           configMap:
             name: {{ template "fullname_proxy" . }}
+        - name: config
+          configMap:
+            name: {{ template "fullname_oauth" . }}

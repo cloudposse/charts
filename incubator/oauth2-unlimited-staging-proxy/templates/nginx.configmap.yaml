@@ -3,14 +3,14 @@ kind: ConfigMap
 metadata:
   name: {{ template "fullname_proxy" . }}
   labels:
-    app: {{ template "fullname_proxy" . }}
+    app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
   default.conf: |-
     upstream backend {
-      server localhost:8085;
+      server oauth:80;
     }
 
     server {
@@ -26,7 +26,7 @@ data:
         # }
 
         # this should capture into $sub hostnames that match pr123-some-service.<zone>
-        server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.DNS_ZONE }}
+        server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.DNS_ZONE }};
                   
         location / {
           proxy_pass       http://backend/user/$http_x_forwarded_user;
