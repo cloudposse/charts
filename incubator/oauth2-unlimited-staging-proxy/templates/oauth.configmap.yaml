@@ -37,10 +37,11 @@ data:
     {{- end }}
       ]
 
-    {{- if .Values.oauth.app.redirectUrl }}
       ## the OAuth Redirect URL.
       # defaults to the "https://" + requested host header + "/oauth2/callback"
-      redirect_url = {{ .Values.oauth.app.redirectUrl | quote }}
+    {{- if .Values.oauth.app.redirectUrl }}
+      # REALLY, you dont want to mess with this.  The requested host header is perfect.
+      # redirect_url = {{ .Values.oauth.app.redirectUrl | quote }}
     {{- end }}
 
       ## Log requests to stdout

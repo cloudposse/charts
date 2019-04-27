@@ -1,6 +1,10 @@
 # This is a YAML-formatted file.
 # Declare variables here to be passed into your templates.
 ---
+
+DNS_ZONE: "" # iap.staging.example.com
+iap_hostname: iap
+
 replicaCount: 1
 
 # Default values for ingress resource

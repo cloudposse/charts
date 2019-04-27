@@ -9,38 +9,78 @@ metadata:
     heritage: "{{ .Release.Service }}"
 data:
   default.conf: |-
-    upstream backend {
-      server localhost:81;
+    upstream localhost_oauth2_proxy {
+      least_conn;
+      server 127.0.0.1:81;
     }
 
     server {
-        listen       80;
-        # was:
-        #  server_name  localhost;
+      listen       80;
+      # was:
+      #  server_name  localhost;
 
-        # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
-        server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.DNS_ZONE }};
+      # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
+      server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
 
-        access_log /dev/stdout;
-        error_log /dev/stderr;
+      # TODO(tamsky): we still need to rewrite $sub -> <some-service>.pr123 for ultimate proxying
 
-        # location / {
-        #     root   /usr/share/nginx/html;
-        #     index  index.html index.htm;
-        # }
+      access_log /dev/stdout;
+      error_log /dev/stderr;
 
-        location / {
-          proxy_pass       http://backend/user/$http_x_forwarded_user;
-          proxy_set_header Host      $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          add_header Content-Disposition 'attachment; filename="client.ovpn"';
-          add_header Content-Type application/octet-stream;
+      # this location can only be used for internal requests
+      # cf. http://nginx.org/en/docs/http/ngx_http_core_module.html#internal
+      location /oauth2/auth {
+        internal;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+                                                                    
+      # initiate the oauth flow
+      location /oauth2/start {
+        auth_request off;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+
+      # initiate the oauth flow
+      location /oauth2/sign_in {
+        auth_request off;
+        rewrite_log on;
+        if ($arg_initial = "true") {
+            # rewrite ^(.*)([?&]initial=true)(.*)$ $1$3
+            # proxy_pass
+            proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$arg_iap_redirect;
+            break;
         }
-
-        location /configs/ {
-          alias /usr/share/nginx/private/;
+        if ($arg_iap_redirect) {
+            rewrite ^.*$ $scheme://$arg_iap_redirect? last;
+            break;
         }
+        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$scheme://$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+      }
 
-        # todo(tamsky)
-        # location /logout
+      location /oauth2/callback {
+        auth_request off;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+                                                        
+      location / {
+        auth_request /oauth2/auth;
+        error_page 401 =307 $scheme://{{.Values.iap_hostname}}.{{ .Values.DNS_ZONE }}/oauth2/sign_in?initial=true&iap_redirect=$scheme://$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+
+        # headers that are set in the auth_request
+        auth_request_set $auth_user $upstream_http_x_authenticated_email;
+        # headers that are set before proxy_pass
+        proxy_set_header x-forwarded-user $auth_user;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+
+        proxy_pass       http://$sub;
+      }
+
+      # TODO(tamsky): add 'location /logout {}'
+
+      proxy_set_header      X-Real-IP                   $remote_addr;
+      proxy_set_header      X-Forwarded-For             $proxy_add_x_forwarded_for;
+      proxy_set_header      X-Upstream-Response-Time    $upstream_response_time;
+      proxy_next_upstream   error                       http_500;
+      proxy_set_header      Host                        $host;
     }
