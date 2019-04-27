@@ -30,3 +30,11 @@ We truncate at 24 chars because some Kubernetes name fields are limited to this 
 {{- define "fullname_proxy" -}}
 {{- printf "%.17s-proxy" .Release.Name | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create a default fully qualified proxy name.
+We truncate at 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "fullname_ingress" -}}
+{{- printf "%.16s-ingress" .Release.Name | trimSuffix "-" -}}
+{{- end -}}
