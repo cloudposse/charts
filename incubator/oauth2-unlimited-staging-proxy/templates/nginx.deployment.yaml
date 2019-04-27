@@ -42,7 +42,7 @@ spec:
 {{ toYaml .Values.nginx.resources | indent 12 }}
 
       # Sidecar oauth2_proxy container
-      - name: {{ .Chart.Name }}
+      - name: oauth
         image: "{{ .Values.oauth.image.repository }}:{{ .Values.oauth.image.tag }}"
         imagePullPolicy: {{ .Values.oauth.image.pullPolicy }}
         args:
@@ -52,49 +52,49 @@ spec:
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: client_id
         - name: OAUTH2_PROXY_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: client_secret
         - name: OAUTH2_PROXY_COOKIE_NAME
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: cookie_name
         - name: OAUTH2_PROXY_COOKIE_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: cookie_domain
         - name: OAUTH2_PROXY_COOKIE_EXPIRE
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: cookie_expire
         - name: OAUTH2_PROXY_COOKIE_REFRESH
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: cookie_refresh
         - name: OAUTH2_PROXY_COOKIE_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ template "fullname_oauth" . }}
               key: cookie_secret
         ports:
-        - containerPort: {{ .Values.oauth.service.http.internalPort }}
+        - containerPort: 81
         volumeMounts:
           - name: config
             mountPath: /usr/share/oauth2_proxy
         livenessProbe:
           tcpSocket:
-            port: {{ .Values.oauth.service.http.internalPort }}
+            port: 81
         readinessProbe:
           tcpSocket:
-            port: {{ .Values.oauth.service.http.internalPort }}
+            port: 81
         resources:
 {{ toYaml .Values.oauth.resources | indent 12 }}
 

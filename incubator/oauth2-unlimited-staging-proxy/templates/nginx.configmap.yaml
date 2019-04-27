@@ -10,12 +10,16 @@ metadata:
 data:
   default.conf: |-
     upstream backend {
-      server oauth:80;
+      server localhost:81;
     }
 
     server {
         listen       80;
-        server_name  localhost;
+        # was:
+        #  server_name  localhost;
+
+        # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
+        server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.DNS_ZONE }};
 
         access_log /dev/stdout;
         error_log /dev/stderr;
@@ -25,9 +29,6 @@ data:
         #     index  index.html index.htm;
         # }
 
-        # this should capture into $sub hostnames that match pr123-some-service.<zone>
-        server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.DNS_ZONE }};
-                  
         location / {
           proxy_pass       http://backend/user/$http_x_forwarded_user;
           proxy_set_header Host      $host;
