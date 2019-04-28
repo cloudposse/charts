@@ -20,8 +20,12 @@ data:
       # was:
       #  server_name  localhost;
 
+      # this server{} config is authoritative for both iap.DOMAIN., and pr123-service.DOMAIN.:
+      server_name {{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+
       # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
-      server_name  ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+      # TODO(tamsky): add trailing '$' to regex:
+      server_name ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
       set $sub "$pr_number-$service";
 
       # TODO(tamsky): we still need to rewrite $sub -> <some-service>.pr123 for ultimate proxying
@@ -52,11 +56,22 @@ data:
             proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$arg_iap_redirect;
             break;
         }
-        # this is where the callback? oauth flow should wind up after authentiation
+        # this is where the callback? oauth flow winds up after valid authentiation with a valid _oauth_cookie
         if ($arg_iap_redirect) {
-            rewrite ^.*$ $arg_iap_redirect? last;
-            break;
+            # redirect to final desination, '?' tells nginx to skip appending the current '?query_args_list'
+            rewrite ^.*$ ${arg_iap_redirect}? redirect;
+
+            # per https://stackoverflow.com/a/55790721
+            # if we need to support query_args in our redirects, we'll need to remove the unwanted query_arg
+            # set $original_path $1;
+            # set $before $2;
+            # set $unwanted $3;
+            # set $rest $4;
+            # set $args "";
+            #
+            # rewrite ^ "${original_path}?${before}${rest}" redirect;
         }
+
         proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
       }
 
