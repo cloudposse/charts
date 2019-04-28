@@ -4,6 +4,7 @@
 
 DNS_ZONE: "" # iap.staging.example.com
 iap_hostname: iap
+kube_dns_hostname: kube-dns.kube-system.svc.cluster.local.  # trailing dot is correct
 
 replicaCount: 1
 
@@ -47,7 +48,8 @@ oauth:
   app:
     useSSL: false
     upstreams:
-  #	  - example.com
+      # do not change
+      - http://localhost/
 
   # Enabled provider
     provider: "github"

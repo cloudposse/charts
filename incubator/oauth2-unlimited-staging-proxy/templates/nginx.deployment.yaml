@@ -84,6 +84,11 @@ spec:
             secretKeyRef:
               name: {{ template "fullname_oauth" . }}
               key: cookie_secret
+        - name: OAUTH2_PROXY_WHITELIST_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname_oauth" . }}
+              key: whitelist_domain
         ports:
         - containerPort: 81
         volumeMounts:

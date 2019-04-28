@@ -9,6 +9,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
 data:
   default.conf: |-
+    resolver {{ .Values.kube_dns_hostname }} ipv6=off;
     upstream localhost_oauth2_proxy {
       least_conn;
       server 127.0.0.1:81;
@@ -20,7 +21,8 @@ data:
       #  server_name  localhost;
 
       # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
-      server_name  ~^(?<sub>[Pp][Rr][0-9]+-[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+      server_name  ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+      set $sub "$pr_number-$service";
 
       # TODO(tamsky): we still need to rewrite $sub -> <some-service>.pr123 for ultimate proxying
 
@@ -50,11 +52,12 @@ data:
             proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$arg_iap_redirect;
             break;
         }
+        # this is where the callback? oauth flow should wind up after authentiation
         if ($arg_iap_redirect) {
-            rewrite ^.*$ $scheme://$arg_iap_redirect? last;
+            rewrite ^.*$ $arg_iap_redirect? last;
             break;
         }
-        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$scheme://$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
       }
 
       location /oauth2/callback {
@@ -73,7 +76,8 @@ data:
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $http_connection;
 
-        proxy_pass       http://$sub;
+        # internal k8s namespace:
+        proxy_pass       http://$service.$pr_number.svc.cluster.local.;
       }
 
       # TODO(tamsky): add 'location /logout {}'
