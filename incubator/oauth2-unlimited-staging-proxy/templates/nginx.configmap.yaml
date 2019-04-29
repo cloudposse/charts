@@ -9,7 +9,10 @@ metadata:
     heritage: "{{ .Release.Service }}"
 data:
   default.conf: |-
+    # nginx requires a 'resolver' directive when variables appear in proxy_pass arguments
+    # (eg: proxy_pass "http://$service.$pr_number..." )
     resolver {{ .Values.kube_dns_hostname }} ipv6=off;
+
     upstream localhost_oauth2_proxy {
       least_conn;
       server 127.0.0.1:81;
@@ -17,23 +20,24 @@ data:
 
     server {
       listen       80;
-      # was:
-      #  server_name  localhost;
 
-      # this server{} config is authoritative for both iap.DOMAIN., and pr123-service.DOMAIN.:
+      # TODO(mtamsky): It might be clearer if we had two server{}
+      # blocks, each with unique server_name patterns.  This would
+      # create a clear separation of the iap from internal services.
+
+      # this server{} config answers for both:
+      # iap.DOMAIN
       server_name {{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+      # pr123-service.DOMAIN
+      server_name ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$;
 
-      # this should capture into $sub a hostname that matches pr123-some-service.<DNS_ZONE>
-      # TODO(tamsky): add trailing '$' to regex:
-      server_name ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
-      set $sub "$pr_number-$service";
-
-      # TODO(tamsky): we still need to rewrite $sub -> <some-service>.pr123 for ultimate proxying
+      # Assemble the two captured vars into $sub
+      set $pr_number_service "${pr_number}-${service}";
 
       access_log /dev/stdout;
       error_log /dev/stderr;
 
-      # this location can only be used for internal requests
+      # 'internal' directive designates this location is nginx-internal-only
       # cf. http://nginx.org/en/docs/http/ngx_http_core_module.html#internal
       location /oauth2/auth {
         internal;
@@ -46,33 +50,30 @@ data:
         proxy_pass http://localhost_oauth2_proxy;
       }
 
-      # initiate the oauth flow
+      # Presents the initial login page with "Sign in with a XYZ account" button.
+      # Also logs the user out by clearing their _oauth_cookie.
       location /oauth2/sign_in {
         auth_request off;
         rewrite_log on;
         if ($arg_initial = "true") {
-            # rewrite ^(.*)([?&]initial=true)(.*)$ $1$3
-            # proxy_pass
-            proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$arg_iap_redirect;
+            proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=${arg_iap_redirect};
             break;
+            # we continue processing this request
+            # http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#break
         }
-        # this is where the callback? oauth flow winds up after valid authentiation with a valid _oauth_cookie
+
+        # This is currently where the callback? oauth flow winds up after valid
+        # authentiation with a valid _oauth_cookie.
+
+        # TODO(tamsky): determine if we can move iap_redirect to a unique path
+        # instead of piggybacking on the /oauth2/sign_in location
         if ($arg_iap_redirect) {
-            # redirect to final desination, '?' tells nginx to skip appending the current '?query_args_list'
+            # redirect to final desination, trailing-'?' tells nginx to drop current $query_string
             rewrite ^.*$ ${arg_iap_redirect}? redirect;
-
-            # per https://stackoverflow.com/a/55790721
-            # if we need to support query_args in our redirects, we'll need to remove the unwanted query_arg
-            # set $original_path $1;
-            # set $before $2;
-            # set $unwanted $3;
-            # set $rest $4;
-            # set $args "";
-            #
-            # rewrite ^ "${original_path}?${before}${rest}" redirect;
         }
 
-        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+        # This 'proxy_pass' URL is what generates the start-of-oauth-flow:
+        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=${pr_number_service}.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}${request_uri};
       }
 
       location /oauth2/callback {
@@ -81,18 +82,23 @@ data:
       }
                                                         
       location / {
+        # All paths (not matched above) are protected by the 'auth_request' directive.
         auth_request /oauth2/auth;
-        error_page 401 =307 $scheme://{{.Values.iap_hostname}}.{{ .Values.DNS_ZONE }}/oauth2/sign_in?initial=true&iap_redirect=$scheme://$sub.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
 
-        # headers that are set in the auth_request
+        # Headers we include in the auth_request:
         auth_request_set $auth_user $upstream_http_x_authenticated_email;
-        # headers that are set before proxy_pass
+
+        # TODO(tamsky): verify we need 'initial=true' pieces.
+        error_page 401 =307 $scheme://{{.Values.iap_hostname}}.{{ .Values.DNS_ZONE }}/oauth2/sign_in?initial=true&iap_redirect=$scheme://${pr_number_service}.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+
+        # Headers that are set in the request sent to the oauth2_proxy:
         proxy_set_header x-forwarded-user $auth_user;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $http_connection;
 
-        # internal k8s namespace:
-        proxy_pass       http://$service.$pr_number.svc.cluster.local.;
+        # Lookup hostname using DNS and proxy the current request to service_ip_address:80
+        proxy_pass       http://${service}.${pr_number}.svc.cluster.local.;
+                                                                         # trailing dot is correct
       }
 
       # TODO(tamsky): add 'location /logout {}'

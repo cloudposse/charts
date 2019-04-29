@@ -20,7 +20,7 @@ Create a default fully qualified oauth name.
 We limit this value to 24 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "fullname_oauth" -}}
-{{- printf "%s-oauth" .Release.Name | trimSuffix "-" -}}
+{{- printf "%.17s-oauth" .Release.Name | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
