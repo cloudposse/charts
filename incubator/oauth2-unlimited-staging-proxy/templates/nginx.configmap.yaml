@@ -25,13 +25,13 @@ data:
       # blocks, each with unique server_name patterns.  This would
       # create a clear separation of the iap from internal services.
 
-      # this server{} config answers for both:
+      # Currently, this server{} config answers for both:
       # iap.DOMAIN
       server_name {{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
       # pr123-service.DOMAIN
       server_name ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$;
 
-      # Assemble the two captured vars into $sub
+      # Assemble the two captured vars
       set $pr_number_service "${pr_number}-${service}";
 
       access_log /dev/stdout;
