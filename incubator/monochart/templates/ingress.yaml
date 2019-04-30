@@ -1,5 +1,4 @@
 {{- $root := . -}}
-{{- $servicePort := .Values.service.ports.default.external -}}
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
