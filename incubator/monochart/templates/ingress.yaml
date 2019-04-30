@@ -27,7 +27,7 @@ spec:
           - path: {{ $path }}
             backend:
               serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              servicePort: {{ include "monochart.ingress.port" ( hasKey $ingress "port" | ternary $ingress.port "default" }}
 {{- end -}}
 {{- with $ingress.tls }}
   tls:
