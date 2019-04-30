@@ -329,6 +329,7 @@ persistence:
 ingress:
   default:
     enabled: false
+    port: default
 #    labels:
 #      dns: "route53"
 #    annotations:
