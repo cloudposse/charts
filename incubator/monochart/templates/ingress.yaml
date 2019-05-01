@@ -1,5 +1,4 @@
 {{- $root := . -}}
-{{- $servicePort := .Values.service.ports.default.external -}}
 {{- $serviceName := include "common.fullname" . -}}
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
@@ -27,7 +26,7 @@ spec:
           - path: {{ $path }}
             backend:
               serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+              servicePort: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
 {{- end -}}
 {{- with $ingress.tls }}
   tls:
