@@ -1,0 +1,6 @@
+To verify that Fluentd  has started, run:
+
+  kubectl --namespace={{ .Release.Namespace }} get all -l "app={{ template "fluentd_kubernetes.name" . }},release={{ .Release.Name }}"
+
+THIS APPLICATION CAPTURES ALL CONSOLE OUTPUT AND FORWARDS IT TO configured backend storage. Anything that might be identifying,
+including things like IP addresses, container images, and object names will NOT be anonymized.

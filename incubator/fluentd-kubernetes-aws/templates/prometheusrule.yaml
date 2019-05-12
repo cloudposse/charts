@@ -1,0 +1,69 @@
+{{- if .Values.prometheus.createRule }}
+# Copied from https://github.com/kiwigrid/helm-charts/blob/416e9ef84ad865846d263e2fccdf0c32ed9fee81/charts/fluentd-elasticsearch/templates/prometheusrule.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name:  {{ template "fluentd_kubernetes.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "fluentd_kubernetes.name" . }}
+    helm.sh/chart: {{ include "fluentd_kubernetes.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.prometheus.labels }}
+{{- toYaml .Values.prometheus.labels | nindent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: fluentd
+    rules:
+    - alert: FluentdNodeDown
+      expr: up{job="{{ .Release.Name }}"} == 0
+      for: 10m
+      labels:
+        service: fluentd
+        severity: warning
+      annotations:
+        summary: fluentd cannot be scraped
+        description: Prometheus could not scrape {{ "{{ $labels.job }}" }} for more than 10 minutes
+
+    - alert: FluentdNodeDown
+      expr: up{job="{{ .Release.Name }}"} == 0
+      for: 30m
+      labels:
+        service: fluentd
+        severity: critical
+      annotations:
+        summary: fluentd cannot be scraped
+        description: Prometheus could not scrape {{ "{{ $labels.job }}" }} for more than 30 minutes
+
+    - alert: FluentdQueueLength
+      expr: rate(fluentd_status_buffer_queue_length[5m]) > 0.3
+      for: 1m
+      labels:
+        service: fluentd
+        severity: warning
+      annotations:
+        summary: fluentd node are failing
+        description: In the last 5 minutes, fluentd queues increased 30%. Current value is {{ "{{ $value }}" }}
+
+    - alert: FluentdQueueLength
+      expr: rate(fluentd_status_buffer_queue_length[5m]) > 0.5
+      for: 1m
+      labels:
+        service: fluentd
+        severity: critical
+      annotations:
+        summary: fluentd node are critical
+        description: In the last 5 minutes, fluentd queues increased 50%. Current value is {{ "{{ $value }}" }}
+
+    - alert: FluentdRecordsCountsHigh
+      expr: sum(rate(fluentd_record_counts{job="{{ .Release.Name }}"}[5m])) BY (instance) >  (3 * sum(rate(fluentd_record_counts{job="{{ .Release.Name }}"}[15m])) BY (instance))
+      for: 1m
+      labels:
+        service: fluentd
+        severity: critical
+      annotations:
+        summary: fluentd records count are critical
+        description: In the last 5m, records counts increased 3 times, comparing to the latest 15 min.
+
+{{- end }}
