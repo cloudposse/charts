@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- if .Values.prometheus.labels }}
-{{- toYaml .Values.prometheus.labels | indent 4 }}
+{{ toYaml .Values.prometheus.labels | indent 4 }}
 {{- end }}
 
 spec:

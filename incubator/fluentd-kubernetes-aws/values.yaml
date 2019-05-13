@@ -2,12 +2,12 @@
 
 image:
   repository: fluent/fluentd-kubernetes-daemonset
-  tag: v1.3.3-debian-elasticsearch-1.8
+  tag: v1.4.2-debian-elasticsearch-1.1
 
 role: elasticsearch-user
 
 elasticsearch:
-  endpoint: my-elasticsearch-jivhavxbcd5dvcbjzrac7j42rm.us-east-1.es.amazonaws.com
+  endpoint: my-elasticsearch-jivhavxbcd5.us-east-1.es.amazonaws.com
   region: us-east-1
 
 prometheus:

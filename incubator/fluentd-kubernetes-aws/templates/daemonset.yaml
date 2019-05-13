@@ -1,6 +1,5 @@
 apiVersion: apps/v1
-{{/*kind: DaemonSet*/}}
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ template "fluentd_kubernetes.fullname" . }}
   labels:
@@ -25,32 +24,35 @@ spec:
         kubernetes.io/cluster-service: "true"
         app: {{ template "fluentd_kubernetes.name" . }}
         release: {{ .Release.Name }}
+      {{- if .Values.role }}
       annotations:
         iam.amazonaws.com/role: {{ .Values.role }}
+      {{- end }}
     spec:
       serviceAccountName: {{ template "fluentd_kubernetes.fullname" . }}
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchFields:
-                  - key: metadata.name
-                    operator: In
-                    values:
-                      - ip-10-105-15-232.eu-west-2.compute.internal
       containers:
       - name: fluentd
         image: {{ .Values.image.repository}}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
         env:
+        {{- if .Values.role }}
           - name: FLUENT_ELASTICSEARCH_HOST
             value: "localhost"
           - name: FLUENT_ELASTICSEARCH_PORT
             value: "9200"
           - name: FLUENT_ELASTICSEARCH_SCHEME
             value: "http"
+        {{- else }}
+          - name: FLUENT_ELASTICSEARCH_HOST
+            value: "{{ .Values.elasticsearch.endpoint }}"
+          - name: FLUENT_ELASTICSEARCH_PORT
+            value: "443"
+          - name: FLUENT_ELASTICSEARCH_SCHEME
+            value: "https"
+        {{- end }}
           {{- range $name, $value := .Values.env }}
           {{- if (not (empty $value)) and (not (eq $name "FLUENT_ELASTICSEARCH_HOST" "FLUENT_ELASTICSEARCH_SCHEME")) }}
           - name: {{ $name | quote }}
@@ -65,8 +67,16 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
-
+      {{- if .Values.role }}
       - name: signing-proxy
+        # This image, abutaha/aws-es-proxy:0.9, still has issues, but the Fluentd plugin seems not to be affected by them.
+        # Still, the image should be updated when possible, but once we find a good image it should not need to be
+        # updated further until AWS changes their signing algorithm.
+        # https://github.com/abutaha/aws-es-proxy/issues/27
+        # https://github.com/abutaha/aws-es-proxy/issues/29
+        # https://github.com/abutaha/aws-es-proxy/issues/35
+        # An alternative is mozilla/aws-signing-proxy but as of version 1.0.3 it did not work
+        # https://github.com/mozilla-services/aws-signing-proxy/issues/9
         image: abutaha/aws-es-proxy:0.9
         imagePullPolicy: IfNotPresent
         args:
@@ -83,7 +93,7 @@ spec:
           requests:
            cpu: 5m
            memory: 10Mi
-
+      {{- end }}
       terminationGracePeriodSeconds: 30
       volumes:
         - name: varlog
