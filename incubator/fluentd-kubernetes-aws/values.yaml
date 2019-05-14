@@ -1,0 +1,41 @@
+# Default values for fluentd-kubernetes-aws.
+
+image:
+  repository: fluent/fluentd-kubernetes-daemonset
+  tag: v1.4.2-debian-elasticsearch-1.1
+
+role: elasticsearch-user
+
+elasticsearch:
+  endpoint: my-elasticsearch-jivhavxbcd5.us-east-1.es.amazonaws.com
+  region: us-east-1
+
+prometheus:
+  createService: true
+  createServiceMonitor: true
+  createRule: true
+  labels:
+    app: prometheus-operator
+    release: prometheus-operator
+
+env:
+  # set environment variables in the form name: value
+  FLUENTD_PROMETHEUS_PORT: 24231
+  FLUENT_ELASTICSEARCH_BUFFER_CHUNK_LIMIT_SIZE: 4M
+  FLUENT_ELASTICSEARCH_BUFFER_QUEUE_LIMIT_LENGTH: 64
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 500m
+  #  memory: 200Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 200Mi
+
+debug:
+  fluentd: false
+  signer: false

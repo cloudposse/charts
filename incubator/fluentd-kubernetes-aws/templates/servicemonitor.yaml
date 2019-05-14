@@ -1,0 +1,25 @@
+{{- if .Values.prometheus.createServiceMonitor }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "fluentd_kubernetes.fullname" . }}
+  labels:
+    app: {{ template "fluentd_kubernetes.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.prometheus.labels }}
+{{ toYaml .Values.prometheus.labels | indent 4 }}
+{{- end }}
+
+spec:
+  endpoints:
+  - path: /metrics
+    port: prometheus
+  selector:
+    namespaceSelector:
+      any: true
+    matchLabels:
+      app: {{ template "fluentd_kubernetes.name" . }}-prometheus
+      release: {{ .Release.Name }}
+{{- end }}

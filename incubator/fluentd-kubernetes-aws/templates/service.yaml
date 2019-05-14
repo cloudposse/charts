@@ -1,0 +1,22 @@
+{{- if .Values.prometheus.createService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fluentd_kubernetes.fullname" . }}-prometheus
+  labels:
+    app: {{ template "fluentd_kubernetes.name" . }}-prometheus
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+
+spec:
+  type: ClusterIP
+  ports:
+    - name: prometheus
+      port: 9224
+      protocol: TCP
+      targetPort: {{ index .Values.env "FLUENTD_PROMETHEUS_PORT" | default "24231" }}
+  selector:
+    app: {{ template "fluentd_kubernetes.name" . }}
+    release: {{ .Release.Name }}
+{{- end }}
