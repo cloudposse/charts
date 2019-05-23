@@ -96,7 +96,7 @@ $ helm install --name route53 \
     incubator/route53-kubernetes
 ```
 
-The above command sets the host parameter to 'test.com' and install vpn acceptable with that host.
+The above command sets the DNS record type to A and installs the service.
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
