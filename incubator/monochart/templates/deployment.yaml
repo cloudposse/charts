@@ -49,12 +49,14 @@ spec:
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{ include "monochart.env" . | indent 8 }}
-        {{- if .Values.deployment.pod.command }}
-        command: {{ toYaml .Values.deployment.pod.command }}
-        {{- end }}
-        {{- if .Values.deployment.pod.args }}
-        args: {{ toYaml .Values.deployment.pod.args }}
-        {{- end }}
+{{- with .Values.deployment.pod.command }}
+        command:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.deployment.pod.args }}
+        args:
+{{ toYaml . | indent 10 }}
+{{- end }}
 {{- with .Values.deployment.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
