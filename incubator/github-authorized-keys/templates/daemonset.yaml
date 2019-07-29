@@ -137,8 +137,13 @@ spec:
 {{end}}
         - name: SYNC_USERS_ROOT
           value: /host
+{{if .Values.integrateSSH}}
         - name: INTEGRATE_SSH
-          value: "true"
+          valueFrom:
+            secretKeyRef:
+              name: github-authorized-keys
+              key: integrateSSH
+{{end}}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:

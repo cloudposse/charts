@@ -79,6 +79,10 @@ etcdClusterSize: 3
 ##
 etcdTTL: "86400"
 
+## Specify whether or not to automatically configure ssh
+##
+integrateSSH: "true"
+
 ## Template of create user command
 ##
 ## Available placeholders
