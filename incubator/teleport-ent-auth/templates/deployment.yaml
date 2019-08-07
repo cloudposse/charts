@@ -67,14 +67,16 @@ spec:
           httpGet:
             path: /healthz
             port: {{ .Values.diagnostics.port | default 3000 }}
-          initialDelaySeconds: 30
+          initialDelaySeconds: 70
           timeoutSeconds: 3
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /readyz
             port: {{ .Values.diagnostics.port | default 3000 }}
           initialDelaySeconds: 30
           timeoutSeconds: 3
+          failureThreshold: 5
         {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
