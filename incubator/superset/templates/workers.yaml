@@ -53,7 +53,7 @@ spec:
         - name: {{ .Chart.Name }}-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["celery", "worker", "--app=superset.sql_lab:celery_app", "--pool=gevent", "-Ofair"]
+          args: ["celery", "worker", "--app=superset.sql_lab:celery_app", "--pool=gevent", "-Ofair", "-c", "{{ .Values.workers.count }}"]
           volumeMounts:
             - name: superset-configs
               mountPath: /home/superset

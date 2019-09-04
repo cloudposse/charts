@@ -192,3 +192,4 @@ readinessProbe:
   failureThreshold: 2
 workers:
   enabled: false
+  count: 10
