@@ -1,5 +1,8 @@
 # Apache superset
 
+This is a fork of [`stable/superset`](https://github.com/helm/charts/tree/master/stable/superset).
+Please respect any Copyrights that may apply.  
+
 ## Introduction
 
 This chart bootstraps an [Apache superset](https://superset.incubator.apache.org/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
