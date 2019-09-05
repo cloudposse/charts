@@ -190,6 +190,6 @@ readinessProbe:
   timeoutSeconds: 5
   periodSeconds: 10
   failureThreshold: 2
-workers:
+worker:
   enabled: false
-  count: 10
+  concurrency: 10

@@ -7,7 +7,7 @@ This chart bootstraps an [Apache superset](https://superset.incubator.apache.org
 ## TL;DR;
 
 ```bash
-$ helm install stable/superset
+$ helm install cloudposse-incubator/superset
 ```
 
 ## Prerequisites
@@ -20,6 +20,8 @@ $ helm install stable/superset
 To install the chart with the release name `my-release`:
 
 ```bash
+$ helm repo rm cloudposse-incubator 2>/dev/null
+$ helm repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
 $ helm install --name my-release stable/superset
 ```
 
@@ -51,7 +53,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `replicas`                 | Number of replicas of superset                  | `1`                                                          |
 | `extraEnv`                 | Extra environment variables passed to pods      | `{}`                                                         |
 | `extraEnvFromSecret`       | The name of a Kubernetes secret (must be manually created in the same namespace) containing values to be added to the environment | `""` |
-| `deploymentAnnotations`              | Key Value pairs of deployment level annotations. Useful for 3rd party integrations | `{}` |
+| `deploymentAnnotations`    | Key Value pairs of deployment level annotations. Useful for 3rd party integrations | `{}` |
 | `persistence.enabled`      | Enable persistence                              | `false`                                                      |
 | `persistence.existingClaim`| Provide an existing PersistentVolumeClaim       | `""`                                                         |
 | `persistence.storageClass` | Storage class of backing PVC                    | `nil` (uses alpha storage class annotation)                  |
@@ -69,6 +71,8 @@ The command removes all the Kubernetes components associated with the chart and 
 | `ingress.hosts`            | ingress hosts                                   | `[superset.domain.com]`                                      |
 | `ingress.path`             | ingress path                                    | `\`                                                          |
 | `ingress.tls`              | ingress tls                                     | `[]`                                                         |
+| `worker.enabled`           | Enable celery worker                            | `true`                                                       |
+| `worker.concurrency`       | Celery worker concurrency                       | `10`                                                         | 
 
  see [values.yaml](./values.yaml)
 

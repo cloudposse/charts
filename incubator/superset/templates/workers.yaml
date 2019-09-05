@@ -1,4 +1,4 @@
-{{- if .Values.workers.enabled -}}
+{{- if .Values.worker.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -10,7 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.workers.count }}
+  replicas: {{ .Values.worker.count }}
   selector:
     matchLabels:
       app: {{ include "superset.name" . }}
@@ -53,7 +53,7 @@ spec:
         - name: {{ .Chart.Name }}-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["celery", "worker", "--app=superset.sql_lab:celery_app", "--pool=gevent", "-Ofair", "-c", "{{ .Values.workers.count }}"]
+          args: ["celery", "worker", "--app=superset.sql_lab:celery_app", "--pool=gevent", "-Ofair", "-c", "{{ .Values.worker.concurrency }}"]
           volumeMounts:
             - name: superset-configs
               mountPath: /home/superset
