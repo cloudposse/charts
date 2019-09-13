@@ -43,10 +43,14 @@ spec:
             image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
             imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 12 }}
-            {{- if $cron.pod.command }}
-            command: {{ toYaml $cron.pod.command }}
+            {{- with $cron.pod.command }}
+            command:
+{{ toYaml . | indent 12}}
             {{- end }}
-            args: {{ toYaml $cron.pod.args }}
+            {{- with $cron.pod.args }}
+            args:
+{{ toYaml . | indent 12}}
+            {{- end }}
 {{- with $cron.pod.securityContext }}
             securityContext:
 {{ toYaml . | indent 14 }}
