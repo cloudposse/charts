@@ -8,7 +8,8 @@ nameOverride: teleport-auth
 
 ## Teleport service replicas
 ## See https://gravitational.com/teleport/docs/admin-guide/#auth-server-ha
-replicaCount: 1
+replicaCount: 2
+maxUnavailable: 50%
 
 rbac:
   create: true
