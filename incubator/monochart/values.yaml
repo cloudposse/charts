@@ -67,6 +67,7 @@ deployment:
   #   name: value
   pod:
     # securityContext: {}
+    # hostAliases: {}
     annotations: {}
     ## https://github.com/uswitch/kiam
     ## https://github.com/jtblin/kube2iam

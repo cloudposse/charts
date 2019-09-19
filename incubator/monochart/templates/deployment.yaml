@@ -61,6 +61,10 @@ spec:
         securityContext:
 {{ toYaml . | indent 10 }}
 {{- end }}
+{{- with .Values.deployment.pod.hostAliases }}
+        hostAliases:
+{{ toYaml . | indent 10 }}
+{{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
           - name: {{ $name }}
