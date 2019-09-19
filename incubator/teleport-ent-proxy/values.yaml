@@ -6,6 +6,7 @@ name: proxy
 nameOverride: teleport-proxy
 
 replicaCount: 2
+maxUnavailable: 50%
 
 ## Configuration to be copied into Teleport container
 ## Each entry must be an inline file that will be written to /etc/teleport

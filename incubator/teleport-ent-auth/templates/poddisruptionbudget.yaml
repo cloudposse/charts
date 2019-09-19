@@ -1,0 +1,21 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "teleport-auth.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+    app.kubernetes.io/component: "{{ .Values.name }}"
+    helm.sh/chart: {{ include "teleport-auth.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: "{{ .Values.name }}"
+  {{- if .Values.minAvailable }}
+  minAvailable: {{ .Values.minAvailable }}
+  {{- else }}
+  maxUnavailable: {{ default 0 .Values.maxUnavailable }}
+  {{- end }}

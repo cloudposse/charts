@@ -10,6 +10,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ default 0 .Values.maxUnavailable }}
+      maxSurge: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
@@ -17,6 +22,10 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+{{- with .Values.podAnnotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       labels:
         app.kubernetes.io/name: {{ include "teleport-proxy.name" . }}
         app.kubernetes.io/component: "{{ .Values.name }}"

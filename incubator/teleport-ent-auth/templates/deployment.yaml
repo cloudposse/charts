@@ -13,7 +13,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 99%
+      maxUnavailable: {{ default 0 .Values.maxUnavailable }}
+      maxSurge: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "teleport-auth.name" . }}
