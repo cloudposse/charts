@@ -50,6 +50,9 @@ spec:
 {{- with .Values.daemonset.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
+{{- with .Values.daemonset.pod.hostAliases }}
+        hostAliases:
+{{ toYaml . | indent 10 }}
 {{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
