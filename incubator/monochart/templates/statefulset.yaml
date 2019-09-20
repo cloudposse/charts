@@ -57,6 +57,9 @@ spec:
 {{- with .Values.statefulset.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
+{{- with .Values.statefulset.pod.hostAliases }}
+        hostAliases:
+{{ toYaml . | indent 10 }}
 {{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
