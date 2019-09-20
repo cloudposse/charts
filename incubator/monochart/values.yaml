@@ -67,7 +67,11 @@ deployment:
   #   name: value
   pod:
     # securityContext: {}
-    # hostAliases: {}
+    # hostAliases:
+    #  - ip: "10.1.2.3"
+    #    hostnames:
+    #    - "foo.remote"
+    #    - "bar.remote"
     annotations: {}
     ## https://github.com/uswitch/kiam
     ## https://github.com/jtblin/kube2iam
