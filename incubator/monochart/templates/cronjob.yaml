@@ -54,6 +54,7 @@ spec:
 {{- with $cron.pod.securityContext }}
             securityContext:
 {{ toYaml . | indent 14 }}
+{{- end }}
 {{- with $cron.pod.hostAliases }}
             hostAliases:
 {{ toYaml . | indent 14 }}

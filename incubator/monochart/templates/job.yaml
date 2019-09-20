@@ -48,6 +48,7 @@ spec:
 {{- with $job.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
+{{- end }}
 {{- with $job.pod.hostAliases }}
         hostAliases:
 {{ toYaml . | indent 10 }}
