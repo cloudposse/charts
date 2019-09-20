@@ -51,10 +51,6 @@ spec:
         securityContext:
 {{ toYaml . | indent 10 }}
 {{- end }}
-{{- with .Values.daemonset.pod.hostAliases }}
-        hostAliases:
-{{ toYaml . | indent 10 }}
-{{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}
@@ -66,6 +62,10 @@ spec:
           name: storage
 {{ include "monochart.files.volumeMounts" . | indent 8 }}
 {{- with .Values.probes }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.daemonset.pod.hostAliases }}
+      hostAliases:
 {{ toYaml . | indent 8 }}
 {{- end }}
 {{- with .Values.resources }}

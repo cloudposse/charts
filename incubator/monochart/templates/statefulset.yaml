@@ -58,10 +58,6 @@ spec:
         securityContext:
 {{ toYaml . | indent 10 }}
 {{- end }}
-{{- with .Values.statefulset.pod.hostAliases }}
-        hostAliases:
-{{ toYaml . | indent 10 }}
-{{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
         - name: {{ $name }}
@@ -78,6 +74,10 @@ spec:
 {{- with .Values.resources }}
         resources:
 {{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.statefulset.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
 {{- end }}
       imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}

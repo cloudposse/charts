@@ -55,10 +55,6 @@ spec:
             securityContext:
 {{ toYaml . | indent 14 }}
 {{- end }}
-{{- with $cron.pod.hostAliases }}
-            hostAliases:
-{{ toYaml . | indent 14 }}
-{{- end }}
             volumeMounts:
             - mountPath: {{ $root.Values.persistence.mountPath | quote }}
               name: storage
@@ -66,6 +62,10 @@ spec:
 {{- with $root.Values.resources }}
             resources:
 {{ toYaml . | indent 14 }}
+{{- end }}
+{{- with $cron.pod.hostAliases }}
+          hostAliases:
+{{ toYaml . | indent 12 }}
 {{- end }}
           imagePullSecrets:
 {{- if $root.Values.dockercfg.enabled }}
