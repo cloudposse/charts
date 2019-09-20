@@ -48,6 +48,9 @@ spec:
 {{- with $job.pod.securityContext }}
         securityContext:
 {{ toYaml . | indent 10 }}
+{{- with $job.pod.hostAliases }}
+        hostAliases:
+{{ toYaml . | indent 10 }}
 {{- end }}
         volumeMounts:
         - mountPath: {{ $root.Values.persistence.mountPath | quote }}
