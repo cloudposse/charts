@@ -99,3 +99,23 @@ VolumeMounts template block for deployable resources
 {{- end }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+The pod anti-affinity rule to prefer not to be scheduled onto a node if that node is already running a pod with same app
+*/}}
+{{- define "monochart.affinityRule.ShouldBeOnDifferentNode" -}}
+- weight: 100
+  podAffinityTerm:
+    labelSelector:
+      matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - {{ include "common.name" . }}
+      - key: release
+        operator: In
+        values:
+        - {{ .Release.Name | quote }}
+    topologyKey: "kubernetes.io/hostname"
+{{- end -}}
+
