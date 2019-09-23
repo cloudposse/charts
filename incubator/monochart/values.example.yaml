@@ -65,3 +65,20 @@ deployment:
     ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
+  affinity:
+    # use of simple rule
+    affinityRule: "ShouldBeOnDifferentNode"
+    # use custom affinity rule. Here app MUST be on different host then postgres instance for it
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - postgresql
+          - key: release
+            operator: In
+            values:
+            - "{{ requiredEnv "RELEASE_NAME" }}-postgresql"
+        topologyKey: "kubernetes.io/hostname"
