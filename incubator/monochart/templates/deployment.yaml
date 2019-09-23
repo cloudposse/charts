@@ -44,6 +44,30 @@ spec:
 {{- end }}
 {{- end }}
     spec:
+{{- if .Values.deployment.affinity }}
+      affinity:
+{{- if or .Values.deployment.affinity.podAntiAffinity (eq .Values.deployment.affinity.affinityRule "ShouldBeOnDifferentNode") }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+{{- if .Values.deployment.affinity.podAntiAffinity }}
+{{- if .Values.deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with .Values.deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq .Values.deployment.affinity.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.deployment.affinity.podAffinity }}
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+{{- with .Values.deployment.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
       containers:
       - name: {{ include "common.name" . }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
