@@ -68,6 +68,10 @@ spec:
         resources:
 {{ toYaml . | indent 10 }}
 {{- end }}
+{{- with .Values.daemonset.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+{{- end }}
       imagePullSecrets:
 {{- if .Values.dockercfg.enabled }}
         - name: {{ include "common.fullname" . }}

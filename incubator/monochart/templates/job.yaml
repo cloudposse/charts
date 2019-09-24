@@ -57,6 +57,10 @@ spec:
         resources:
 {{ toYaml . | indent 10 }}
 {{- end }}
+{{- with $job.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+{{- end }}
       imagePullSecrets:
 {{- if $root.Values.dockercfg.enabled }}
         - name: {{ include "common.fullname" $root }}
