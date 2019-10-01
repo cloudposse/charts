@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "service-operator.fullname" . }}
+  labels:
+    app: {{ include "service-operator.name" . }}
+    chart: {{ include "service-operator.chart" . }}
+    component: server
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "service-operator.name" . }}
+      component: app
+  template:
+    metadata:
+      name: {{ include "service-operator.name" . }}
+      labels:
+        app: {{ include "service-operator.name" . }}
+        component: app
+    spec:
+      serviceAccountName: service-level-operator
+      containers:
+        - name: app
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          {{- with .Values.resources }}
+          resources:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
+

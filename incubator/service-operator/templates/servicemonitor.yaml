@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "service-operator.name" . }}
+  labels:
+    app: {{ include "service-operator.name" . }}
+    component: app
+    prometheus: {{ .Values.prometheus }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "service-operator.name" . }}
+      component: app
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  endpoints:
+    - port: http
+      interval: 10s

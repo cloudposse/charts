@@ -1,0 +1,8 @@
+apiVersion: v1
+description: Service level operator abstracts and automates the service level of Kubernetes applications by generation SLI & SLOs to be consumed easily by dashboards and alerts and allow that the SLI/SLO's live with the application flow.
+name: service-level-operator
+version: 0.1.0
+appVersion: "v0.2.0"
+home: https://github.com/spotahome/service-level-operator
+sources:
+- https://github.com/spotahome/service-level-operator
