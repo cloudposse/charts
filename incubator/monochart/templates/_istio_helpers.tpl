@@ -119,7 +119,7 @@ port:
 {{- with $item }}
 {{- if kindIs "string" . }}
 {{- $port := . }}
-number: {{ $root.Values.service.ports.$port.external }}
+number: {{ index $root.Values.service.ports $port | .external }}
 {{- else }}
 {{ toYaml . }}
 {{- end }}
