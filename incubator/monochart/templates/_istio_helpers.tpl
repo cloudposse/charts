@@ -1,11 +1,12 @@
 {{/* vim: set filetype=mustache: */}}
 
-{{- $root := . -}}
-
 {{/*
 The pod anti-affinity rule to prefer not to be scheduled onto a node if that node is already running a pod with same app
 */}}
 {{- define "monochart.istio.virtualService.http" -}}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 name: {{ .name | quote }}
 
 {{- if gt ( len .match ) 0 }}
@@ -18,7 +19,7 @@ name: {{ .name | quote }}
 {{- if gt ( len .route ) 0 }}
   route:
 {{- range $route := .route -}}
-  - {{ include "monochart.istio.virtualService.http.route" $route }}
+  - {{ include "monochart.istio.virtualService.http.route" ( list $root $route ) }}
 {{- end }}
 {{- end }}
 
@@ -78,46 +79,67 @@ name: {{ .name | quote }}
 {{- end }}
 {{- end }}
 
+{{- end }}
+
 {{- end -}}
 
 {{- define "monochart.istio.virtualService.http.route" -}}
 {{ include "monochart.istio.virtualService.route" . }}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 {{- if gt ( len .headers ) 0 }}
 {{- with .headers }}
 headers:
 {{ toYaml . | indent 2 }}
 {{- end }}
 {{- end }}
+{{- end }}
 
 {{- end -}}
 
 {{- define "monochart.istio.virtualService.destination" -}}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 host: {{ .host }}
 {{- if gt ( len .subset ) 0 }}
 subset: {{ .subset | quote }}
 {{- end }}
 {{- if gt ( len .port ) 0 }}
 port:
-{{ include "monochart.istio.virtualService.destination.port" .port | indent 2 }}
+{{ include "monochart.istio.virtualService.destination.port" ( list $root .port ) | indent 2 }}
+{{- end }}
 {{- end }}
 {{- end -}}
 
 {{- define "monochart.istio.virtualService.destination.port" -}}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 {{- if kindIs "string" . }}
 {{- $port := . }}
 number: {{ $root.Values.service.ports.$port.external }}
 {{- else }}
 {{ toYaml . }}
 {{- end }}
+{{- end }}
 {{- end -}}
 
 {{- define "monochart.istio.virtualService.route" -}}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 destination:
-{{ include "monochart.istio.virtualService.destination" .destination | indent 2 }}
+{{ include "monochart.istio.virtualService.destination" ( list $root .destination ) | indent 2 }}
 weight: {{ .weight }}
+{{- end }}
 {{- end -}}
 
 {{- define "monochart.istio.virtualService.Xroute" -}}
+{{ $root := first . }}
+{{ $item := last . }}
+{{- with $item }}
 {{- if gt ( len .match ) 0 }}
 match:
 {{- range $match := .match -}}
@@ -128,7 +150,8 @@ match:
 {{- if gt ( len .route ) 0 }}
 route:
 {{- range $route := .route -}}
-- {{ include "monochart.istio.virtualService.route" $route }}
+- {{ include "monochart.istio.virtualService.route" ( list $root $route ) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
