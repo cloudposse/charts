@@ -9,70 +9,70 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
 {{- with $item }}
 name: {{ .name | quote }}
 
-{{- if gt ( len .match ) 0 }}
+{{- if not ( empty .match ) }}
   match:
 {{- range $match := .match -}}
   - {{ toYaml $match }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .route ) 0 }}
+{{- if not ( empty .route ) }}
   route:
 {{- range $route := .route -}}
   - {{ include "monochart.istio.virtualService.http.route" ( list $root $route ) }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .redirect ) 0 }}
+{{- if not ( empty .redirect ) }}
 {{- with .redirect }}
   redirect:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .rewrite ) 0 }}
+{{- if not ( empty .rewrite ) }}
 {{- with .rewrite }}
   rewrite:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .timeout ) 0 }}
+{{- if not ( empty .timeout ) }}
 {{- with .timeout }}
   timeout:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .retries ) 0 }}
+{{- if not ( empty .retries ) }}
 {{- with .retries }}
   retries:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .fault ) 0 }}
+{{- if not ( empty .fault ) }}
 {{- with .fault }}
   fault:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .mirror ) 0 }}
+{{- if not ( empty .mirror ) }}
 {{- with .mirror }}
   mirror:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .corsPolicy ) 0 }}
+{{- if not ( empty .corsPolicy ) }}
 {{- with .corsPolicy }}
   corsPolicy:
 {{ toYaml . | indent 4 }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .headers ) 0 }}
+{{- if not ( empty .headers ) }}
 {{- with .headers }}
   headers:
 {{ toYaml . | indent 4 }}
@@ -88,7 +88,7 @@ name: {{ .name | quote }}
 {{ $root := first . }}
 {{ $item := last . }}
 {{- with $item }}
-{{- if gt ( len .headers ) 0 }}
+{{- if not ( empty .headers ) }}
 {{- with .headers }}
 headers:
 {{ toYaml . | indent 2 }}
@@ -103,10 +103,10 @@ headers:
 {{ $item := last . }}
 {{- with $item }}
 host: {{ .host }}
-{{- if gt ( len .subset ) 0 }}
+{{- if not ( empty .subset ) }}
 subset: {{ .subset | quote }}
 {{- end }}
-{{- if gt ( len .port ) 0 }}
+{{- if not ( empty .port ) }}
 port:
 {{ include "monochart.istio.virtualService.destination.port" ( list $root .port ) | indent 2 }}
 {{- end }}
@@ -140,14 +140,14 @@ weight: {{ .weight }}
 {{ $root := first . }}
 {{ $item := last . }}
 {{- with $item }}
-{{- if gt ( len .match ) 0 }}
+{{- if not ( empty .match ) }}
 match:
 {{- range $match := .match -}}
 - {{ toYaml $match }}
 {{- end }}
 {{- end }}
 
-{{- if gt ( len .route ) 0 }}
+{{- if not ( empty .route ) }}
 route:
 {{- range $route := .route -}}
 - {{ include "monochart.istio.virtualService.route" ( list $root $route ) }}
