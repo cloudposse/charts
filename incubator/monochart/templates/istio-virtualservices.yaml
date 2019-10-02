@@ -11,51 +11,51 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-{{- with $virtualService.labels }}
+{{ with $virtualService.labels }}
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{ include "common.labels.standard" $root | indent 4 }}
   name: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
-{{- with $virtualService.hosts }}
+{{ with $virtualService.hosts }}
   hosts:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 
 {{- if not ( empty $virtualService.gateways ) }}
 {{- with $virtualService.gateways }}
   gateways:
 {{ toYaml . | indent 4 }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 
 {{- if not ( empty $virtualService.http ) }}
   http:
 {{- range $http := $virtualService.http -}}
   - {{ include "monochart.istio.virtualService.http" ( list $root $http ) }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 
 {{- if not ( empty $virtualService.tls ) }}
   tls:
-{{- range $tls := $virtualService.tls -}}
+{{ range $tls := $virtualService.tls -}}
   - {{ include "monochart.istio.virtualService.tls" ( list $root $tls ) }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 
 {{- if not ( empty $virtualService.tcp ) }}
   tcp:
-{{- range $tcp := $virtualService.tcp -}}
+{{ range $tcp := $virtualService.tcp -}}
   - {{ include "monochart.istio.virtualService.tcp" ( list $root $tcp ) }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 
-{{- if not ( empty $virtualService.exportTo ) }}
-{{- with $virtualService.exportTo }}
+{{ if not ( empty $virtualService.exportTo ) }}
+{{ with $virtualService.exportTo }}
   exportTo:
 {{ toYaml . | indent 4 }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}
 
-{{- end -}}
-{{- end -}}
+{{ end }}
+{{ end }}

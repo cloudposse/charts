@@ -13,70 +13,70 @@ name: {{ .name | quote }}
   match:
 {{- range $match := .match -}}
   - {{ toYaml $match }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .route ) }}
   route:
 {{- range $route := .route -}}
   - {{ include "monochart.istio.virtualService.http.route" ( list $root $route ) }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .redirect ) }}
 {{- with .redirect }}
   redirect:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .rewrite ) }}
 {{- with .rewrite }}
   rewrite:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .timeout ) }}
 {{- with .timeout }}
   timeout:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .retries ) }}
 {{- with .retries }}
   retries:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .fault ) }}
 {{- with .fault }}
   fault:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .mirror ) }}
 {{- with .mirror }}
   mirror:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .corsPolicy ) }}
 {{- with .corsPolicy }}
   corsPolicy:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- if not ( empty .headers ) }}
 {{- with .headers }}
   headers:
 {{ toYaml . | indent 4 }}
-{{- end }}
+{{ end }}
 {{- end }}
 
 {{- end }}
