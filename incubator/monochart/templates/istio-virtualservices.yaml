@@ -31,21 +31,21 @@ spec:
 
 {{- if gt ( len $virtualService.http ) 0 }}
   http:
-{{- range $http := $virtualServices.http -}}
+{{- range $http := $virtualService.http -}}
   - {{ include "monochart.istio.virtualService.http" $http }}
 {{- end }}
 {{- end }}
 
 {{- if gt ( len $virtualService.tls ) 0 }}
   tls:
-{{- range $tls := $virtualServices.tls -}}
+{{- range $tls := $virtualService.tls -}}
   - {{ include "monochart.istio.virtualService.tls" $tls }}
 {{- end }}
 {{- end }}
 
 {{- if gt ( len $virtualService.tcp ) 0 }}
   tcp:
-{{- range $tcp := $virtualServices.tcp -}}
+{{- range $tcp := $virtualService.tcp -}}
   - {{ include "monochart.istio.virtualService.tcp" $tcp }}
 {{- end }}
 {{- end }}
