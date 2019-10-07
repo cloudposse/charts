@@ -1,7 +1,7 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
-The pod anti-affinity rule to prefer not to be scheduled onto a node if that node is already running a pod with same app
+Template for https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#HTTPRoute
 */}}
 {{- define "monochart.istio.virtualService.httpRoute" -}}
 {{- $root := first . }}
@@ -62,6 +62,9 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
 
 {{- end -}}
 
+{{/*
+Template for https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#HTTPRouteDestination
+*/}}
 {{- define "monochart.istio.virtualService.route" -}}
 {{- $root := first . }}
 {{- range $item := last . }}
@@ -74,6 +77,9 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
 {{- end }}
 {{- end -}}
 
+{{/*
+Template for https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#Destination
+*/}}
 {{- define "monochart.istio.virtualService.destination" -}}
 {{- $root := first . }}
 {{- $serviceName := include "common.fullname" $root -}}
@@ -90,6 +96,10 @@ destination:
 {{- end }}
 {{- end -}}
 
+{{/*
+Template for hhttps://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#PortSelector
+if port defined with name, get the port number from .Values.services
+*/}}
 {{- define "monochart.istio.virtualService.destination.port" -}}
 {{- $root := first . }}
 {{- $item := last . }}
@@ -100,6 +110,11 @@ number: {{ (index $root.Values.service.ports $item).external }}
 {{- end }}
 {{- end -}}
 
+{{/*
+Template for any routes.
+ ex.: https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#TCPRoute
+ ex.: https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#TLSRoute
+*/}}
 {{- define "monochart.istio.virtualService.Xroute" -}}
 {{- $root := first . }}
 {{- range $item := last . }}
