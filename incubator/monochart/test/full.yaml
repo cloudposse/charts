@@ -1,0 +1,268 @@
+replicaCount: 1
+
+dockercfg:
+  enabled: false
+  image:
+    pullSecret:
+      registry: https://index.docker.io/v1/
+      username: example
+      password: password
+
+image:
+  repository: nginx
+  tag: 1.15.3
+  pullPolicy: IfNotPresent
+  ## Additional docker pull secrets
+  pullSecrets:
+    - "docker-secret-1"
+    - "docker-secret-2"
+
+configMaps:
+  default:
+    enabled: true
+    mountPath: /config-default
+    annotations:
+      test.annotation: value
+    labels:
+      test_label: value
+    env:
+      CONFIG_ENV_NAME: ENV_VALUE
+    files:
+      config.test.txt: |-
+        some text
+
+secrets:
+  default:
+    enabled: true
+    mountPath: /secret-default
+    annotations:
+      test.secret.annotation: value
+    labels:
+      test_label: value
+    env:
+      SECRET_ENV_NAME: ENV_VALUE
+    files:
+      secret.test.txt: |-
+        some text
+
+# Inline environment
+env:
+  INLINE_ENV_NAME: ENV_VALUE
+
+deployment:
+  enabled: true
+  ## Pods replace strategy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # strategy: {}
+  revisionHistoryLimit: 10
+  annotations:
+    nginx.version: 1.15.3
+  labels:
+    component: nginx
+  pod:
+    annotations: {}
+    ## https://github.com/uswitch/kiam
+    ## https://github.com/jtblin/kube2iam
+    #  iam.amazonaws.com/role: role-arn
+    labels: {}
+  affinity:
+    # use of simple rule
+    affinityRule: "ShouldBeOnDifferentNode"
+    # use custom affinity rule. Here app MUST be on different host then postgres instance for it
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - postgresql
+          - key: release
+            operator: In
+            values:
+            - "test-postgresql"
+        topologyKey: "kubernetes.io/hostname"
+
+# Istio Virtual Services for load balancer
+virtualServices:
+  default:
+    annotations:
+      test: annotation
+    labels:
+      test: label
+    enabled: true
+    hosts:
+      - "domain.com"
+      - "www.domain.com"
+    gateways:
+      - "public-ingress"
+      - "private-ingress"
+    http:
+    - name: "reviews-v2-routes"
+      match:
+        - uri:
+            prefix: "/wpcatalog"
+        - uri:
+            prefix: "/consumercatalog"
+      rewrite:
+        uri: "/newcatalog"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v2
+
+    - name: "reviews-v1-route"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+      corsPolicy:
+        allowOrigin:
+          - example.com
+        allowMethods:
+          - POST
+          - GET
+        allowCredentials: false
+        allowHeaders:
+          - X-Foo-Bar
+        maxAge: "24h"
+
+    - name: "cors"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      corsPolicy:
+        allowOrigin:
+          - example.com
+        allowMethods:
+          - POST
+          - GET
+        allowCredentials: false
+        allowHeaders:
+          - X-Foo-Bar
+        maxAge: "24h"
+
+    - name: "fault-injection-abort"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      fault:
+        abort:
+          percentage:
+            value: 0.1
+          httpStatus: 400
+
+    - name: "fault-injection-delay"
+      match:
+        - sourceLabels:
+            env: prod
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+      fault:
+        delay:
+          percentage:
+            value: 0.1
+          fixedDelay: 5s
+
+    - name: "http-match-request"
+      match:
+        - headers:
+            end-user:
+              exact: jason
+          uri:
+            prefix: "/ratings/v2/"
+          ignoreUriCase: true
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+
+    - name: "http-redirect"
+      match:
+        - uri:
+            exact: /v1/getProductRatings
+      redirect:
+        uri: /v1/bookRatings
+        authority: newratings.default.svc.cluster.local
+
+    - name: "http-retry"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+        retryOn: gateway-error,connect-failure,refused-stream
+
+    - name: "http-rewrite"
+      match:
+        - uri:
+            prefix: /ratings
+      rewrite:
+        uri: /v1/bookRatings
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+
+    - name: "http-route-destination"
+      route:
+      - destination:
+          host: reviews.prod.svc.cluster.local
+          subset: v2
+        weight: 25
+      - destination:
+          host: reviews.prod.svc.cluster.local
+          subset: v1
+        weight: 75
+
+    - name: "headers"
+      headers:
+        request:
+          set:
+            test: true
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v2
+          weight: 25
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+          headers:
+            response:
+              remove:
+                - foo
+          weight: 75
+
+    - name: "monochart-port"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            port: default
+
+    - name: "monochart-omit-host"
+      route:
+        - destination:
+
+    - name: "monochart-omit-destination"
+      route:
+        - {}
+
+    - name: "monochart-self-usecase"
+      route:
+        - destination:
+            port: default
+
+    tcp:
+    - match:
+      - port: 27017
+      route:
+      - destination:
+          host: mongo.backup.svc.cluster.local
+          port:
+            number: 5555

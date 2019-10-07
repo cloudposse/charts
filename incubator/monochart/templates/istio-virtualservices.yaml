@@ -1,0 +1,49 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $virtualService := .Values.virtualServices -}}
+{{- if $virtualService.enabled }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+{{- with $virtualService.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $virtualService.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  hosts:
+{{ toYaml $virtualService.hosts | indent 2 }}
+
+{{- if not ( empty $virtualService.gateways ) }}
+  gateways:
+{{ toYaml $virtualService.gateways | indent 2 }}
+{{- end }}
+
+{{- if not ( empty $virtualService.http ) }}
+  http:
+{{ include "monochart.istio.virtualService.httpRoute" ( list $root $virtualService.http ) | indent 2 }}
+{{- end }}
+
+{{- if not ( empty $virtualService.tls ) }}
+  tls:
+{{ include "monochart.istio.virtualService.Xroute" ( list $root $virtualService.tls ) | indent 2 }}
+{{- end }}
+
+{{- if not ( empty $virtualService.tcp ) }}
+  tcp:
+{{ include "monochart.istio.virtualService.Xroute" ( list $root $virtualService.tcp ) | indent 2 }}
+{{- end }}
+
+{{- if not ( empty $virtualService.exportTo ) }}
+  exportTo:
+{{ toYaml $virtualService.exportTo | indent 4 }}
+{{- end }}
+
+{{ end }}
+{{ end }}

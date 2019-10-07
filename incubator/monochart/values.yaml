@@ -367,3 +367,28 @@ ingress:
 #    - secretName: server-tls
 #      hosts:
 #      - domain.com
+
+# Istio Virtual Services for load balancer
+virtualServices:
+  default:
+    enabled: false
+#    hosts:
+#      - "domain.com"
+#    http:
+#    - name: "reviews-v2-routes"
+#      match:
+#      - uri:
+#          prefix: "/wpcatalog"
+#      - uri:
+#          prefix: "/consumercatalog"
+#      rewrite:
+#        uri: "/newcatalog"
+#      route:
+#      - destination:
+#          host: reviews.prod.svc.cluster.local
+#          subset: v2
+#    - name: "reviews-v1-route"
+#      route:
+#      - destination:
+#          host: reviews.prod.svc.cluster.local
+#          subset: v1
