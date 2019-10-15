@@ -33,7 +33,7 @@ spec:
     spec:
       restartPolicy: '{{ default "Never" $job.restartPolicy }}'
       containers:
-      - name: {{ include "common.name" $root }}
+      - name: {{ $root.Release.Name }}
         image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}
         imagePullPolicy: {{ $root.Values.image.pullPolicy }}
 {{ include "monochart.env" $root | indent 8 }}
