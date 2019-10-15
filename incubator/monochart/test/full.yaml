@@ -266,3 +266,22 @@ virtualServices:
           host: mongo.backup.svc.cluster.local
           port:
             number: 5555
+
+crd:
+  "networking.istio.io/v1alpha3":
+    ServiceEntry:
+      default:
+        enabled: true
+        labels:
+          test: label
+        annotations:
+          test: annotations
+        spec:
+          hosts:
+          - www.googleapis.com
+          ports:
+          - number: 443
+            name: https
+            protocol: HTTPS
+          location: MESH_EXTERNAL
+          resolution: DNS

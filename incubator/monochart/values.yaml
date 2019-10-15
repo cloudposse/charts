@@ -392,3 +392,19 @@ virtualServices:
 #      - destination:
 #          host: reviews.prod.svc.cluster.local
 #          subset: v1
+
+
+crd:
+#  "networking.istio.io/v1alpha3":
+#    ServiceEntry:
+#      default:
+#        enabled: true
+#        spec:
+#          hosts:
+#            - www.googleapis.com
+#            ports:
+#              - number: 443
+#                name: https
+#                protocol: HTTPS
+#            location: MESH_EXTERNAL
+#            resolution: DNS
