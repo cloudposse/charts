@@ -12,14 +12,14 @@ kind: {{ $kind | quote }}
 metadata:
   name: {{ include "common.fullname" $root }}-{{ $name }}
 {{- with $resource.annotations }}
-annotations:
-{{ toYaml . | indent 2 }}
+  annotations:
+{{ toYaml . | indent 4 }}
 {{- end }}
-labels:
+  labels:
 {{- with $resource.labels }}
-{{ toYaml . | indent 2 }}
+{{ toYaml . | indent 4 }}
 {{- end }}
-{{ include "common.labels.standard" $root | indent 2 }}
+{{ include "common.labels.standard" $root | indent 4 }}
 spec:
 {{ toYaml $resource.spec | indent 2 }}
 {{- end }}
