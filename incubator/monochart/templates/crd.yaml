@@ -7,7 +7,7 @@
 
 {{- if $resource.enabled }}
 ---
-apiVersion:{{ $api | quote }}
+apiVersion: {{ $api | quote }}
 kind: {{ $kind | quote }}
 metadata:
   name: {{ include "common.fullname" $root }}-{{ $name }}
