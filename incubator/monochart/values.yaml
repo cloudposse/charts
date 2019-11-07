@@ -194,10 +194,10 @@ cronjob:
 service:
   enabled: false
   type: ClusterIP
-  ports:
-    default:
-      internal: 8080
-      external: 80
+  # ports:
+  #   name:
+  #     internal: 80
+  #     external: 80
   # labels:
   #   name: value
   # annotations:
@@ -354,7 +354,7 @@ persistence:
 ingress:
   default:
     enabled: false
-    port: default
+#    port: port-name
 #    labels:
 #      dns: "route53"
 #    annotations:
