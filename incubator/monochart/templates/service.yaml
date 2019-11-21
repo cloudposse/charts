@@ -24,9 +24,16 @@ spec:
     protocol: {{ default "TCP" $port.protocol  }}
     name: {{ $name }}
 {{- end }}
+{{- if .Values.service.selector }}
+{{- with .Values.service.selector }}
+  selector:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- else }}
   selector:
     app: {{ include "common.name" . }}
     release: {{ .Release.Name }}
     serve: "true"
+{{- end -}}
 {{- end -}}
 {{- end -}}
