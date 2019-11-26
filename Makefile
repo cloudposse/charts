@@ -6,10 +6,10 @@ export PATH:=$(PATH):$(BUILD_HARNESS_PATH)/vendor
 
 .PHONY : init
 ## Init build-harness
-init:
+init::
 	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/install.sh | bash
 
 .PHONY : clean
 ## Clean build-harness
-clean:
+clean::
 	@rm -rf $(BUILD_HARNESS_PATH)
