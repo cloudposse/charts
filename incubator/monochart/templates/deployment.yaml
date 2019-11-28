@@ -87,9 +87,11 @@ spec:
 {{- end }}
         ports:
 {{- range $name, $port := .Values.service.ports }}
+{{- if $port }}
           - name: {{ $name }}
             containerPort: {{ $port.internal }}
             protocol: {{ default "TCP" $port.protocol  }}
+{{- end }}
 {{- end }}
         volumeMounts:
         - mountPath: {{ .Values.persistence.mountPath | quote }}
