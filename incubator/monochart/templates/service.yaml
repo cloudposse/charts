@@ -19,10 +19,12 @@ spec:
 {{- else }}
   ports:
 {{- range $name, $port := .Values.service.ports }}
-  - port: {{ $port.external }}
-    targetPort: {{ $name }}
+{{- if $port }}
+  - targetPort: {{ $name }}
+    port: {{ $port.external }}
     protocol: {{ default "TCP" $port.protocol  }}
     name: {{ $name }}
+{{- end }}
 {{- end }}
 {{- if .Values.service.selector }}
 {{- with .Values.service.selector }}
