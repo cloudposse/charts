@@ -1,8 +1,8 @@
 apiVersion: v1
 description: A declarative helm chart for deploying common types of services on Kubernetes
 name: monochart
-version: 0.18.3
-appVersion: 0.18.3
+version: 0.18.4
+appVersion: 0.18.4
 home: https://github.com/cloudposse/charts/tree/master/incubator/monochart
 icon: https://raw.githubusercontent.com/cloudposse/charts/master/incubator/monochart/logo.png
 maintainers:
