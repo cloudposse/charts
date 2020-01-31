@@ -191,5 +191,6 @@ readinessProbe:
   periodSeconds: 10
   failureThreshold: 2
 worker:
+  resources: {}
   enabled: false
   concurrency: 10
