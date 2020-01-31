@@ -75,7 +75,7 @@ spec:
             - secretRef:
                 name: {{ .Values.extraEnvFromSecret }}
           {{- end }}
-          {{- with .Values.resources }}
+          {{- with .Values.worker.resources }}
           resources:
             {{- . | toYaml | nindent 12 }}
           {{- end }}
