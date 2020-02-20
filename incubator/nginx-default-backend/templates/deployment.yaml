@@ -7,6 +7,10 @@ metadata:
     k8s-addon: ingress-nginx.addons.k8s.io
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+      k8s-addon: ingress-nginx.addons.k8s.io
   template:
     metadata:
       labels:
