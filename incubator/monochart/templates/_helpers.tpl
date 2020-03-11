@@ -49,6 +49,16 @@ env:
     value: {{ default "" $value | quote }}
 {{- end }}
 {{- end }}
+{{- with $root.Values.envFrom }}
+{{- range $name := .configMaps -}}
+- configMapRef:
+    name: {{ $name }}
+{{- end }}
+{{- range $name := .secrets -}}
+- secretRef:
+    name: {{ $name }}
+{{- end }}
+{{- end }}
 {{- end -}}
 
 
