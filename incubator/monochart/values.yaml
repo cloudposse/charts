@@ -51,9 +51,18 @@ secrets:
   #         group:
   #           key: value
 
-# Inline environment
+# Inline ENV variables
 env:
   # ENV_NAME: ENV_VALUE
+
+# ENV variables from existing Kubernetes secrets and ConfigMaps
+#envFrom:
+#  secrets:
+#    - secret-1
+#    - secret-2
+#  configMaps:
+#    - config-1
+#    - config-2
 
 deployment:
   enabled: false
