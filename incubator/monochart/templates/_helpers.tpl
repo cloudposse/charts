@@ -23,7 +23,7 @@ Environment template block for deployable resources
 */}}
 {{- define "monochart.env" -}}
 {{- $root := . -}}
-{{- if or .Values.configMaps $root.Values.secrets }}
+{{- if or $root.Values.configMaps $root.Values.secrets }}
 envFrom:
 {{- range $name, $config := $root.Values.configMaps -}}
 {{- if $config.enabled }}
@@ -49,16 +49,19 @@ env:
     value: {{ default "" $value | quote }}
 {{- end }}
 {{- end }}
+{{- if $root.Values.envFrom }}
+envFrom:
 {{- with $root.Values.envFrom }}
-{{- range $name := .configMaps -}}
-- configMapRef:
-    name: {{ $name }}
+{{- range $name := .configMaps }}
+  - configMapRef:
+      name: {{ $name }}
 {{- end }}
-{{- range $name := .secrets -}}
-- secretRef:
-    name: {{ $name }}
+{{- range $name := .secrets }}
+  - secretRef:
+      name: {{ $name }}
 {{- end }}
 {{- end }}
+{{- end -}}
 {{- end -}}
 
 
