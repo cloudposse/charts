@@ -40,6 +40,9 @@ spec:
 {{ toYaml . | indent 4 }}
 {{- end }}
     spec:
+{{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+{{- end }}
       terminationGracePeriodSeconds: 0
       containers:
       - name: {{ .Release.Name }}

@@ -44,6 +44,9 @@ spec:
 {{- end }}
 {{- end }}
     spec:
+{{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+{{- end }}
 {{- if .Values.deployment.affinity }}
       affinity:
 {{- if or .Values.deployment.affinity.podAntiAffinity (eq .Values.deployment.affinity.affinityRule "ShouldBeOnDifferentNode") }}

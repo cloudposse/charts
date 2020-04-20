@@ -1,5 +1,7 @@
 replicaCount: 1
 
+# serviceAccountName: my-service-account
+
 dockercfg:
   enabled: false
   # image:
