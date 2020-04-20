@@ -31,6 +31,9 @@ spec:
 {{ toYaml .| indent 8 }}
 {{- end }}
     spec:
+{{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+{{- end }}
       restartPolicy: '{{ default "Never" $job.restartPolicy }}'
       containers:
       - name: {{ $root.Release.Name }}
