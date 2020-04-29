@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "keycloak-gatekeeper.fullname" . }}
+  labels: {{ include "keycloak-gatekeeper.labels" . | nindent 4 }}
+    app.kubernetes.io/configuration-checksum: {{ toJson .Values | sha256sum | trunc 48 | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{ include "keycloak-gatekeeper.selector" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "keycloak-gatekeeper.selector" . | nindent 8 }}
+      annotations:
+        app.kubernetes.io/configuration-checksum: {{ toJson .Values | sha256sum | trunc 48 | quote }}
+      {{- if .Values.prometheusMetrics }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/oauth/metrics"
+        prometheus.io/port: "3000"
+      {{- end }}
+{{- with .Values.podAnnotations }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: {{ include "keycloak-gatekeeper.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --listen=0.0.0.0:3000
+            - --discovery-url={{ .Values.discoveryURL }}
+            - --client-id=$(CLIENT_ID)
+            - --client-secret=$(CLIENT_SECRET)
+            - --upstream-url={{ .Values.upstreamURL }}
+            - --skip-upstream-tls-verify={{ .Values.skipUpstreamTlsVerify }}
+            - --skip-openid-provider-tls-verify={{ .Values.skipOpenidProviderTlsVerify }}
+            - --enable-default-deny={{ .Values.defaultDeny }}
+            - --enable-logging={{ .Values.logging }}
+            - --enable-refresh-tokens={{ .Values.refreshTokens }}
+            - --enable-session-cookies={{ .Values.sessionCookies }}
+            {{- if not .Values.ingress.tls }}
+            - --secure-cookie=false
+            {{- end }}
+            - --enable-encrypted-token
+            - --encryption-key=$(ENCRYPTION_KEY)
+            {{- if .Values.addClaims }}
+            {{- range $i, $extraClaim := .Values.addClaims }}
+            - --add-claims={{ $extraClaim }}
+            {{ end -}}
+            {{- end }}
+            {{- if .Values.matchClaims }}
+            {{- range $key, $val := .Values.matchClaims }}
+            - --match-claims='{{ $key }}={{ $val }}'
+            {{ end -}}
+            {{- end }}
+            {{- if .Values.debug }}
+            - --verbose
+            {{- end }}
+            {{- if .Values.rules }}
+            {{- range $i, $rule := .Values.rules }}
+            - --resources={{ $rule }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.scopes }}
+            {{- range $i, $scope := .Values.scopes }}
+            - --scopes={{ $scope }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.prometheusMetrics }}
+            - --enable-metrics
+            {{- end }}
+            {{- if .Values.droolsPolicyEnabled }}
+            - -Dkeycloak.profile.feature.authz_drools_policy=enabled
+            {{- end }}
+            {{- range $i, $arg := .Values.extraArgs }}
+            - --{{ $arg }}
+            {{- end }}
+            {{- if .Values.forwarding.enable }}
+            - --enable-forwarding=true
+            - --forwarding-username=$(FORWARD_USERNAME)
+            - --forwarding-password=$(FORWARD_PASSWORD)
+            {{- range $i, $domain := .Values.forwarding.domains }}
+            - --forwarding-domains={{ $domain }}
+            {{- end }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "keycloak-gatekeeper.fullname" . }}
+                optional: false
+            {{- if .Values.forwarding.enable }}
+            - secretRef:
+                name: {{ include "keycloak-gatekeeper.fullname" . }}-forwarding
+                optional: false
+            {{- end }}
+          {{- with .Values.extraEnvs }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            privileged: false
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

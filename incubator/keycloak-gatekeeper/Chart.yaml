@@ -1,0 +1,23 @@
+# This Chart was forked from https://github.com/gabibbo97/charts/tree/master/charts/keycloak-gatekeeper
+# in order to provide the Cloud Posse robust keycloak-gatekeep
+#
+# It's based largely on the AWESOME WORK of Giacomo Longo
+#
+apiVersion: v1
+name: keycloak-gatekeeper
+version: 3.2.2
+description: Keycloak gatekeeper
+home: https://www.keycloak.org
+sources:
+  - https://github.com/keycloak/keycloak-containers
+  - https://github.com/keycloak/keycloak-gatekeeper
+keywords:
+  - authentication
+  - authorization
+  - keycloak
+  - proxy
+maintainers:
+  - email: hello@cloudposse.com
+    name: Cloud Posse
+icon: https://raw.githubusercontent.com/keycloak/keycloak-misc/master/logo/keycloak_logo_600px.svg
+appVersion: "9.0.2"
