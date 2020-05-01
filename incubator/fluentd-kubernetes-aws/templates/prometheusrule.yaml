@@ -17,9 +17,7 @@ spec:
   - name: fluentd
     rules:
     - alert: FluentdNodeDown
-      expr: |
-        up{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"} == 0
-        or absent(up{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"})
+      expr: up{job="{{ .Release.Name }}"} == 0
       for: 10m
       labels:
         service: fluentd
@@ -29,9 +27,7 @@ spec:
         description: Prometheus could not scrape {{ "{{ $labels.job }}" }} for more than 10 minutes
 
     - alert: FluentdNodeDown
-      expr: |
-        up{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"} == 0
-        or absent(up{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"})
+      expr: up{job="{{ .Release.Name }}"} == 0
       for: 30m
       labels:
         service: fluentd
@@ -41,9 +37,7 @@ spec:
         description: Prometheus could not scrape {{ "{{ $labels.job }}" }} for more than 30 minutes
 
     - alert: FluentdQueueLength
-      expr: |
-        rate(fluentd_output_status_buffer_queue_length[5m]) > 0.3
-        or absent(fluentd_output_status_buffer_queue_length)
+      expr: rate(fluentd_status_buffer_queue_length[5m]) > 0.3
       for: 1m
       labels:
         service: fluentd
@@ -53,9 +47,7 @@ spec:
         description: In the last 5 minutes, fluentd queues increased 30%. Current value is {{ "{{ $value }}" }}
 
     - alert: FluentdQueueLength
-      expr: |
-        rate(fluentd_output_status_buffer_queue_length[5m]) > 0.5
-        or absent(fluentd_output_status_buffer_queue_length)
+      expr: rate(fluentd_status_buffer_queue_length[5m]) > 0.5
       for: 1m
       labels:
         service: fluentd
@@ -65,9 +57,7 @@ spec:
         description: In the last 5 minutes, fluentd queues increased 50%. Current value is {{ "{{ $value }}" }}
 
     - alert: FluentdRecordsCountsHigh
-      expr: |
-        sum(rate(fluentd_output_status_emit_records{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"}[5m])) BY (instance) >  (3 * sum(rate(fluentd_output_status_emit_records{job="{{ template "fluentd_kubernetes.name" . }}-prometheus"}[15m])) BY (instance))
-        or absent(fluentd_output_status_emit_records)
+      expr: sum(rate(fluentd_record_counts{job="{{ .Release.Name }}"}[5m])) BY (instance) >  (3 * sum(rate(fluentd_record_counts{job="{{ .Release.Name }}"}[15m])) BY (instance))
       for: 1m
       labels:
         service: fluentd
