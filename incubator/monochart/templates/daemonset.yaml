@@ -38,7 +38,7 @@ spec:
 {{ toYaml .| indent 8 }}
 {{- end }}
     spec:
-{{- if .Values.serviceAccountName }}
+{{- if index .Values "serviceAccountName" }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
       containers:

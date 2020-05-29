@@ -40,7 +40,7 @@ spec:
 {{ toYaml . | indent 4 }}
 {{- end }}
     spec:
-{{- if .Values.serviceAccountName }}
+{{- if index .Values "serviceAccountName" }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
       terminationGracePeriodSeconds: 0
