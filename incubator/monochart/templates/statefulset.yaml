@@ -1,7 +1,7 @@
 {{- if .Values.statefulset -}}
 {{- if .Values.statefulset.enabled -}}
 kind: StatefulSet
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 metadata:
   name: {{ include "common.fullname" . }}
 {{- with .Values.statefulset.annotations }}
