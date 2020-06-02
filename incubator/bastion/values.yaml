@@ -7,6 +7,7 @@ image:
   repository: cloudposse/bastion
   tag: latest
   pullPolicy: Always
+  pullSecrets: []
 
 env:
   #HOSTNAME: "bastion"
@@ -71,6 +72,8 @@ githubAuthorizedKeys:
 
     # Specify a imagePullPolicy
     pullPolicy: Always
+
+    pullSecrets: []
 
   # Specify Github API Token
   #   ref: https://github.com/blog/1509-personal-api-tokens
