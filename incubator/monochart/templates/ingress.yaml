@@ -3,7 +3,7 @@
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1
 kind: Ingress
 metadata:
 {{- with $ingress.annotations }}
