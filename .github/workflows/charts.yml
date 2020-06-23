@@ -16,12 +16,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        uses: "docker://cloudposse/build-harnes:0.36.0"
+        uses: "docker://cloudposse/build-harness:0.36.0"
         with:
           args: "build"
 
       - name: Index
-        uses: "docker://cloudposse/build-harnes:0.36.0"
+        uses: "docker://cloudposse/build-harness:0.36.0"
         with:
           args: "index"
 
