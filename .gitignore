@@ -1,3 +1,5 @@
+.build-harness
+
 # General files for the project
 pkg/*
 *.pyc

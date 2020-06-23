@@ -1,0 +1,35 @@
+name: Charts
+on:
+  push:
+    branches:
+      - master
+
+  pull_request: 
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the pull request branch
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: "docker://cloudposse/build-harnes:0.36.0"
+        with:
+          args: "build"
+
+      - name: Index
+        uses: "docker://cloudposse/build-harnes:0.36.0"
+        with:
+          args: "index"
+
+      - name: Deploy
+        run: aws s3 sync --acl public-read packages/ s3://charts.prod.cloudposse.org/ --include '*.tgz' --include '*.yaml' --exclude '*'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Test Download from CDN
+        run: curl -fsSL -o /dev/null https://artifacts.cloudposse.com/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
