@@ -14,7 +14,7 @@ services:
 
 install:
   - make init
-  - sudo make helm/install
+  - sudo make packages/install/helm packages/install/yq
   - make helm/repo/add-remote
   - make helm/repo/add-current
   - make docker/login
