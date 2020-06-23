@@ -18,12 +18,12 @@ jobs:
       - name: Build
         uses: "docker://cloudposse/build-harness:0.36.0"
         with:
-          args: "build"
+          args: "-C incubator all"
 
       - name: Index
         uses: "docker://cloudposse/build-harness:0.36.0"
         with:
-          args: "index"
+          args: "-C packages all"
 
       - name: Deploy
         run: aws s3 sync --acl public-read packages/ s3://charts.prod.cloudposse.org/ --include '*.tgz' --include '*.yaml' --exclude '*'
