@@ -24,19 +24,22 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-      {{- if .Values.serviceAccountName }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
+      {{- if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- end }}
       tolerations:
-      - key: node-role.kubernetes.io/master
+      - operator: Exists
         effect: NoSchedule
-      containers:
-{{- if .Values.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range $pullSecret := .Values.image.pullSecrets }}
-        - name: {{ $pullSecret }}
+      {{- with index .Values "priorityClassName" }}
+      priorityClassName: {{ . }}
       {{- end }}
-{{- end }}
+      containers:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range $pullSecret := .Values.image.pullSecrets }}
+        - name: {{ $pullSecret }}
+        {{- end }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -45,30 +48,29 @@ spec:
           runAsNonRoot: false
           runAsUser: 0
         env:
-{{- range $name, $value := .Values.env.open }}
-{{- if not (empty $value) }}
+        {{- range $name, $value := .Values.env.open }}
+        {{- if not (empty $value) }}
         - name: {{ $name | quote }}
           value: {{ $value | quote }}
-{{- end }}
-{{- end }}
-{{- $secret_name := include "fluentd_kubernetes.fullname" . }}
-{{- range $name, $value := .Values.env.secret }}
-{{- if not ( empty $value) }}
+        {{- end }}
+        {{- end }}
+        {{- $secret_name := include "fluentd_kubernetes.fullname" . }}
+        {{- range $name, $value := .Values.env.secret }}
+        {{- if not ( empty $value) }}
         - name: {{ $name | quote }}
           valueFrom:
             secretKeyRef:
               name: {{ $secret_name }}
               key: {{ $name | quote }}
-{{- end }}
-{{- end }}
-        resources:
-{{ toYaml .Values.resources | indent 12 }}
+        {{- end }}
+        {{- end }}
+        resources: {{ toYaml .Values.resources | nindent 12 }}
         ports:
-{{- range $port := .Values.service.ports }}
+        {{- range $port := .Values.service.ports }}
           - name: {{ $port.name }}
-            containerPort: {{ $port.containerPort }}
+            containerPort: {{ $port.targetPort }}
             protocol: {{ $port.protocol }}
-{{- end }}
+        {{- end }}
           - name: http-input
             containerPort: 9880
             protocol: TCP
@@ -79,8 +81,15 @@ spec:
           mountPath: /mnt/pos
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/
-        - name: config-volume-{{ template "fluentd_kubernetes.fullname" . }}
-          mountPath: {{ .Values.configDir }}
+        {{- with index .Values "configMaps" }}
+        - name: config-volume-{{ template "fluentd_kubernetes.fullname" $ }}
+          mountPath: {{ $.Values.configDir }}
+        {{- end }}
+        {{- with index .Values "fluent.conf" }}
+        - name: fluent-conf
+          mountPath: /fluentd/etc/fluent.conf
+          subPath: fluent.conf
+        {{- end }}
       volumes:
       - name: varlog
         hostPath:
@@ -90,18 +99,22 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/
-      - name: config-volume-{{ template "fluentd_kubernetes.fullname" . }}
+      {{- with index .Values "fluent.conf" }}
+      - name: fluent-conf
         configMap:
-          name: {{ template "fluentd_kubernetes.fullname" . }}
+          name: {{ template "fluentd_kubernetes.fullname" $ }}-fluent-conf
+      {{- end }}
+      {{- with index .Values "configMaps" }}
+      - name: config-volume-{{ template "fluentd_kubernetes.fullname" $ }}
+        configMap:
+          name: {{ template "fluentd_kubernetes.fullname" $ }}-config
+      {{- end }}
     {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
+      affinity: {{ toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
+      tolerations: {{ toYaml . | nindent 8 }}
     {{- end }}

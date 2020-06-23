@@ -1,14 +1,29 @@
+{{ with index .Values "configMaps" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fluentd_kubernetes.fullname" . }}
+  name: {{ template "fluentd_kubernetes.fullname" $ }}-config
   labels:
-    app: {{ template "fluentd_kubernetes.name" . }}
-    chart: {{ template "fluentd_kubernetes.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: {{ template "fluentd_kubernetes.name" $ }}
+    chart: {{ template "fluentd_kubernetes.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
 data:
-{{- range $key, $value := .Values.configMaps }}
-  {{ $key }}: |-
-{{ $value | indent 4 }}
+  {{- range $key, $value := . }}
+  {{ $key }}: |- {{ $value | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with index .Values "fluent.conf" }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fluentd_kubernetes.fullname" $ }}-fluent-conf
+  labels:
+    app: {{ template "fluentd_kubernetes.name" $ }}
+    chart: {{ template "fluentd_kubernetes.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+data:
+  fluent.conf: |- {{ . | nindent 4 }}
 {{- end }}

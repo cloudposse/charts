@@ -31,7 +31,7 @@ env:
     OUTPUT_BUFFER_QUEUE_LIMIT: 8
 
 configDir: /etc/fluent/config.d
-configMap:
+configMaps:
   general.conf: |
     <match fluentd.**>
       @type null
@@ -132,7 +132,7 @@ env:
    OUTPUT_BUFFER_QUEUE_LIMIT: 8
 
 configDir: /etc/fluent/config.d
-configMap:
+configMaps:
   system.conf: |-
     <system>
       root_dir /tmp/fluentd-buffers/

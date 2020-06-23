@@ -1,3 +1,4 @@
+{{ if .Values.service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,10 +13,11 @@ spec:
   ports:
   {{- range $port := .Values.service.ports }}
     - name: {{ $port.name }}
-      port: {{ $port.externalPort }}
-      targetPort: {{ $port.containerPort }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
       protocol: {{ $port.protocol }}
   {{- end }}
   selector:
     app: {{ template "fluentd_kubernetes.name" . }}
     release: {{ .Release.Name }}
+{{- end }}
