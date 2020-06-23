@@ -1,3 +1,4 @@
+apiVersion: v1
 description: |-
   Use GitHub teams to manage system user accounts and authorized_keys.
   WARNING: 

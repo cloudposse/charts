@@ -1,15 +1,13 @@
-SHELL = /bin/bash
-export BUILD_HARNESS_PATH ?= $(shell until [ -d "build-harness" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/build-harness
--include $(BUILD_HARNESS_PATH)/Makefile
+-include $(shell curl -sSL -o .build-harness "https://git.io/build-harness"; echo .build-harness)
 
-export PATH:=$(PATH):$(BUILD_HARNESS_PATH)/vendor
+build:
+	docker run -v $(CURDIR)/incubator:/build-harness/incubator -v $(CURDIR)/packages:/build-harness/packages \
+		-e CURRENT_REPO_URL=https://charts.cloudposse.com/incubator \
+		cloudposse/build-harness:0.36.0 -C incubator all
 
-.PHONY : init
-## Init build-harness
-init::
-	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/install.sh | bash
+index:
+	docker run -v $(CURDIR)/incubator:/build-harness/incubator -v $(CURDIR)/packages:/build-harness/packages \
+		cloudposse/build-harness:0.36.0 -C packages all
 
-.PHONY : clean
-## Clean build-harness
-clean::
-	@rm -rf $(BUILD_HARNESS_PATH)
+all: build index
+	@exit 0
