@@ -12,24 +12,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout the pull request branch
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Build
+      - name: Build Chart Packages
         uses: "docker://cloudposse/build-harness:0.36.0"
         with:
           args: "-C incubator all"
 
-      - name: Index
+      - name: Generate Index
         uses: "docker://cloudposse/build-harness:0.36.0"
         with:
           args: "-C packages all"
 
-      - name: Deploy
-        run: aws s3 sync --acl public-read packages/ s3://charts.prod.cloudposse.org/ --include '*.tgz' --include '*.yaml' --exclude '*'
+      - name: Deploy Charts to Dev
+        if: github.ref != 'refs/heads/master'
+        run: aws s3 sync --acl public-read packages/ s3://cloudposse-dev-charts/${{GITHUB_REF}}/ --include '*.tgz' --include '*.yaml' --exclude '*' --dryrun
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Test Download from CDN
-        run: curl -fsSL -o /dev/null https://artifacts.cloudposse.com/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
+      - name: Deploy Charts to Production
+        if: github.ref == 'refs/heads/master'
+        run: aws s3 sync --acl public-read packages/ s3://cloudposse-charts/ --include '*.tgz' --include '*.yaml' --exclude '*' --dryrun
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
