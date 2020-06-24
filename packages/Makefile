@@ -8,7 +8,7 @@ HELM_CHART_REPO_URL ?= https://charts.cloudposse.com
 		echo "## Merging index with $(HELM_CHART_REPO_URL)/$(dir $@)"; \
 		$(HELM) repo index $(dir $@) --merge /tmp/index.yaml --url $(HELM_CHART_REPO_URL)/$(dir $@) --debug; \
 	else \
-		echo "## Generating new index for $(HELM_CHART_REPO_URL)/$(dir $@))"; \
+		echo "## Generating new index for $(HELM_CHART_REPO_URL)/$(dir $@)"; \
 		$(HELM) repo index $(dir $@) --url $(HELM_CHART_REPO_URL)/$(dir $@) --debug; \
 	fi;
 

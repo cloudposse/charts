@@ -43,7 +43,17 @@ jobs:
           HELM_CHART_REPO_URL: ${{ steps.helm_chart.outputs.repo_url }}
 
       - name: Publish Charts to Chart Repository
-        run: aws s3 sync --acl public-read packages/ ${{ steps.helm_chart.outputs.bucket_url }} --include '*.tgz' --include '*.yaml' --exclude '*' --dryrun
+        run: aws s3 sync --acl public-read packages/ ${{ steps.helm_chart.outputs.bucket_url }} --exclude '*' --include '*.tgz' --include '*.yaml' --dryrun
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Test
+        run: |
+          set -e
+          # Test incubator repo
+          helm repo del cloudposse-incubator
+          helm repo add test-incubator ${{ steps.helm_chart.outputs.repo_url }}/incubator
+          helm repo update
+          helm search repo monochart -l -o table | grep -qv "No results found"
+
