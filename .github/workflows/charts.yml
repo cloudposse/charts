@@ -27,11 +27,11 @@ jobs:
 
       - name: Deploy Charts to Dev
         if: github.ref != 'refs/heads/master'
-        run: aws s3 sync --acl public-read packages/ s3://cloudposse-dev-charts/${{GITHUB_REF}}/ --include '*.tgz' --include '*.yaml' --exclude '*' --dryrun
+        run: aws s3 sync --acl public-read packages/ s3://cloudposse-dev-charts/${{ GITHUB_REF }}/ --include '*.tgz' --include '*.yaml' --exclude '*' --dryrun
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          HELM_CHART_REPO_URL: https://charts.dev.cloudposse.com/${{GITHUB_REF}}
+          HELM_CHART_REPO_URL: https://charts.dev.cloudposse.com/${{ GITHUB_REF }}
 
       - name: Deploy Charts to Production
         if: github.ref == 'refs/heads/master'
