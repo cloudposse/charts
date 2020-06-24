@@ -53,14 +53,6 @@ jobs:
         if: success() && github.repository == 'cloudposse/charts'
         uses: "docker://cloudposse/build-harness:0.37.0"
         with:
-          entrypoint: /bin/bash
-        run: |
-          set -e
-          # Test incubator repo
-          CHART_VERSION=$(yq r incubator/monochart/Chart.yaml version)
-          helm repo remove cloudposse-incubator
-          helm repo add test-incubator ${{ steps.helm_chart.outputs.repo_url }}/incubator
-          helm repo update
-          helm search repo test-incubator/monochart -l -o table --version ${CHART_VERSION} | grep -qv "No results found"
-          helm pull test-incubator/monochart --version ${CHART_VERSION}
-
+          args: "-C test all"
+        env:
+          HELM_CHART_REPO_URL: ${{ steps.helm_chart.outputs.repo_url }}
