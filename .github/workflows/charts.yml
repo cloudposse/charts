@@ -51,6 +51,9 @@ jobs:
 
       - name: Test
         if: success() && github.repository == 'cloudposse/charts'
+        uses: "docker://cloudposse/build-harness:0.37.0"
+        with:
+          entrypoint: /bin/bash
         run: |
           set -e
           # Test incubator repo
