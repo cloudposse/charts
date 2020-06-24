@@ -1,3 +1,4 @@
+apiVersion: v1
 name: cert-manager
 version: v0.7.0
 appVersion: v0.7.0
