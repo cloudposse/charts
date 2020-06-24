@@ -43,14 +43,14 @@ jobs:
           HELM_CHART_REPO_URL: ${{ steps.helm_chart.outputs.repo_url }}
 
       - name: Publish Charts to Chart Repository
-        if: github.repository == 'cloudposse/charts'
+        if: success() && github.repository == 'cloudposse/charts'
         run: aws s3 sync --acl public-read packages/ ${{ steps.helm_chart.outputs.bucket_url }} --exclude '*' --include '*.tgz' --include '*.yaml'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Test
-        if: github.repository == 'cloudposse/charts'
+        if: success() && github.repository == 'cloudposse/charts'
         run: |
           set -e
           # Test incubator repo
