@@ -16,12 +16,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Chart Packages
-        uses: "docker://cloudposse/build-harness:0.36.0"
+        uses: "docker://cloudposse/build-harness:0.37.0"
         with:
           args: "-C incubator all"
 
       - name: Generate Index
-        uses: "docker://cloudposse/build-harness:0.36.0"
+        uses: "docker://cloudposse/build-harness:0.37.0"
         with:
           args: "-C packages all"
 
