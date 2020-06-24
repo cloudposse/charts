@@ -31,6 +31,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CURRENT_REPO_URL: https://charts.dev.cloudposse.com/${{GITHUB_REF}}
 
       - name: Deploy Charts to Production
         if: github.ref == 'refs/heads/master'
@@ -38,4 +39,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CURRENT_REPO_URL: https://charts.cloudposse.com
 
