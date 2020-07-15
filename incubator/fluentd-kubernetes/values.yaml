@@ -2,77 +2,78 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 image:
-  repository: gcr.io/google-containers/fluentd-elasticsearch
-  tag: v2.0.4
+  repository: quay.io/fluentd_elasticsearch/fluentd
+  tag: v2.9.0
   pullPolicy: IfNotPresent
   # pullSecrets:
   #   - secret1
   #   - secret2
 
 env:
-  open:
-    OUTPUT_HOST: elasticsearch-client.default.svc.cluster.local
-    OUTPUT_PORT: 9200
-    OUTPUT_BUFFER_CHUNK_LIMIT: 2M
-    OUTPUT_BUFFER_QUEUE_LIMIT: 8
-    FLUENT_UID: 0
-    FLUENTD_OPT: ""
-    FLUENTD_ARGS: "--no-supervisor -q"
-  secret:
+  open: {}
+  #  OUTPUT_HOST: elasticsearch-client.default.svc.cluster.local
+  #  OUTPUT_PORT: 9200
+  #  OUTPUT_BUFFER_CHUNK_LIMIT: 2M
+  #  OUTPUT_BUFFER_QUEUE_LIMIT: 8
+  #  FLUENT_UID: 0
+  #  FLUENTD_OPT: ""
+  #  FLUENTD_ARGS: "--no-supervisor -q"
+  secret: {}
 
 configDir: /etc/fluent/config.d
-configMap:
-  general.conf: |
-    # Prevent fluentd from handling records containing its own logs. Otherwise
-    # it can lead to an infinite loop, when error in sending one message generates
-    # another message which also fails to be sent and so on.
-    <match fluentd.**>
-      @type null
-    </match>
 
-    # Emits internal metrics to every minute, and also exposes them on port
-    # 24220. Useful for determining if an output plugin is retryring/erroring,
-    # or determining the buffer queue length.
-    <source>
-      @type monitor_agent
-      bind 0.0.0.0
-      port 24220
-      tag fluentd.monitor.metrics
-    </source>
-  system.conf: |-
-    <system>
-      root_dir /tmp/fluentd-buffers/
-    </system>
-  forward-input.conf: |
-    <source>
-      @type forward
-      port 24224
-      bind 0.0.0.0
-    </source>
-  output.conf: |
-    <match **>
-      @id elasticsearch
-      @type elasticsearch
-      @log_level info
-      include_tag_key true
-      # Replace with the host/port to your Elasticsearch cluster.
-      host "#{ENV['OUTPUT_HOST']}"
-      port "#{ENV['OUTPUT_PORT']}"
-      logstash_format true
-      <buffer>
-        @type file
-        path /var/log/fluentd-buffers/kubernetes.system.buffer
-        flush_mode interval
-        retry_type exponential_backoff
-        flush_thread_count 2
-        flush_interval 5s
-        retry_forever
-        retry_max_interval 30
-        chunk_limit_size "#{ENV['OUTPUT_BUFFER_CHUNK_LIMIT']}"
-        queue_limit_length "#{ENV['OUTPUT_BUFFER_QUEUE_LIMIT']}"
-        overflow_action block
-      </buffer>
-    </match>
+configMaps: {}
+  #  general.conf: |
+  #    # Prevent fluentd from handling records containing its own logs. Otherwise
+  #    # it can lead to an infinite loop, when error in sending one message generates
+  #    # another message which also fails to be sent and so on.
+  #    <match fluentd.**>
+  #      @type null
+  #    </match>
+  #
+  #    # Emits internal metrics to every minute, and also exposes them on port
+  #    # 24220. Useful for determining if an output plugin is retryring/erroring,
+  #    # or determining the buffer queue length.
+  #    <source>
+  #      @type monitor_agent
+  #      bind 0.0.0.0
+  #      port 24220
+  #      tag fluentd.monitor.metrics
+  #    </source>
+  #  system.conf: |-
+  #    <system>
+  #      root_dir /tmp/fluentd-buffers/
+  #    </system>
+  #  forward-input.conf: |
+  #    <source>
+  #      @type forward
+  #      port 24224
+  #      bind 0.0.0.0
+  #    </source>
+  #  output.conf: |
+  #    <match **>
+  #      @id elasticsearch
+  #      @type elasticsearch
+  #      @log_level info
+  #      include_tag_key true
+  #      # Replace with the host/port to your Elasticsearch cluster.
+  #      host "#{ENV['OUTPUT_HOST']}"
+  #      port "#{ENV['OUTPUT_PORT']}"
+  #      logstash_format true
+  #      <buffer>
+  #        @type file
+  #        path /var/log/fluentd-buffers/kubernetes.system.buffer
+  #        flush_mode interval
+  #        retry_type exponential_backoff
+  #        flush_thread_count 2
+  #        flush_interval 5s
+  #        retry_forever
+  #        retry_max_interval 30
+  #        chunk_limit_size "#{ENV['OUTPUT_BUFFER_CHUNK_LIMIT']}"
+  #        queue_limit_length "#{ENV['OUTPUT_BUFFER_QUEUE_LIMIT']}"
+  #        overflow_action block
+  #      </buffer>
+  #    </match>
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -93,12 +94,22 @@ tolerations: []
 affinity: {}
 
 service:
-  type: ClusterIP
-  ports:
-  - name: "monitor-agent"
-    protocol: TCP
-    externalPort: 80
-    containerPort: 24220
+  enabled: false
+#  type: ClusterIP
+#  ports:
+#  - name: "metrics"
+#    protocol: TCP
+#    port: 80
+#    targetPort: 24231
+
+serviceAccount:
+  enabled: false
+  name: fluentd
+# annotations:
+#   eks.amazonaws.com/role-arn: "arn:aws:iam::1234567890:role/fluentd
+
+serviceMonitor:
+  enabled: false
 
 ingress:
   enabled: false
