@@ -21,6 +21,7 @@ spec:
       - name: init
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        imagePullSecrets: {{ .Values.image.pullSecrets }}
         command: ["/bin/sh", "-c", "(cp -a /etc/ /mnt/etc/) && (mkdir -p /mnt/home /mnt/root /mnt/var/log)"]
         volumeMounts:
         - mountPath: "/mnt"
@@ -29,6 +30,7 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullSecrets: {{ .Values.image.pullSecrets }}
         volumeMounts:
         - mountPath: /etc
           subPath: etc/
@@ -68,6 +70,7 @@ spec:
       - name: "github-authorized-keys"
         image: "{{ .Values.githubAuthorizedKeys.image.repository }}:{{ .Values.githubAuthorizedKeys.image.tag }}"
         imagePullPolicy: {{ default "" .Values.githubAuthorizedKeys.image.pullPolicy | quote }}
+        imagePullSecrets: {{ .Values.githubAuthorizedKeys.image.pullSecrets }}
         volumeMounts:
         - mountPath: /etc
           subPath: etc/
