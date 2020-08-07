@@ -54,7 +54,7 @@ spec:
             value: "https"
         {{- end }}
           {{- range $name, $value := .Values.env }}
-          {{- if (not (empty $value)) and (not (eq $name "FLUENT_ELASTICSEARCH_HOST" "FLUENT_ELASTICSEARCH_SCHEME")) }}
+          {{- if and (not (empty $value)) (not (eq $name "FLUENT_ELASTICSEARCH_HOST" "FLUENT_ELASTICSEARCH_SCHEME")) }}
           - name: {{ $name | quote }}
             value: {{ $value | quote }}
           {{- end }}
