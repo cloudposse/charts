@@ -19,7 +19,7 @@ image:
   #   - "docker-secret-1"
   #   - "docker-secret-2"
 
-configMaps:
+configMaps: {}
   # default:
   #   enabled: false
   #   mountPath: /config-default
@@ -36,7 +36,7 @@ configMaps:
   #         group:
   #           key: value
 
-secrets:
+secrets: {}
   # default:
   #   enabled: false
   #   mountPath: /secret-default
@@ -54,7 +54,7 @@ secrets:
   #           key: value
 
 # Inline ENV variables
-env:
+env: {}
   # ENV_NAME: ENV_VALUE
 
 # ENV variables from existing Kubernetes secrets and ConfigMaps
@@ -218,7 +218,7 @@ service:
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
 ## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
 ##
-serviceMonitors:
+serviceMonitors: {}
 #  ## Name of the ServiceMonitor to create
 #  ##
 #  name:
@@ -302,7 +302,7 @@ serviceMonitors:
 #          # serverName: ""
 
 ## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusrulespec
-prometheusRules:
+prometheusRules: {}
 #  name:
 #    labels:
 #      prometheus: kube-prometheus
@@ -318,7 +318,7 @@ prometheusRules:
 #          description: Reloading Prometheus' configuration has failed for {{$labels.namespace}}/{{$labels.pod}}
 #          summary: Reloading Promehteus' configuration failed
 
-probes:
+probes: {}
 #  livenessProbe:
 #    httpGet:
 #      path: /
@@ -328,7 +328,7 @@ probes:
 #      path: /
 #      port: http
 
-resources:
+resources: {}
 #  limits:
 #    cpu: 100m
 #    memory: 128Mi
@@ -405,7 +405,7 @@ virtualServices:
 #          subset: v1
 
 
-crd:
+crd: {}
 #  "networking.istio.io/v1alpha3":
 #    ServiceEntry:
 #      default:
