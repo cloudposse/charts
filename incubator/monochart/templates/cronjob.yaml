@@ -37,8 +37,8 @@ spec:
 {{ toYaml .| indent 12 }}
 {{- end }}
         spec:
-{{- if index .Values "serviceAccountName" }}
-          serviceAccountName: {{ .Values.serviceAccountName }}
+{{- if index $root.Values "serviceAccountName" }}
+          serviceAccountName: {{ $root.Values.serviceAccountName }}
 {{- end }}
           restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
           containers:
