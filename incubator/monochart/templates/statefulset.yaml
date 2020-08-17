@@ -28,8 +28,10 @@ spec:
   template:
     metadata:
       name: {{ include "common.fullname" . }}
-{{- with .Values.statefulset.pod.annotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- with .Values.statefulset.pod.annotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
       labels:
@@ -37,13 +39,37 @@ spec:
         release: {{ .Release.Name | quote }}
         serve: "true"
 {{- with .Values.statefulset.pod.labels }}
-{{ toYaml . | indent 4 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
     spec:
 {{- if index .Values "serviceAccountName" }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
-      terminationGracePeriodSeconds: 0
+      terminationGracePeriodSeconds: {{ .Values.statefulset.terminationGracePeriodSeconds }}
+{{- if .Values.statefulset.affinity }}
+      affinity:
+{{- if or .Values.statefulset.affinity.podAntiAffinity (eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode") }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+{{- if .Values.statefulset.affinity.podAntiAffinity }}
+{{- if .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.statefulset.affinity.podAffinity }}
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+{{- with .Values.statefulset.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
@@ -70,9 +96,11 @@ spec:
 {{- end }}
 {{- end }}
         volumeMounts:
+        {{- if .Values.statefulset.persistence.enabled }}
         - mountPath: {{ .Values.statefulset.persistence.mountPath | quote }}
           name: {{ include "common.fullname" . }}
-{{ include "monochart.files.volumeMounts" . | indent 8 }}
+        {{- end }}
+        {{- include "monochart.files.volumeMounts" . | nindent 8 }}
 {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
 {{- end }}
@@ -95,6 +123,7 @@ spec:
 {{- end }}
       volumes:
 {{ include "monochart.files.volumes" . | indent 6 }}
+{{- if .Values.statefulset.persistence.enabled }}
 {{- if not .Values.statefulset.persistence.useVolumeClaimTemplates }}
       - name: {{ (include "common.fullname" . ) }}
         persistentVolumeClaim:
@@ -124,6 +153,7 @@ spec:
       storageClassName: ""
 {{- else }}
       storageClassName: {{ .Values.statefulset.persistence.storageClass | quote }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

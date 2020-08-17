@@ -97,9 +97,11 @@ spec:
 {{- end }}
 {{- end }}
         volumeMounts:
+        {{- if .Values.persistence.enabled }}
         - mountPath: {{ .Values.persistence.mountPath | quote }}
           name: storage
-{{ include "monochart.files.volumeMounts" . | indent 8 }}
+        {{- end }}
+        {{- include "monochart.files.volumeMounts" . |  nindent 8 }}
 {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
 {{- end }}
@@ -121,8 +123,8 @@ spec:
       {{- end }}
 {{- end }}
       volumes:
+      {{- if .Values.persistence.enabled }}
       - name: storage
-      {{- if .Values.persistence }}
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim | default (include "common.fullname" .) }}
@@ -130,5 +132,5 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- end }}
-{{ include "monochart.files.volumes" . | indent 6 }}
+      {{- include "monochart.files.volumes" . | nindent 6 }}
 {{- end -}}

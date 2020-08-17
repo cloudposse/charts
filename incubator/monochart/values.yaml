@@ -97,6 +97,7 @@ statefulset:
   ## ref: https://v1-10.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#statefulsetupdatestrategy-v1-apps
   # strategy: {}
   revisionHistoryLimit: 10
+  terminationGracePeriodSeconds: 10
   # annotations:
   #   name: value
   # labels:
@@ -116,6 +117,7 @@ statefulset:
     # args:
   ## Configure volumeClaimTemplate block
   persistence:
+    enabled: true
     useVolumeClaimTemplates: true
     accessMode: ReadWriteOnce
     size: 8Gi
