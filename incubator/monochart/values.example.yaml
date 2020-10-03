@@ -60,6 +60,12 @@ envFrom:
     - config-1
     - config-2
 
+# ENV variables from fieldRef.fieldPath
+# https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
+envFromFieldRefFieldPath:
+  ENV_1: path-1
+  ENV_2: path-2
+
 deployment:
   enabled: true
   ## Pods replace strategy
