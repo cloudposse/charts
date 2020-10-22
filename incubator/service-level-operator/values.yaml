@@ -25,3 +25,5 @@ resources:
     cpu: 120m
     memory: 128Mi
 prometheus: prometheus-operator-prometheus
+serviceMonitor:
+  interval: 10s
