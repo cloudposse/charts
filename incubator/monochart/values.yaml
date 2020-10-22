@@ -214,9 +214,10 @@ service:
   enabled: false
   type: ClusterIP
   ports:
-    default:
-      internal: 8080
-      external: 80
+    http:               #Name of the Port for Multi-Port Services
+      internal: 8080    #This is the targetPort for the application/deployment/etc.
+      external: 80      #This is the incoming port
+      protocol: TCP
   # labels:
   #   name: value
   # annotations:
