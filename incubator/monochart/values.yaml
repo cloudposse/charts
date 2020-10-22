@@ -213,11 +213,10 @@ cronjob:
 service:
   enabled: false
   type: ClusterIP
-  ports:
-    default:               #Name of the Port for Multi-Port Services
-      internal: 8080    #This is the targetPort for the application/deployment/etc.
-      external: 80      #This is the incoming port
-      protocol: TCP
+  # ports:
+  #   name:             #Name of the Port for Multi-Port Services
+  #     internal: 80    #This is the targetPort for the application/deployment/etc.
+  #     external: 80    #This is the incoming port
   # labels:
   #   name: value
   # annotations:
@@ -374,7 +373,7 @@ persistence:
 ingress:
   default:
     enabled: false
-    port: default
+#    port: port-name
 #    labels:
 #      dns: "route53"
 #    annotations:
