@@ -72,6 +72,13 @@ env: {}
 #  ENV_1: path-1
 #  ENV_2: path-2
 
+# ENV variables from  secretkeyref
+# https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+# envFromSecretKeyRef:
+#   - name: MY_ENV_VARIABLE
+#     secret: kubernetes-secret-name
+#     key: key-name-in-secret
+
 deployment:
   enabled: false
   ## Pods replace strategy
