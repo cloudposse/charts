@@ -73,6 +73,18 @@ env:
         fieldPath: {{ $value }}
 {{- end }}
 {{- end }}
+{{/*
+https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+*/}}
+{{- with $root.Values.envFromSecretKeyRef }}
+{{- range $data := . }}
+  - name: {{ $data.name }}
+    valueFrom:
+      secretKeyRef:
+        name: {{ $data.secret }}
+        key: {{ $data.key }}
+{{- end }}
+{{- end }}
 {{- end -}}
 
 
