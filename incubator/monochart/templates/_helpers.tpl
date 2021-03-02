@@ -64,8 +64,9 @@ env:
 {{/*
 https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
 */}}
-{{- with $root.Values.envFromFieldRefFieldPath }}
+{{- if or (not (empty $root.Values.envFromFieldRefFieldPath)) (not (empty $root.Values.envFromSecretKeyRef)) }}
 env:
+{{- with $root.Values.envFromFieldRefFieldPath }}
 {{- range $name, $value := . }}
   - name: {{ $name }}
     valueFrom:
@@ -83,6 +84,7 @@ https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-envir
       secretKeyRef:
         name: {{ $data.secret }}
         key: {{ $data.key }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
