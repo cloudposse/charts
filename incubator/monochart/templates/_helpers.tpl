@@ -64,7 +64,7 @@ env:
 {{/*
 https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
 */}}
-{{- if or (not (empty $root.Values.envFromFieldRefFieldPath)) (not (empty $root.Values.envFromSecretKeyRef)) }}
+{{- if $root.Values.envFromFieldRefFieldPath | or $root.Values.envFromSecretKeyRef }}
 env:
 {{- with $root.Values.envFromFieldRefFieldPath }}
 {{- range $name, $value := . }}
