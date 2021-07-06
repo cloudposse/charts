@@ -13,7 +13,7 @@ spec:
       component: app
   namespaceSelector:
     matchNames:
-      - monitoring
+      - {{ .Release.Namespace }}
   endpoints:
     - port: http
-      interval: 10s
+      interval: {{ .Values.serviceMonitor.interval }}
