@@ -29,7 +29,7 @@ metadata:
     ingressName: {{ $name }}
   name: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
-{{- if and $ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+{{- if and ( hasKey $ingress "className" ) ( and  $ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) ) }}
   ingressClassName: {{ $ingress.className }}
 {{- end }}
   rules:
