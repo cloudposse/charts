@@ -8,10 +8,10 @@ CHARTS = $(wildcard */)
 all: deps $(wildcard */)
 
 deps:
-	$(HELM) repo add kubernetes-incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+	$(HELM) repo add kubernetes-incubator https://charts.helm.sh/incubator
 	$(HELM) repo add cloudposse-incubator https://charts.cloudposse.com/incubator/
-	$(HELM) repo add kuberentes-stable https://kubernetes-charts.storage.googleapis.com
-	$(HELM) repo add kubernetes-stable-alt http://storage.googleapis.com/kubernetes-charts
+	$(HELM) repo add kuberentes-stable 	https://charts.helm.sh/stable
+	$(HELM) repo add kubernetes-stable-alt 	https://charts.helm.sh/stable
 	mkdir -p $(PACKAGES_DIR)
 
 clean:
