@@ -1,11 +1,11 @@
 dependencies:
   - name: chartmuseum
-    repository: https://kubernetes-charts-incubator.storage.googleapis.com/
+    repository: https://chartmuseum.github.io/charts
     condition: server.enabled, global.server.enabled
-    version: 1.0.0
+    version: 2.14.2
     alias: server
   - name: chartmuseum
-    repository: https://kubernetes-charts-incubator.storage.googleapis.com/
+    repository: https://chartmuseum.github.io/charts
     condition: gateway.enabled, global.gateway.enabled
-    version: 1.0.0
+    version: 2.14.2
     alias: gateway

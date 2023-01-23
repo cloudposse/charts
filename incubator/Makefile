@@ -20,7 +20,7 @@ clean:
 
 .PHONY : $(CHARTS)
 $(CHARTS): CHART ?= $(@D)
-$(CHARTS): VERSION ?= $(shell yq r $(CHART)/Chart.yaml version)
+$(CHARTS): VERSION ?= $(shell yq eval .version $(CHART)/Chart.yaml)
 $(CHARTS): PACKAGE ?= $(CHART)-$(VERSION).tgz
 $(CHARTS):
 	@echo "# Building package for $(CHART) ($(PACKAGE))"
