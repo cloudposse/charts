@@ -38,6 +38,9 @@ spec:
       http:
         paths:
           - path: {{ $path }}
+            {{- if and $ingress.pathType (semverCompare ">=1.18-0" $root.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $ingress.pathType | default "ImplementationSpecific" }}
+            {{- end }}
             backend:
               {{- if semverCompare ">=1.19-0" $root.Capabilities.KubeVersion.GitVersion }}
               service:
