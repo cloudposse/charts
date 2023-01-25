@@ -43,7 +43,7 @@ spec:
               service:
                 name:  {{ $serviceName }}
                 port:
-                  number: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+                  name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
               {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
