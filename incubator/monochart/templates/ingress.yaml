@@ -3,7 +3,18 @@
 {{- range $name, $ingress := .Values.ingress -}}
 {{- if $ingress.enabled }}
 ---
+{{- if and ( hasKey $ingress "className" ) ( and  $ingress.className (semverCompare ">=1.18-0" $root.Capabilities.KubeVersion.GitVersion) ) }}
+  {{- if not (hasKey $ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set $ingress.annotations "kubernetes.io/ingress.class" $ingress.className }}
+  {{- end }}
+{{- end }}
+{{- if semverCompare ">=1.19-0" $root.Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" $root.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
 {{- with $ingress.annotations }}
@@ -18,15 +29,28 @@ metadata:
     ingressName: {{ $name }}
   name: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
+{{- if and ( hasKey $ingress "className" ) ( and  $ingress.className (semverCompare ">=1.18-0" $root.Capabilities.KubeVersion.GitVersion) ) }}
+  ingressClassName: {{ $ingress.className }}
+{{- end }}
   rules:
 {{- range $host, $path := $ingress.hosts }}
     - host: {{ $host }}
       http:
         paths:
           - path: {{ $path }}
+            {{- if semverCompare ">=1.18-0" $root.Capabilities.KubeVersion.GitVersion }}
+            pathType: {{ $ingress.pathType | default "ImplementationSpecific" }}
+            {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $root.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name:  {{ $serviceName }}
+                port:
+                  name: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+              {{- else }}
               serviceName: {{ $serviceName }}
               servicePort: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+              {{- end }}
 {{- end -}}
 {{- with $ingress.tls }}
   tls:

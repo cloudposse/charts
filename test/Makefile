@@ -2,7 +2,7 @@ all: monochart
 
 # Test incubator repo
 monochart: HELM_CHART_REPO_URL ?= https://charts.cloudposse.com
-monochart: HELM_CHART_VERSION ?= $(shell yq r ../incubator/monochart/Chart.yaml version)
+monochart: HELM_CHART_VERSION ?= $(shell yq eval .version ../incubator/monochart/Chart.yaml)
 monochart:
 	@echo "Testing for monochart $(HELM_CHART_VERSION)..."
 	  helm repo add test-incubator $(HELM_CHART_REPO_URL)/incubator

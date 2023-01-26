@@ -381,6 +381,7 @@ ingress:
   default:
     enabled: false
 #    port: port-name
+#    pathType: ImplementationSpecific
 #    labels:
 #      dns: "route53"
 #    annotations:

@@ -29,14 +29,14 @@ jobs:
           GITHUB_REF: ${{ github.ref }}
 
       - name: Build Chart Packages
-        uses: "docker://cloudposse/build-harness:0.37.0"
+        uses: "docker://cloudposse/build-harness:1.10.0"
         with:
           args: "-C incubator all"
         env:
           HELM_CHART_REPO_URL: ${{ steps.helm_chart.outputs.repo_url }}
 
       - name: Generate Index
-        uses: "docker://cloudposse/build-harness:0.37.0"
+        uses: "docker://cloudposse/build-harness:1.10.0"
         with:
           args: "-C packages all"
         env:
@@ -48,10 +48,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
 
       - name: Test
         if: success() && github.repository == 'cloudposse/charts'
-        uses: "docker://cloudposse/build-harness:0.37.0"
+        uses: "docker://cloudposse/build-harness:1.10.0"
         with:
           args: "-C test all"
         env:

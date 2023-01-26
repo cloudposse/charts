@@ -1,7 +1,7 @@
 dependencies:
 - name: common
-  version: 0.0.1
-  repository: https://kubernetes-charts-incubator.storage.googleapis.com/
+  version: 1.0.0
+  repository: https://atlassian.github.io/data-center-helm-charts
 - name: oauth2-proxy
   version: 0.1.4
   repository: https://charts.cloudposse.com/incubator/
