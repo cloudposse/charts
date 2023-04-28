@@ -19,11 +19,11 @@ jobs:
         id: helm_chart
         run: |
           if [[ ${GITHUB_REF} == 'refs/heads/master' ]]; then
-              echo "::set-output name=bucket_url::s3://cloudposse-charts/"
-              echo "::set-output name=repo_url::https://charts.cloudposse.com"
+              echo "bucket_url=s3://cloudposse-charts/" >> $GITHUB_OUTPUT
+              echo "repo_url=https://charts.cloudposse.com" >> $GITHUB_OUTPUT
           else
-              echo "::set-output name=bucket_url::s3://cloudposse-dev-charts/${GITHUB_REF}/"
-              echo "::set-output name=repo_url::https://charts.dev.cloudposse.com/${GITHUB_REF}"
+              echo "bucket_url=s3://cloudposse-dev-charts/${GITHUB_REF}/" >> $GITHUB_OUTPUT
+              echo "repo_url=https://charts.dev.cloudposse.com/${GITHUB_REF}" >> $GITHUB_OUTPUT
           fi
         env:
           GITHUB_REF: ${{ github.ref }}
