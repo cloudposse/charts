@@ -96,12 +96,17 @@ spec:
             protocol: {{ default "TCP" $port.protocol  }}
 {{- end }}
 {{- end }}
+        {{- if or .Values.deployment.pod.volumeMounts .Values.persistence.enabled .Values.configMaps.enabled .Values.secrets.enabled }}
         volumeMounts:
+        {{- if .Values.deployment.pod.volumeMounts }}
+        {{- toYaml .Values.deployment.pod.volumeMounts | nindent 8 }}
+        {{- end }}
         {{- if .Values.persistence.enabled }}
         - mountPath: {{ .Values.persistence.mountPath | quote }}
           name: storage
         {{- end }}
         {{- include "monochart.files.volumeMounts" . |  nindent 8 }}
+        {{- end }}
 {{- with .Values.probes }}
 {{ toYaml . | indent 8 }}
 {{- end }}
@@ -109,20 +114,26 @@ spec:
         resources:
 {{ toYaml . | indent 10 }}
 {{- end }}
-{{- with .Values.deployment.pod.hostAliases }}
+      {{- with .Values.deployment.pod.hostAliases }}
       hostAliases:
-{{ toYaml . | indent 8 }}
-{{- end }}
+        {{- toYaml . | indent 8 }}
+      {{- end }}
+    {{- if or .Values.dockercfg.enabled .Values.image.pullSecrets }}
       imagePullSecrets:
-{{- if .Values.dockercfg.enabled }}
+    {{- end }}
+      {{- if .Values.dockercfg.enabled }}
         - name: {{ include "common.fullname" . }}
-{{- end }}
-{{- with .Values.image.pullSecrets }}
+      {{- end }}
+    {{- with .Values.image.pullSecrets }}
       {{- range . }}
         - name: {{ . }}
       {{- end }}
-{{- end }}
+    {{- end }}
+    {{- if or .Values.deployment.volumes .Values.persistence.enabled .Values.configMaps.enabled .Values.secrets.enabled }}
       volumes:
+      {{- if .Values.deployment.volumes }}
+        {{- toYaml .Values.deployment.volumes | nindent 6 }}
+      {{- end }}
       {{- if .Values.persistence.enabled }}
       - name: storage
       {{- if .Values.persistence.enabled }}
@@ -133,4 +144,6 @@ spec:
       {{- end }}
       {{- end }}
       {{- include "monochart.files.volumes" . | nindent 6 }}
+      {{- end }}
+      
 {{- end -}}
