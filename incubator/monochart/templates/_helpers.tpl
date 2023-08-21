@@ -61,16 +61,11 @@ env:
     value: {{ default "" $value | quote }}
 {{- end }}
 {{- end }}
-
 {{/*
 https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/#use-pod-fields-as-values-for-environment-variables
 */}}
 {{- with $root.Values.envFromFieldRefFieldPath }}
-
-{{/* Only add env block if not used by above .Values.env */}}
-{{- if not $root.Values.env}}
 env:
-{{- end }}
 {{- range $name, $value := . }}
   - name: {{ $name }}
     valueFrom:
