@@ -97,6 +97,9 @@ spec:
 {{- end }}
 {{- end }}
         volumeMounts:
+        {{- if .Values.deployment.pod.volumeMounts }}
+        {{- toYaml .Values.deployment.pod.volumeMounts | nindent 8 }}
+        {{- end }}
         {{- if .Values.persistence.enabled }}
         - mountPath: {{ .Values.persistence.mountPath | quote }}
           name: storage
@@ -123,6 +126,9 @@ spec:
       {{- end }}
 {{- end }}
       volumes:
+      {{- if .Values.deployment.volumes }}
+      {{- toYaml .Values.deployment.volumes | nindent 6 }}
+      {{- end }}
       {{- if .Values.persistence.enabled }}
       - name: storage
       {{- if .Values.persistence.enabled }}
