@@ -65,16 +65,6 @@ deployment:
     ## https://github.com/jtblin/kube2iam
     #  iam.amazonaws.com/role: role-arn
     labels: {}
-    
-  ## Directly attach Volume
-    volumeMounts:
-      - name: apmsocketpath
-        mountPath: /var/run/datadog
-  volumes:
-    - hostPath:
-        path: /var/run/datadog/
-      name: apmsocketpath
-      
   affinity:
     # use of simple rule
     affinityRule: "ShouldBeOnDifferentNode"

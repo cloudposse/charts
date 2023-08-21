@@ -103,15 +103,6 @@ deployment:
     labels: {}
     # command:
     args: []
-    
-    volumeMounts: []
-    # - name: apmsocketpath
-    #   mountPath: /var/run/datadog
-    
-  volumes: []
-  # - name: apmsocketpath
-  #   hostPath:
-  #     path: /var/run/datadog/
 
 statefulset:
   enabled: false
