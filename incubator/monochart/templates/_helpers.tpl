@@ -160,3 +160,71 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
     topologyKey: "kubernetes.io/hostname"
 {{- end -}}
 
+{{/*
+The affinity
+*/}}
+{{- define "monochart.affinity" -}}
+{{- if .Values.affinity }}
+affinity:
+{{- if or .Values.affinity.podAntiAffinity (eq .Values.affinity.affinityRule "ShouldBeOnDifferentNode") }}
+	podAntiAffinity:
+		preferredDuringSchedulingIgnoredDuringExecution:
+{{- if .Values.affinity.podAntiAffinity }}
+{{- if .Values.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with .Values.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq .Values.affinity.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 6 }}
+{{- end }}
+{{- end }}
+{{- if .Values.affinity.podAffinity }}
+	podAffinity:
+		requiredDuringSchedulingIgnoredDuringExecution:
+{{- with .Values.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- end -}}
+
+{{/*
+The nodeSelector
+*/}}
+{{- define "monochart.nodeSelector" -}}
+- weight: 100
+  podAffinityTerm:
+    labelSelector:
+      matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - {{ include "common.name" . }}
+      - key: release
+        operator: In
+        values:
+        - {{ .Release.Name | quote }}
+    topologyKey: "kubernetes.io/hostname"
+{{- end -}}
+
+{{/*
+The tolerations
+*/}}
+{{- define "monochart.tolerations" -}}
+- weight: 100
+  podAffinityTerm:
+    labelSelector:
+      matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - {{ include "common.name" . }}
+      - key: release
+        operator: In
+        values:
+        - {{ .Release.Name | quote }}
+    topologyKey: "kubernetes.io/hostname"
+{{- end -}}

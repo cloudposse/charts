@@ -79,6 +79,55 @@ env: {}
 #     secret: kubernetes-secret-name
 #     key: key-name-in-secret
 
+nodeSelector: {}
+#  disktype: ssd
+
+tolerations: []
+#  - key: "key1"
+#    operator: "Equal"
+#    value: "value1"
+#    effect: "NoSchedule"
+
+affinity: {}
+#  nodeAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      nodeSelectorTerms:
+#        - matchExpressions:
+#            - key: kubernetes.io/e2e-az-name
+#              operator: In
+#              values:
+#                - e2e-az1
+#                - e2e-az2
+#    preferredDuringSchedulingIgnoredDuringExecution:
+#      - weight: 1
+#        preference:
+#          matchExpressions:
+#            - key: custom-key
+#              operator: In
+#              values:
+#                - custom-value
+#
+#    podAffinity:
+#      requiredDuringSchedulingIgnoredDuringExecution:
+#        - labelSelector:
+#            matchExpressions:
+#              - key: security
+#                operator: In
+#                values:
+#                  - S1
+#          topologyKey: topology.kubernetes.io/zone
+#    podAntiAffinity:
+#      preferredDuringSchedulingIgnoredDuringExecution:
+#        - weight: 100
+#          podAffinityTerm:
+#            labelSelector:
+#              matchExpressions:
+#                - key: security
+#                  operator: In
+#                  values:
+#                    - S2
+#            topologyKey: topology.kubernetes.io/zone
+
 deployment:
   enabled: false
   ## Pods replace strategy
@@ -112,6 +161,55 @@ deployment:
   # - name: apmsocketpath
   #   hostPath:
   #     path: /var/run/datadog/
+
+  nodeSelector: {}
+  #  disktype: ssd
+
+  tolerations: []
+  #  - key: "key1"
+  #    operator: "Equal"
+  #    value: "value1"
+  #    effect: "NoSchedule"
+
+  affinity: {}
+  #  nodeAffinity:
+  #    requiredDuringSchedulingIgnoredDuringExecution:
+  #      nodeSelectorTerms:
+  #        - matchExpressions:
+  #            - key: kubernetes.io/e2e-az-name
+  #              operator: In
+  #              values:
+  #                - e2e-az1
+  #                - e2e-az2
+  #    preferredDuringSchedulingIgnoredDuringExecution:
+  #      - weight: 1
+  #        preference:
+  #          matchExpressions:
+  #            - key: custom-key
+  #              operator: In
+  #              values:
+  #                - custom-value
+  #
+  #    podAffinity:
+  #      requiredDuringSchedulingIgnoredDuringExecution:
+  #        - labelSelector:
+  #            matchExpressions:
+  #              - key: security
+  #                operator: In
+  #                values:
+  #                  - S1
+  #          topologyKey: topology.kubernetes.io/zone
+  #    podAntiAffinity:
+  #      preferredDuringSchedulingIgnoredDuringExecution:
+  #        - weight: 100
+  #          podAffinityTerm:
+  #            labelSelector:
+  #              matchExpressions:
+  #                - key: security
+  #                  operator: In
+  #                  values:
+  #                    - S2
+  #            topologyKey: topology.kubernetes.io/zone
 
 statefulset:
   enabled: false
@@ -150,6 +248,55 @@ statefulset:
   #   labels:
   #     name: value
 
+  nodeSelector: {}
+  #  disktype: ssd
+
+  tolerations: []
+  #  - key: "key1"
+  #    operator: "Equal"
+  #    value: "value1"
+  #    effect: "NoSchedule"
+
+  affinity: {}
+  #  nodeAffinity:
+  #    requiredDuringSchedulingIgnoredDuringExecution:
+  #      nodeSelectorTerms:
+  #        - matchExpressions:
+  #            - key: kubernetes.io/e2e-az-name
+  #              operator: In
+  #              values:
+  #                - e2e-az1
+  #                - e2e-az2
+  #    preferredDuringSchedulingIgnoredDuringExecution:
+  #      - weight: 1
+  #        preference:
+  #          matchExpressions:
+  #            - key: custom-key
+  #              operator: In
+  #              values:
+  #                - custom-value
+  #
+  #    podAffinity:
+  #      requiredDuringSchedulingIgnoredDuringExecution:
+  #        - labelSelector:
+  #            matchExpressions:
+  #              - key: security
+  #                operator: In
+  #                values:
+  #                  - S1
+  #          topologyKey: topology.kubernetes.io/zone
+  #    podAntiAffinity:
+  #      preferredDuringSchedulingIgnoredDuringExecution:
+  #        - weight: 100
+  #          podAffinityTerm:
+  #            labelSelector:
+  #              matchExpressions:
+  #                - key: security
+  #                  operator: In
+  #                  values:
+  #                    - S2
+  #            topologyKey: topology.kubernetes.io/zone
+
 daemonset:
   enabled: false
   ## Pods replace strategy
@@ -175,6 +322,56 @@ daemonset:
     # command:
     args: []
 
+  nodeSelector: {}
+  #  disktype: ssd
+
+  tolerations: []
+  #  - key: "key1"
+  #    operator: "Equal"
+  #    value: "value1"
+  #    effect: "NoSchedule"
+
+  affinity: {}
+  #  nodeAffinity:
+  #    requiredDuringSchedulingIgnoredDuringExecution:
+  #      nodeSelectorTerms:
+  #        - matchExpressions:
+  #            - key: kubernetes.io/e2e-az-name
+  #              operator: In
+  #              values:
+  #                - e2e-az1
+  #                - e2e-az2
+  #    preferredDuringSchedulingIgnoredDuringExecution:
+  #      - weight: 1
+  #        preference:
+  #          matchExpressions:
+  #            - key: custom-key
+  #              operator: In
+  #              values:
+  #                - custom-value
+  #
+  #    podAffinity:
+  #      requiredDuringSchedulingIgnoredDuringExecution:
+  #        - labelSelector:
+  #            matchExpressions:
+  #              - key: security
+  #                operator: In
+  #                values:
+  #                  - S1
+  #          topologyKey: topology.kubernetes.io/zone
+  #    podAntiAffinity:
+  #      preferredDuringSchedulingIgnoredDuringExecution:
+  #        - weight: 100
+  #          podAffinityTerm:
+  #            labelSelector:
+  #              matchExpressions:
+  #                - key: security
+  #                  operator: In
+  #                  values:
+  #                    - S2
+  #            topologyKey: topology.kubernetes.io/zone
+
+
 job:
   default:
     enabled: false
@@ -197,6 +394,55 @@ job:
       labels: {}
       # command:
       args: []
+
+    nodeSelector: {}
+    #  disktype: ssd
+
+    tolerations: []
+    #  - key: "key1"
+    #    operator: "Equal"
+    #    value: "value1"
+    #    effect: "NoSchedule"
+
+    affinity: {}
+    #  nodeAffinity:
+    #    requiredDuringSchedulingIgnoredDuringExecution:
+    #      nodeSelectorTerms:
+    #        - matchExpressions:
+    #            - key: kubernetes.io/e2e-az-name
+    #              operator: In
+    #              values:
+    #                - e2e-az1
+    #                - e2e-az2
+    #    preferredDuringSchedulingIgnoredDuringExecution:
+    #      - weight: 1
+    #        preference:
+    #          matchExpressions:
+    #            - key: custom-key
+    #              operator: In
+    #              values:
+    #                - custom-value
+    #
+    #    podAffinity:
+    #      requiredDuringSchedulingIgnoredDuringExecution:
+    #        - labelSelector:
+    #            matchExpressions:
+    #              - key: security
+    #                operator: In
+    #                values:
+    #                  - S1
+    #          topologyKey: topology.kubernetes.io/zone
+    #    podAntiAffinity:
+    #      preferredDuringSchedulingIgnoredDuringExecution:
+    #        - weight: 100
+    #          podAffinityTerm:
+    #            labelSelector:
+    #              matchExpressions:
+    #                - key: security
+    #                  operator: In
+    #                  values:
+    #                    - S2
+    #            topologyKey: topology.kubernetes.io/zone
 
 cronjob:
   default:
@@ -225,6 +471,55 @@ cronjob:
       labels: {}
       # command:
       args: []
+
+    nodeSelector: {}
+    #  disktype: ssd
+
+    tolerations: []
+    #  - key: "key1"
+    #    operator: "Equal"
+    #    value: "value1"
+    #    effect: "NoSchedule"
+
+    affinity: {}
+    #  nodeAffinity:
+    #    requiredDuringSchedulingIgnoredDuringExecution:
+    #      nodeSelectorTerms:
+    #        - matchExpressions:
+    #            - key: kubernetes.io/e2e-az-name
+    #              operator: In
+    #              values:
+    #                - e2e-az1
+    #                - e2e-az2
+    #    preferredDuringSchedulingIgnoredDuringExecution:
+    #      - weight: 1
+    #        preference:
+    #          matchExpressions:
+    #            - key: custom-key
+    #              operator: In
+    #              values:
+    #                - custom-value
+    #
+    #    podAffinity:
+    #      requiredDuringSchedulingIgnoredDuringExecution:
+    #        - labelSelector:
+    #            matchExpressions:
+    #              - key: security
+    #                operator: In
+    #                values:
+    #                  - S1
+    #          topologyKey: topology.kubernetes.io/zone
+    #    podAntiAffinity:
+    #      preferredDuringSchedulingIgnoredDuringExecution:
+    #        - weight: 100
+    #          podAffinityTerm:
+    #            labelSelector:
+    #              matchExpressions:
+    #                - key: security
+    #                  operator: In
+    #                  values:
+    #                    - S2
+    #            topologyKey: topology.kubernetes.io/zone
 
 service:
   enabled: false
