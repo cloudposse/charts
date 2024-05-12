@@ -41,6 +41,9 @@ spec:
 {{- if index .Values "serviceAccountName" }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
+{{- include "monochart.affinity" (list . .Values.daemonset) | nindent 6 }}
+{{- include "monochart.nodeSelector" (list . .Values.daemonset) | nindent 6 }}
+{{- include "monochart.tolerations" (list . .Values.daemonset) | nindent 6 }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}

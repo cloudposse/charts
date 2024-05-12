@@ -41,6 +41,9 @@ spec:
           serviceAccountName: {{ $root.Values.serviceAccountName }}
 {{- end }}
           restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
+{{- include "monochart.affinity" (list $root $cron) | nindent 10 }}
+{{- include "monochart.nodeSelector" (list $root $cron) | nindent 10 }}
+{{- include "monochart.tolerations" (list $root $cron) | nindent 10 }}
           containers:
           - name: {{ $root.Release.Name }}
             image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}

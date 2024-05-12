@@ -164,27 +164,45 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
 The affinity
 */}}
 {{- define "monochart.affinity" -}}
-{{- if .Values.affinity }}
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := mergeOverwrite $root.Values.affinity (get $specific "affinity") -}}
+{{- if $config }}
 affinity:
-{{- if or .Values.affinity.podAntiAffinity (eq .Values.affinity.affinityRule "ShouldBeOnDifferentNode") }}
-	podAntiAffinity:
-		preferredDuringSchedulingIgnoredDuringExecution:
-{{- if .Values.affinity.podAntiAffinity }}
-{{- if .Values.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
-{{- with .Values.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- if or $config.podAntiAffinity (eq $config.affinityRule "ShouldBeOnDifferentNode") }}
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.podAntiAffinity }}
+{{- if $config.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
 {{ toYaml . | indent 6 }}
 {{- end }}
 {{- end }}
 {{- end }}
-{{- if eq .Values.affinity.affinityRule "ShouldBeOnDifferentNode" }}
-{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 6 }}
+{{- if eq $config.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" $root | nindent 6 }}
 {{- end }}
 {{- end }}
-{{- if .Values.affinity.podAffinity }}
-	podAffinity:
-		requiredDuringSchedulingIgnoredDuringExecution:
-{{- with .Values.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{- if $config.podAffinity }}
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+{{- with $config.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
 {{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- if $config.nodeAffinity }}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+    preferredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -195,36 +213,28 @@ affinity:
 The nodeSelector
 */}}
 {{- define "monochart.nodeSelector" -}}
-- weight: 100
-  podAffinityTerm:
-    labelSelector:
-      matchExpressions:
-      - key: app
-        operator: In
-        values:
-        - {{ include "common.name" . }}
-      - key: release
-        operator: In
-        values:
-        - {{ .Release.Name | quote }}
-    topologyKey: "kubernetes.io/hostname"
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := mergeOverwrite $root.Values.nodeSelector (get $specific "nodeSelector") -}}
+{{- if $config }}
+{{- with $config }}
+nodeSelector:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}
 {{- end -}}
 
 {{/*
 The tolerations
 */}}
 {{- define "monochart.tolerations" -}}
-- weight: 100
-  podAffinityTerm:
-    labelSelector:
-      matchExpressions:
-      - key: app
-        operator: In
-        values:
-        - {{ include "common.name" . }}
-      - key: release
-        operator: In
-        values:
-        - {{ .Release.Name | quote }}
-    topologyKey: "kubernetes.io/hostname"
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := default $root.Values.tolerations (get $specific "tolerations") -}}
+{{- if $config }}
+{{- with $config }}
+tolerations:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}
 {{- end -}}
