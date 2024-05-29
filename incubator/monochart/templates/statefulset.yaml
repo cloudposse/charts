@@ -46,30 +46,9 @@ spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
       terminationGracePeriodSeconds: {{ .Values.statefulset.terminationGracePeriodSeconds }}
-{{- if .Values.statefulset.affinity }}
-      affinity:
-{{- if or .Values.statefulset.affinity.podAntiAffinity (eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode") }}
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-{{- if .Values.statefulset.affinity.podAntiAffinity }}
-{{- if .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
-{{- with .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
-{{ toYaml . | indent 10 }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- if eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode" }}
-{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 10 }}
-{{- end }}
-{{- end }}
-{{- if .Values.statefulset.affinity.podAffinity }}
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-{{- with .Values.statefulset.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
-{{ toYaml . | indent 10 }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- include "monochart.affinity" (list . .Values.statefulset) | nindent 6 }}
+{{- include "monochart.nodeSelector" (list . .Values.statefulset) | nindent 6 }}
+{{- include "monochart.tolerations" (list . .Values.statefulset) | nindent 6 }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}

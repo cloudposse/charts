@@ -35,6 +35,9 @@ spec:
       serviceAccountName: {{ $root.Values.serviceAccountName }}
 {{- end }}
       restartPolicy: '{{ default "Never" $job.restartPolicy }}'
+{{- include "monochart.affinity" (list . $job) | nindent 6 }}
+{{- include "monochart.nodeSelector" (list . $job) | nindent 6 }}
+{{- include "monochart.tolerations" (list . $job) | nindent 6 }}
       containers:
       - name: {{ $root.Release.Name }}
         image: {{ required "image.repository is required!" $root.Values.image.repository }}:{{ required "image.tag is required!" $root.Values.image.tag }}

@@ -160,3 +160,81 @@ The pod anti-affinity rule to prefer not to be scheduled onto a node if that nod
     topologyKey: "kubernetes.io/hostname"
 {{- end -}}
 
+{{/*
+The affinity
+*/}}
+{{- define "monochart.affinity" -}}
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := mergeOverwrite $root.Values.affinity (get $specific "affinity") -}}
+{{- if $config }}
+affinity:
+{{- if or $config.podAntiAffinity (eq $config.affinityRule "ShouldBeOnDifferentNode") }}
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.podAntiAffinity }}
+{{- if $config.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq $config.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" $root | nindent 6 }}
+{{- end }}
+{{- end }}
+{{- if $config.podAffinity }}
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+{{- with $config.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- if $config.nodeAffinity }}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+    preferredDuringSchedulingIgnoredDuringExecution:
+{{- if $config.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with $config.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- end -}}
+
+{{/*
+The nodeSelector
+*/}}
+{{- define "monochart.nodeSelector" -}}
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := mergeOverwrite $root.Values.nodeSelector (get $specific "nodeSelector") -}}
+{{- if $config }}
+{{- with $config }}
+nodeSelector:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+The tolerations
+*/}}
+{{- define "monochart.tolerations" -}}
+{{- $root := first . }}
+{{- $specific := last . }}
+{{- $config := default $root.Values.tolerations (get $specific "tolerations") -}}
+{{- if $config }}
+{{- with $config }}
+tolerations:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}

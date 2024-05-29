@@ -95,14 +95,66 @@ deployment:
     # use custom affinity rule. Here app MUST be on different host then postgres instance for it
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - postgresql
+              - key: release
+                operator: In
+                values:
+                  - "postgresql"
+          topologyKey: "kubernetes.io/hostname"
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                  - linux
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: label-1
+                operator: In
+                values:
+                  - key-1
+        - weight: 50
+          preference:
+            matchExpressions:
+              - key: label-2
+                operator: In
+                values:
+                  - key-2
+  tolerations:
+    - key: "gpu3"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+
+nodeSelector:
+  disktype: ssd
+
+tolerations: []
+
+
+affinity:
+  # use of simple rule
+  affinityRule: "ShouldBeOnDifferentNode"
+  # use custom affinity rule. Here app MUST be on different host then postgres instance for it
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchExpressions:
-          - key: app
-            operator: In
-            values:
-            - postgresql
-          - key: release
-            operator: In
-            values:
-            - "{{ requiredEnv "RELEASE_NAME" }}-postgresql"
+            - key: app
+              operator: In
+              values:
+                - postgresql
+            - key: release
+              operator: In
+              values:
+                - "postgresql"
         topologyKey: "kubernetes.io/hostname"

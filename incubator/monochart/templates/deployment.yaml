@@ -29,7 +29,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-{{- if .Values.deployment.pod}}
+{{- if .Values.deployment.pod }}
 {{- with .Values.deployment.pod.annotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
@@ -47,30 +47,9 @@ spec:
 {{- if index .Values "serviceAccountName" }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}
-{{- if .Values.deployment.affinity }}
-      affinity:
-{{- if or .Values.deployment.affinity.podAntiAffinity (eq .Values.deployment.affinity.affinityRule "ShouldBeOnDifferentNode") }}
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-{{- if .Values.deployment.affinity.podAntiAffinity }}
-{{- if .Values.deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
-{{- with .Values.deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
-{{ toYaml . | indent 10 }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- if eq .Values.deployment.affinity.affinityRule "ShouldBeOnDifferentNode" }}
-{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 10 }}
-{{- end }}
-{{- end }}
-{{- if .Values.deployment.affinity.podAffinity }}
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-{{- with .Values.deployment.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
-{{ toYaml . | indent 10 }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- include "monochart.affinity" (list . .Values.deployment) | nindent 6 }}
+{{- include "monochart.nodeSelector" (list . .Values.deployment) | nindent 6 }}
+{{- include "monochart.tolerations" (list . .Values.deployment) | nindent 6 }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ required "image.repository is required!" .Values.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
