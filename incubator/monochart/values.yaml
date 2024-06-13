@@ -525,9 +525,9 @@ service:
   enabled: false
   type: ClusterIP
   # ports:
-  #   name:
-  #     internal: 80
-  #     external: 80
+  #   name:             #Name of the Port for Multi-Port Services
+  #     internal: 80    #This is the targetPort for the application/deployment/etc.
+  #     external: 80    #This is the incoming port
   # labels:
   #   name: value
   # annotations:
