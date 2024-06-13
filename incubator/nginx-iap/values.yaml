@@ -1,0 +1,146 @@
+# This is a YAML-formatted file.
+# Declare variables here to be passed into your templates.
+---
+
+DNS_ZONE: "" # iap.staging.example.com
+iap_hostname: iap
+kube_dns_hostname: kube-dns.kube-system.svc.cluster.local.  # trailing dot is correct
+
+replicaCount: 1
+
+# Default values for ingress resource
+ingress:
+  annotations: ~
+  labels: ~
+  hosts:
+    # - iap.staging.example.com
+
+# Default values for nginx.
+nginx:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: Always
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    name: proxy
+    type: ClusterIP
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+    http:
+      externalPort: 80
+      internalPort: 80
+
+# Default values for oauth2-proxy.
+oauth:
+  # oauth2_proxy config file settings:
+  app:
+    useSSL: false
+    upstreams:
+      # do not change
+      - http://localhost/
+
+  # Enabled provider
+    provider: "github"
+
+  # Common oauth configs
+    clientID:
+    clientSecret:
+    scope:
+    redirectUrl:
+
+  # Github specific configs
+    githubOrg:
+    githubTeam:
+
+  # Github or Gitlab specific configs
+    loginUrl:
+    redeemUrl:
+    validateUrl:
+
+  # MS Azure specific configs
+    azureTenant:
+    resource:
+
+  # Google specific configs
+    googleGroups:
+  #      - "group"
+    googleAdminEmail:
+    googleServiceAccountJson:
+
+  # HTTP auth configs
+    basicAuthPassword:
+    displayHtpasswdForm:
+    htpasswdFile:
+
+  # Email filters
+    emailDomains:
+      - "*"
+    emails:
+  #      - igor@cloudposse.com
+
+  # OAuth2 proxy configs
+    approvalPrompt:
+    requestLogging: false
+    passAccessToken: false
+    passBasicAuth: true
+    passHostHeader: true
+    setXAuthRequest: true
+    customTemplatesDir:
+    proxyPrefix:
+    skipAuthRegex:
+  #	  - ".*"
+    skipProviderButton:
+    profileUrl:
+    signatureKey:
+
+  # OAuth2 proxy session cookie config
+    cookieName:
+    cookieSecret:
+    cookieDomain:
+    cookieExpire:
+    cookieRefresh:
+    cookieSecure: true
+    cookieHttponly: false
+
+  # oauth settings    
+  replicaCount: 1
+  image:
+    repository: cloudposse/oauth2-proxy
+    tag: 2.2
+    pullPolicy: Always
+  service:
+    name: oauth
+    type: ClusterIP
+  #   labels:
+  #     dns: "route53"
+  #   annotations:
+  #     kubernetes.io/tls-acme: "true"
+  #     domainName: "foobar.com"
+  #     dnsRecordType: "CNAME"
+  #     dnsRecordTTL: "300"
+    http:
+      externalPort: 80
+      internalPort: 80
+    # https:
+    #   # not used
+    #   externalPort: 443
+    #   internalPort: 443
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

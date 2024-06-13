@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname_proxy" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+{{- if .Values.nginx.service.labels }}
+{{ toYaml .Values.nginx.service.labels | indent 4 }}
+{{- end }}
+{{- if .Values.nginx.service.annotations }}
+  annotations:
+{{ toYaml .Values.nginx.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.nginx.service.type }}
+  ports:
+  - port: {{ .Values.nginx.service.http.externalPort }}
+    targetPort: {{ .Values.nginx.service.http.internalPort }}
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ template "fullname" . }}

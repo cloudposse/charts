@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname_proxy" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  default.conf: |-
+    # nginx requires a 'resolver' directive when variables appear in proxy_pass arguments
+    # (eg: proxy_pass "http://$service.$pr_number..." )
+    resolver {{ .Values.kube_dns_hostname }} ipv6=off;
+
+    upstream localhost_oauth2_proxy {
+      least_conn;
+      server 127.0.0.1:81;
+    }
+
+    server {
+      listen       80;
+
+      # TODO(mtamsky): It might be clearer if we had two server{}
+      # blocks, each with unique server_name patterns.  This would
+      # create a clear separation of the iap from internal services.
+
+      # Currently, this server{} config answers for both:
+      # iap.DOMAIN
+      server_name {{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }};
+      # pr123-service.DOMAIN
+      server_name ~^(?<pr_number>[Pp][Rr][0-9]+)-(?<service>[^.]+)\.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$;
+
+      # Assemble the two captured vars
+      set $pr_number_service "${pr_number}-${service}";
+
+      access_log /dev/stdout;
+      error_log /dev/stderr;
+
+      # 'internal' directive designates this location is nginx-internal-only
+      # cf. http://nginx.org/en/docs/http/ngx_http_core_module.html#internal
+      location /oauth2/auth {
+        internal;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+                                                                    
+      # initiate the oauth flow
+      location /oauth2/start {
+        auth_request off;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+
+      # Presents the initial login page with "Sign in with a XYZ account" button.
+      # Also logs the user out by clearing their _oauth_cookie.
+      location /oauth2/sign_in {
+        auth_request off;
+        rewrite_log on;
+        if ($arg_initial = "true") {
+            proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=${arg_iap_redirect};
+            break;
+            # we continue processing this request
+            # http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#break
+        }
+
+        # This is currently where the callback? oauth flow winds up after valid
+        # authentiation with a valid _oauth_cookie.
+
+        # TODO(tamsky): determine if we can move iap_redirect to a unique path
+        # instead of piggybacking on the /oauth2/sign_in location
+        if ($arg_iap_redirect) {
+            # redirect to final desination, trailing-'?' tells nginx to drop current $query_string
+            rewrite ^.*$ ${arg_iap_redirect}? redirect;
+        }
+
+        # This 'proxy_pass' URL is what generates the start-of-oauth-flow:
+        proxy_pass http://localhost_oauth2_proxy/oauth2/sign_in?iap_redirect=${pr_number_service}.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}${request_uri};
+      }
+
+      location /oauth2/callback {
+        auth_request off;
+        proxy_pass http://localhost_oauth2_proxy;
+      }
+                                                        
+      location / {
+        # All paths (not matched above) are protected by the 'auth_request' directive.
+        auth_request /oauth2/auth;
+
+        # Headers we include in the auth_request:
+        auth_request_set $auth_user $upstream_http_x_authenticated_email;
+
+        # TODO(tamsky): verify we need 'initial=true' pieces.
+        error_page 401 =307 $scheme://{{.Values.iap_hostname}}.{{ .Values.DNS_ZONE }}/oauth2/sign_in?initial=true&iap_redirect=$scheme://${pr_number_service}.{{ .Values.iap_hostname }}.{{ .Values.DNS_ZONE }}$request_uri;
+
+        # Headers that are set in the request sent to the oauth2_proxy:
+        proxy_set_header x-forwarded-user $auth_user;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+
+        # Lookup hostname using DNS and proxy the current request to service_ip_address:80
+        proxy_pass       http://${service}.${pr_number}.svc.cluster.local.;
+                                                                         # trailing dot is correct
+      }
+
+      # TODO(tamsky): add 'location /logout {}'
+
+      proxy_set_header      X-Real-IP                   $remote_addr;
+      proxy_set_header      X-Forwarded-For             $proxy_add_x_forwarded_for;
+      proxy_set_header      X-Upstream-Response-Time    $upstream_response_time;
+      proxy_next_upstream   error                       http_500;
+      proxy_set_header      Host                        $host;
+    }
