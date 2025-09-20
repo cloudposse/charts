@@ -11,3 +11,9 @@ index:
 
 all: build index
 	@exit 0
+
+readme:
+	@atmos readme
+
+readme/build:
+	@atmos readme
