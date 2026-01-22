@@ -95,7 +95,7 @@ spec:
 {{- end }}
       {{- with .Values.deployment.pod.hostAliases }}
       hostAliases:
-        {{- toYaml . | indent 8 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
     {{- if or .Values.dockercfg.enabled .Values.image.pullSecrets }}
       imagePullSecrets:
